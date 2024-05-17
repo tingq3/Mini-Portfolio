@@ -1,12 +1,10 @@
 <script lang="ts">
-    import type { TLanguage, TProject } from "$types";
-    import LangChip from "./LangChip.svelte";
+    import { flip } from "svelte/animate";
+    import { fade } from 'svelte/transition';
+    import LangChip from "$components/LangChip.svelte";
     import ProjectCard from "./ProjectCard.svelte";
 
-    export let data: {
-        projects: TProject[],
-        languages: TLanguage[],
-    };
+    export let data: import('./$types').PageData;
 
     let selectedProjects = [...data.projects];
     let selectedLangs: string[] = [];
@@ -42,7 +40,7 @@
 <h2>Projects</h2>
 
 <div class="lang-chips">
-    {#each data.languages as info}
+    {#each data.languages as info (info.slug)}
         <LangChip
             on:click={() => selectLang(info.slug)}
             link={false}
@@ -53,8 +51,13 @@
 </div>
 
 <div class="project-list">
-    {#each selectedProjects as info}
+    {#each selectedProjects as info (info.slug)}
+    <div
+        transition:fade={{ duration: 300 }}
+        animate:flip={{ duration: 300 }}
+    >
         <ProjectCard {info} />
+    </div>
     {/each}
 </div>
 

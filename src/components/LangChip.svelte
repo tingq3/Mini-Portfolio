@@ -6,7 +6,10 @@
     export let selected: boolean = false;
 </script>
 
-<a href={link ? `/languages/${info.slug}` : undefined} on:click>
+<a
+    on:click
+    href={link ? `/languages/${info.slug}` : undefined}
+>
     <div
         style:--fill={selected ? info.color : "#DDD"}
         style:--hover={selected ? "brightness(0.85)" : ""}
