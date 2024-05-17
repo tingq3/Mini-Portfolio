@@ -6,9 +6,10 @@
     export let selected: boolean = false;
 </script>
 
-<a href={link ? `/languages/${info.slug}` : undefined}>
+<a href={link ? `/languages/${info.slug}` : undefined} on:click>
     <div
         style:--fill={selected ? info.color : "#DDD"}
+        style:--hover={selected ? "brightness(0.85)" : ""}
         style:--border={info.color}
     >
         {info.name}
@@ -28,9 +29,12 @@
         padding: 5px 10px;
         width: min-content;
         transition:
+            filter .5s,
             background-color .5s;
     }
     div:hover {
+        filter: var(--hover);
         background-color: var(--border);
+        cursor: pointer;
     }
 </style>

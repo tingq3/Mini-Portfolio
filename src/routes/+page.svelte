@@ -1,13 +1,38 @@
 <script lang="ts">
+    import type { TLanguage, TProject } from "$types";
+    import LangChip from "./LangChip.svelte";
+    import ProjectCard from "./ProjectCard.svelte";
+
     export let data: {
         projects: TProject[],
         languages: TLanguage[],
     };
 
-    import type { TLanguage, TProject } from "$types";
-    import LangChip from "./LangChip.svelte";
-    import ProjectCard from "./ProjectCard.svelte";
+    let selectedProjects = [...data.projects];
+    let selectedLangs: string[] = [];
 
+    function updateProjectList() {
+        if (selectedLangs.length === 0) {
+            selectedProjects = [...data.projects];
+            return;
+        }
+
+        // Filter by languages
+        selectedProjects = data.projects
+            .filter(
+                p => p.languages.find(l => selectedLangs.includes(l))
+                !== undefined
+            );
+    }
+
+    function selectLang(language: string) {
+        if (selectedLangs.includes(language)) {
+            selectedLangs = selectedLangs.filter(l => l !== language);
+        } else {
+            selectedLangs = [...selectedLangs, language];
+        }
+        updateProjectList();
+    }
 </script>
 
 <h1>Maddy Guthridge - Portfolio</h1>
@@ -18,12 +43,17 @@
 
 <div class="lang-chips">
     {#each data.languages as info}
-        <LangChip link={false} {info} />
+        <LangChip
+            on:click={() => selectLang(info.slug)}
+            link={false}
+            selected={selectedLangs.includes(info.slug)}
+            {info}
+        />
     {/each}
 </div>
 
 <div class="project-list">
-    {#each data.projects as info}
+    {#each selectedProjects as info}
         <ProjectCard {info} />
     {/each}
 </div>
