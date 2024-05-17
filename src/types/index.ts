@@ -1,4 +1,7 @@
+export type { TProject } from './project';
+export type { TLanguage } from './language';
 export type { Framework } from './framework';
-export type { Language } from './language';
-export type { Project } from './project';
 export type { Skill } from './skill';
+
+export { Project } from './project';
+export { Language } from './language';

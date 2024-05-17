@@ -21,9 +21,10 @@ Basic information about the project.
 * `command` (`string`): command to install the project
 * `url` (`string`): URL for package on a package management website
 
-## `details.txt`
+## `README.md`
 
-A long-form description of the project.
+A long-form description of the project in markdown format. Note that this
+should not contain a header.
 
 ## `icon.png`
 

@@ -3,6 +3,14 @@
   "title": "Project",
   "description": "A project in my portfolio",
   "type": "object",
+  "required": [
+    "name",
+    "description",
+    "status",
+    "languages",
+    "frameworks",
+    "skills"
+  ],
   "properties": {
     "name": {
       "description": "name of the project",
@@ -11,6 +19,10 @@
     "description": {
       "description": "description of the project",
       "type": "string"
+    },
+    "sort": {
+      "description": "Number used to order projects",
+      "type": "number"
     },
     "status": {
       "description": "the status of the project's development",
@@ -73,13 +85,5 @@
         }
       }
     }
-  },
-  "required": [
-    "name",
-    "description",
-    "status",
-    "languages",
-    "frameworks",
-    "skills"
-  ]
+  }
 }

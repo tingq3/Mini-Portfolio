@@ -2,6 +2,7 @@
   "$schema": "../project.schema.json",
   "name": "Universal Controller Script",
   "description": "An advanced compatibility layer to provide best-in-class integration between many hardware MIDI controllers and the FL Studio audio workstation",
+  "sort": 10,
   "status": "Active",
   "repo": "https://github.com/MiguelGuthridge/Universal-Controller-Script",
   "languages": ["python"],

@@ -1,31 +1,40 @@
+import { any, array, defaulted, enums, number, object, optional, string, type Infer } from "superstruct";
+
 /** Status of project development */
-type ProjectStatus = "In-progress" | "Active" | "Complete" | "Incomplete";
+const ProjectStatus = enums(["In-progress", "Active", "Complete", "Incomplete"]);
 
 /** Represents a project */
-export type Project = {
+export const Project = object({
+  /** Slug of project */
+  slug: string(),
   /** User-facing name of the project */
-  name: string
+  name: string(),
   /** Short description of the project */
-  description: string
+  description: string(),
+  /** Sort value */
+  sort: defaulted(number(), 0),
   /** Status of project development */
-  status: ProjectStatus
+  status: ProjectStatus,
   /** Array of language slugs used by the project */
-  languages: string[]
+  languages: array(string()),
   /** Array of framework slugs used by the project */
-  frameworks: string[]
+  frameworks: array(string()),
   /** Array of skill slugs used by the project */
-  skills: string[]
+  skills: array(string()),
   /** URL of the GitHub repo of the project */
-  repo?: string
+  repo: optional(string()),
   /** URL of the site demonstrating the project */
-  site?: string
+  site: optional(string()),
   /** URL of the documentation site for the project */
-  docs?: string
+  docs: optional(string()),
   /** Information about the package distribution of the project */
-  package?: {
+  package: optional(object({
     /** Installation command */
-    command: string
+    command: string(),
     /** URL for viewing the project's package listing */
-    url: string
-  }
-}
+    url: string(),
+  })),
+  "$schema": any(),
+});
+
+export type TProject = Infer<typeof Project>;
