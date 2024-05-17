@@ -2,6 +2,7 @@
   "$schema": "../project.schema.json",
   "name": "Equator",
   "description": "A symbolic math interpreter built using Sympy",
+  "sort": 1,
   "status": "Complete",
   "repo": "https://github.com/MiguelGuthridge/Equator",
   "languages": ["python"],

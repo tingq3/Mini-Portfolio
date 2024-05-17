@@ -3,6 +3,7 @@
     import { fade } from 'svelte/transition';
     import LangChip from "$components/LangChip.svelte";
     import ProjectCard from "./ProjectCard.svelte";
+    import Navbar from "$components/Navbar.svelte";
 
     export let data: import('./$types').PageData;
 
@@ -33,7 +34,7 @@
     }
 </script>
 
-<h1>Maddy Guthridge - Portfolio</h1>
+<Navbar page="" />
 
 <p>This is my data-driven portfolio website.</p>
 
