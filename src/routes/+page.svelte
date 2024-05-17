@@ -7,6 +7,13 @@
 
     export let data: import('./$types').PageData;
 
+    let languageList = data.languages;
+    // Sort languages by most commonly used
+    languageList.sort((a, b) =>
+        filterProjectsByLanguages([b.slug]).length
+        - filterProjectsByLanguages([a.slug]).length
+    )
+
     let selectedProjects = [...data.projects];
     let selectedLangs: string[] = [];
 
@@ -16,14 +23,18 @@
             return;
         }
 
-        // Filter by languages
-        selectedProjects = data.projects
+        selectedProjects = filterProjectsByLanguages(selectedLangs);
+    }
+
+    function filterProjectsByLanguages(langs: string[]) {
+        return data.projects
             .filter(
-                p => p.languages.find(l => selectedLangs.includes(l))
-                !== undefined
+                p => p.languages.find(l => langs.includes(l))
+                !==undefined
             );
     }
 
+    /** Called when a language chip is clicked */
     function selectLang(language: string) {
         if (selectedLangs.includes(language)) {
             selectedLangs = selectedLangs.filter(l => l !== language);
@@ -41,7 +52,7 @@
 <h2>Projects</h2>
 
 <div class="lang-chips">
-    {#each data.languages as info (info.slug)}
+    {#each languageList as info (info.slug)}
         <LangChip
             on:click={() => selectLang(info.slug)}
             link={false}
