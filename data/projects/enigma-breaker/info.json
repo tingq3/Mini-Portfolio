@@ -1,0 +1,16 @@
+{
+  "$schema": "../project.schema.json",
+  "name": "Enigma Machine Breaker",
+  "description": "An enigma machine emulation and brute-force breaker, written in Rust",
+  "status": "Complete",
+  "repo": "https://github.com/MiguelGuthridge/Enigma-Breaker",
+  "languages": [
+    "rust"
+  ],
+  "frameworks": [],
+  "skills": [
+    "type-safety",
+    "algorithms",
+    "cryptography"
+  ]
+}

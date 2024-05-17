@@ -1,0 +1,4 @@
+{
+  "name": "FL Studio MIDI Controller Scripting",
+  "description": "The MIDI Controller Scripting API allows developers to write code that FL Studio can use to communicate with external hardware devices using MIDI"
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "../project.schema.json",
+  "name": "Waydriver",
+  "description": "A task management system to help people prioritise their lives",
+  "status": "In-progress",
+  "repo": "https://github.com/Waydriver",
+  "languages": ["typescript"],
+  "frameworks": [
+    "express",
+    "next"
+  ],
+  "skills": [
+    "fullstack"
+  ]
+}

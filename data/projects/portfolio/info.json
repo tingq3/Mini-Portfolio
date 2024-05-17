@@ -1,0 +1,11 @@
+{
+  "$schema": "../project.schema.json",
+  "name": "Portfolio",
+  "description": "My portfolio website -- you're looking at it",
+  "status": "Active",
+  "repo": "https://github.com/MiguelGuthridge/portfolio",
+  "site": "https://portfolio.miguelguthridge.com",
+  "languages": ["typescript"],
+  "frameworks": ["next"],
+  "skills": []
+}
