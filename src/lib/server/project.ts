@@ -46,6 +46,16 @@ function loadProjectReadme(slug: string) {
   return readme.toString();
 }
 
+export function reloadProjectData() {
+  projects.length = 0;
+  loadProjectList();
+  for (const proj of projects) {
+    loadProjectInfo(proj);
+  }
+  // Sort list by sort order specified in info files
+  projects.sort((a, b) => getProjectInfo(b).sort - getProjectInfo(a).sort)
+}
+
 // Functions for accessing data
 //==================================================
 
@@ -67,10 +77,4 @@ export function getProjectsAsArray() {
 
 // Load all project data
 //==================================================
-
-loadProjectList();
-for (const proj of projects) {
-  loadProjectInfo(proj);
-}
-// Sort list by sort order specified in info files
-projects.sort((a, b) => getProjectInfo(b).sort - getProjectInfo(a).sort)
+reloadProjectData();

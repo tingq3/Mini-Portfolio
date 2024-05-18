@@ -23,8 +23,7 @@ Basic information about the project.
 
 ## `README.md`
 
-A long-form description of the project in markdown format. Note that this
-should not contain a header.
+A long-form description of the project in markdown format.
 
 ## `icon.png`
 

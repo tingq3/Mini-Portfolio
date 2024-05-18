@@ -1,10 +1,12 @@
 <script lang="ts">
     import { flip } from "svelte/animate";
     import { fade } from 'svelte/transition';
-    import LangChip from "$components/LangChip.svelte";
-    import ProjectCard from "./ProjectCard.svelte";
-    import Navbar from "$components/Navbar.svelte";
+
     import { filterProjectsByLanguages } from "$lib/util";
+
+    import ProjectCard from "./ProjectCard.svelte";
+    import LangChip from "$components/LangChip.svelte";
+    import Navbar from "$components/Navbar.svelte";
 
     export let data: import('./$types').PageData;
 

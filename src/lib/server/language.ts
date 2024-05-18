@@ -35,6 +35,19 @@ function loadLanguageInfo(slug: string) {
   languageInfo[slug] = create({ ...proj, slug }, Language);
 }
 
+export function reloadLanguageData() {
+  languages.length = 0;
+  loadLanguageList();
+  for (const lang of languages) {
+    loadLanguageInfo(lang);
+  }
+  // Sort languages by usage frequency
+  languages.sort((a, b) =>
+    filterProjectsByLanguages([b], getProjectsAsArray()).length
+    - filterProjectsByLanguages([a], getProjectsAsArray()).length
+  )
+}
+
 // Functions for accessing data
 //==================================================
 
@@ -56,13 +69,4 @@ export function getLanguagesAsArray() {
 
 // Load all language data
 //==================================================
-
-loadLanguageList();
-for (const lang of languages) {
-  loadLanguageInfo(lang);
-}
-// Sort languages by usage frequency
-languages.sort((a, b) =>
-  filterProjectsByLanguages([b], getProjectsAsArray()).length
-  - filterProjectsByLanguages([a], getProjectsAsArray()).length
-)
+reloadLanguageData();

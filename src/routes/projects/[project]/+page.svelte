@@ -8,15 +8,34 @@
 
 <Navbar page={data.info.name} />
 
-<div class="lang-chips">
-    {#each data.info.languages as lang}
-        <LangChip info={data.languages[lang]} selected />
-    {/each}
-</div>
+<main>
+    <div id="info-container">
+        <div class="lang-chips">
+            {#each data.info.languages as lang}
+                <LangChip info={data.languages[lang]} selected />
+            {/each}
+        </div>
 
-<Markdown source={data.info.readme} />
+        <Markdown
+            source={data.info.readme}
+        />
+    </div>
+</main>
 
 <style>
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #info-container {
+        width: 80%;
+        border-radius: 10px;
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.37);
+        padding: 20px;
+    }
+
     .lang-chips {
         display: flex;
         gap: 10px;
