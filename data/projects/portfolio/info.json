@@ -5,8 +5,8 @@
   "color": "#0099ff",
   "status": "Active",
   "repo": "https://github.com/MiguelGuthridge/portfolio",
-  "site": "https://portfolio.miguelguthridge.com",
+  "site": "https://portfolio.maddyguthridge.com",
   "languages": ["typescript"],
-  "frameworks": ["next"],
+  "frameworks": ["sveltekit"],
   "skills": []
 }

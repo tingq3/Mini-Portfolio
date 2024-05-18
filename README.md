@@ -1,18 +1,13 @@
-# create-svelte
+# Portfolio
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+This is my data-driven portfolio website, built using SvelteKit and TypeScript.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+* The site is entirely built from a `data/` directory, where all information
+  about projects, frameworks and languages is contained.
+* Validation of all source data, using [Superstruct](https://docs.superstructjs.org/).
+* Demos of projects using [Asciinema](https://asciinema.org/).
 
 ## Developing
 
