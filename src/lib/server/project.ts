@@ -33,8 +33,9 @@ function loadProjectInfo(slug: string) {
   const proj = JSON.parse(info.toString());
   projectInfo[slug] = create({
     ...proj,
+    slug,
     readme: loadProjectReadme(slug),
-    slug
+    hasDemo: checkForDemoRecording(slug),
   }, Project);
 }
 
@@ -44,6 +45,13 @@ function loadProjectInfo(slug: string) {
 function loadProjectReadme(slug: string) {
   const readme = fs.readFileSync(`${BASE}/${slug}/README.md`);
   return readme.toString();
+}
+
+/**
+ * Returns whether there is a demo recording for the given project
+ */
+function checkForDemoRecording(slug: string) {
+  return fs.existsSync(`${BASE}/${slug}/demo.asciinema`);
 }
 
 export function reloadProjectData() {

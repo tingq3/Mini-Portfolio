@@ -1,14 +1,10 @@
-import { any, array, defaulted, enums, number, object, optional, string, type Infer } from "superstruct";
+import { any, array, boolean, defaulted, enums, number, object, optional, string, type Infer } from "superstruct";
 
 /** Status of project development */
 const ProjectStatus = enums(["In-progress", "Active", "Complete", "Incomplete"]);
 
 /** Represents a project */
 export const Project = object({
-  /** Slug of project, added during loading */
-  slug: string(),
-  /** Readme of project, added during loading */
-  readme: string(),
   /** User-facing name of the project */
   name: string(),
   /** Short description of the project */
@@ -38,7 +34,18 @@ export const Project = object({
     /** URL for viewing the project's package listing */
     url: string(),
   })),
+  /** Schema (included so that superstruct doesn't freak out) */
   "$schema": any(),
+
+  // Components not from info.json (added during load)
+  //==================================================
+
+  /** Slug of project, added during loading */
+  slug: string(),
+  /** Readme of project, added during loading */
+  readme: string(),
+  /** Whether the project has an asciinema demo */
+  hasDemo: boolean(),
 });
 
 export type TProject = Infer<typeof Project>;

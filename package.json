@@ -16,6 +16,7 @@
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/color": "^3.0.6",
 		"@types/eslint": "^8.56.0",
+		"@types/mime-types": "^2.1.4",
 		"@types/node": "^20.12.12",
 		"@typescript-eslint/eslint-plugin": "^7.0.0",
 		"@typescript-eslint/parser": "^7.0.0",
@@ -31,6 +32,8 @@
 	"dependencies": {
 		"color": "^4.2.3",
 		"marked": "^12.0.2",
+		"mime-types": "^2.1.35",
+		"sanitize-filename": "^1.6.3",
 		"superstruct": "^1.0.4",
 		"tippy.js": "^6.3.7"
 	}
