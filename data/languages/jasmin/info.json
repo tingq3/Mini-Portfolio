@@ -1,5 +1,6 @@
 {
   "name": "Jasmin",
   "description": "Jasmin is an assembly language targeting the Java virtual machine",
-  "color": "#F38684"
+  "color": "#F38684",
+  "exclude": true
 }

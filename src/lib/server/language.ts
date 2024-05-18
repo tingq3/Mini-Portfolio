@@ -31,8 +31,8 @@ function loadLanguageList() {
  */
 function loadLanguageInfo(slug: string) {
   const info = fs.readFileSync(`${BASE}/${slug}/info.json`);
-  const proj = JSON.parse(info.toString());
-  languageInfo[slug] = create({ ...proj, slug }, Language);
+  const lang = JSON.parse(info.toString());
+  languageInfo[slug] = create({ ...lang, slug }, Language);
 }
 
 export function reloadLanguageData() {
@@ -51,20 +51,32 @@ export function reloadLanguageData() {
 // Functions for accessing data
 //==================================================
 
+/**
+ * Returns array of language slugs, skipping those excluded from the global
+ * list.
+ */
 export function getLanguageSlugs(): string[] {
-  return languages;
+  return languages.filter(l => !getLanguageInfo(l).exclude);
 }
 
 export function getLanguageInfo(slug: string): TLanguage {
   return languageInfo[slug];
 }
 
+/**
+ * Returns map of all language info, including those excluded from those the
+ * global list.
+ */
 export function getLanguagesAsMap() {
   return languageInfo;
 }
 
+/**
+ * Returns array of all language info, skipping those excluded from the global
+ * list.
+ */
 export function getLanguagesAsArray() {
-  return languages.map(l => getLanguageInfo(l));
+  return languages.map(l => getLanguageInfo(l)).filter(l => !l.exclude);
 }
 
 // Load all language data
