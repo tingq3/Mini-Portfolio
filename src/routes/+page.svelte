@@ -4,7 +4,7 @@
 
     import { filterProjectsByLanguages } from "$lib/util";
 
-    import ProjectCard from "./ProjectCard.svelte";
+    import ProjectCard from "$components/ProjectCard.svelte";
     import LangChip from "$components/LangChip.svelte";
     import Navbar from "$components/Navbar.svelte";
 
@@ -37,7 +37,7 @@
     }
 </script>
 
-<Navbar path="" />
+<Navbar path={[]} />
 
 <p>This is my data-driven portfolio website.</p>
 

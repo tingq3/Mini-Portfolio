@@ -8,6 +8,8 @@ export const Language = object({
   name: string(),
   /** A short description of the programming language */
   description: string(),
+  /** The contents of README.md, added when loading data */
+  readme: string(),
   /** The color to use for language chips */
   color: string(),
   /** Whether to exclude the language from the main list */

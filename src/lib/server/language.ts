@@ -32,7 +32,19 @@ function loadLanguageList() {
 function loadLanguageInfo(slug: string) {
   const info = fs.readFileSync(`${BASE}/${slug}/info.json`);
   const lang = JSON.parse(info.toString());
-  languageInfo[slug] = create({ ...lang, slug }, Language);
+  languageInfo[slug] = create({
+    ...lang,
+    readme: loadLanguageReadme(slug),
+    slug,
+  }, Language);
+}
+
+/**
+ * Load language README.md
+ */
+function loadLanguageReadme(slug: string) {
+  const readme = fs.readFileSync(`${BASE}/${slug}/README.md`);
+  return readme.toString();
 }
 
 export function reloadLanguageData() {
@@ -52,11 +64,15 @@ export function reloadLanguageData() {
 //==================================================
 
 /**
- * Returns array of language slugs, skipping those excluded from the global
- * list.
+ * Returns array of language slugs, by default filtering out languages excluded
+ * from the global list.
  */
-export function getLanguageSlugs(): string[] {
-  return languages.filter(l => !getLanguageInfo(l).exclude);
+export function getLanguageSlugs(filter?: boolean): string[] {
+  if (filter === false) {
+    return languages;
+  } else {
+    return languages.filter(l => !getLanguageInfo(l).exclude);
+  }
 }
 
 export function getLanguageInfo(slug: string): TLanguage {
@@ -72,11 +88,11 @@ export function getLanguagesAsMap() {
 }
 
 /**
- * Returns array of all language info, skipping those excluded from the global
- * list.
+ * Returns array of all language info, by default filtering out languages
+ * excluded from the global list.
  */
-export function getLanguagesAsArray() {
-  return languages.map(l => getLanguageInfo(l)).filter(l => !l.exclude);
+export function getLanguagesAsArray(filter?: boolean) {
+  return getLanguageSlugs(filter).map(l => getLanguageInfo(l));
 }
 
 // Load all language data
