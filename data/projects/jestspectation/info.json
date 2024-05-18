@@ -2,6 +2,7 @@
   "$schema": "../project.schema.json",
   "name": "Jestspectation",
   "description": "A pattern matching system to make clear and reliable test cases",
+  "color": "#ff3399",
   "sort": 5,
   "status": "Active",
   "repo": "https://github.com/MiguelGuthridge/Jestspectation",

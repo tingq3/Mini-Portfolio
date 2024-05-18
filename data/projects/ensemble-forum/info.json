@@ -2,6 +2,7 @@
   "$schema": "../project.schema.json",
   "name": "Ensemble Forum",
   "description": "A next-gen education-centred web forum designed for teachers and students alike",
+  "color": "#cc66ff",
   "status": "Complete",
   "repo": "https://github.com/EnsembleForum/Ensemble",
   "languages": ["python"],

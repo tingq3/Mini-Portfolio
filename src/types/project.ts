@@ -15,6 +15,8 @@ export const Project = object({
   description: string(),
   /** Sort value */
   sort: defaulted(number(), 0),
+  /** Color to use for ProjectCards */
+  color: string(),
   /** Status of project development */
   status: ProjectStatus,
   /** Array of language slugs used by the project */

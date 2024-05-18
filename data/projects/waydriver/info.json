@@ -2,6 +2,7 @@
   "$schema": "../project.schema.json",
   "name": "Waydriver",
   "description": "A task management system to help people prioritise their lives",
+  "color": "#009999",
   "sort": -2,
   "status": "In-progress",
   "repo": "https://github.com/Waydriver",

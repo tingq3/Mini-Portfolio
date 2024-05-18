@@ -24,6 +24,10 @@
       "description": "Number used to order projects",
       "type": "number"
     },
+    "color": {
+      "description": "Color to use when showing cards of this project",
+      "type": "string"
+    },
     "status": {
       "description": "the status of the project's development",
       "type": "string",

@@ -9,5 +9,5 @@
     link="/projects/{info.slug}"
     title={info.name}
     description={info.description}
-    color="#FF00FF"
+    color={info.color}
 />

@@ -3,6 +3,7 @@
   "name": "Enigma Machine Breaker",
   "description": "An enigma machine emulation and brute-force breaker, written in Rust",
   "sort": 2,
+  "color": "#ffff66",
   "status": "Complete",
   "repo": "https://github.com/MiguelGuthridge/Enigma-Breaker",
   "languages": [
