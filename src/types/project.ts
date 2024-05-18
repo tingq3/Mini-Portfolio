@@ -5,8 +5,10 @@ const ProjectStatus = enums(["In-progress", "Active", "Complete", "Incomplete"])
 
 /** Represents a project */
 export const Project = object({
-  /** Slug of project */
+  /** Slug of project, added during loading */
   slug: string(),
+  /** Readme of project, added during loading */
+  readme: string(),
   /** User-facing name of the project */
   name: string(),
   /** Short description of the project */

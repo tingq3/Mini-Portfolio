@@ -1,29 +1,68 @@
 import { create } from 'superstruct';
-import fs from 'node:fs/promises';
-import { Language } from "$types";
+import fs from 'node:fs';
+import path from 'node:path';
+import { Language, type TLanguage } from "$types";
+import { filterProjectsByLanguages } from "$lib/util";
+import { getProjectsAsArray } from './project';
 
 const BASE = 'data/languages';
 
+// Functions for loading data
+//==================================================
 
-export async function getLanguageList() {
-  const dirInfo = await fs.opendir(BASE);
+const languages: string[] = [];
+const languageInfo: Record<string, TLanguage> = {};
 
-  const projects = []
+/**
+ * Load list of available languages
+ */
+function loadLanguageList() {
+  const dirInfo = fs.readdirSync(BASE);
 
-  for await (const entry of dirInfo) {
-    if (entry.isDirectory()) {
-      projects.push(entry.name);
+  for (const entry of dirInfo) {
+    if (fs.statSync(path.join(BASE, entry)).isDirectory()) {
+      languages.push(entry);
     }
   }
-
-  return projects;
 }
 
 /**
  * Load language info from its info.json file
  */
-export async function getLanguageInfo(slug: string) {
-  const info = await fs.readFile(`${BASE}/${slug}/info.json`);
+function loadLanguageInfo(slug: string) {
+  const info = fs.readFileSync(`${BASE}/${slug}/info.json`);
   const proj = JSON.parse(info.toString());
-  return create({ ...proj, slug }, Language);
+  languageInfo[slug] = create({ ...proj, slug }, Language);
 }
+
+// Functions for accessing data
+//==================================================
+
+export function getLanguageSlugs(): string[] {
+  return languages;
+}
+
+export function getLanguageInfo(slug: string): TLanguage {
+  return languageInfo[slug];
+}
+
+export function getLanguagesAsMap() {
+  return languageInfo;
+}
+
+export function getLanguagesAsArray() {
+  return languages.map(l => getLanguageInfo(l));
+}
+
+// Load all language data
+//==================================================
+
+loadLanguageList();
+for (const lang of languages) {
+  loadLanguageInfo(lang);
+}
+// Sort languages by usage frequency
+languages.sort((a, b) =>
+  filterProjectsByLanguages([b], getProjectsAsArray()).length
+  - filterProjectsByLanguages([a], getProjectsAsArray()).length
+)

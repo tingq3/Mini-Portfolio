@@ -4,34 +4,24 @@
     import LangChip from "$components/LangChip.svelte";
     import ProjectCard from "./ProjectCard.svelte";
     import Navbar from "$components/Navbar.svelte";
+    import { filterProjectsByLanguages } from "$lib/util";
 
     export let data: import('./$types').PageData;
-
-    let languageList = data.languages;
-    // Sort languages by most commonly used
-    languageList.sort((a, b) =>
-        filterProjectsByLanguages([b.slug]).length
-        - filterProjectsByLanguages([a.slug]).length
-    )
 
     let selectedProjects = [...data.projects];
     let selectedLangs: string[] = [];
 
+    /**
+     * Update filtered list of projects based on current language chip
+     * selection
+     */
     function updateProjectList() {
         if (selectedLangs.length === 0) {
             selectedProjects = [...data.projects];
             return;
         }
 
-        selectedProjects = filterProjectsByLanguages(selectedLangs);
-    }
-
-    function filterProjectsByLanguages(langs: string[]) {
-        return data.projects
-            .filter(
-                p => p.languages.find(l => langs.includes(l))
-                !==undefined
-            );
+        selectedProjects = filterProjectsByLanguages(selectedLangs, data.projects);
     }
 
     /** Called when a language chip is clicked */
@@ -52,12 +42,12 @@
 <h2>Projects</h2>
 
 <div class="lang-chips">
-    {#each languageList as info (info.slug)}
+    {#each data.languages as lang (lang.slug)}
         <LangChip
-            on:click={() => selectLang(info.slug)}
+            on:click={() => selectLang(lang.slug)}
             link={false}
-            selected={selectedLangs.includes(info.slug)}
-            {info}
+            selected={selectedLangs.includes(lang.slug)}
+            info={lang}
         />
     {/each}
 </div>
@@ -79,6 +69,7 @@
         gap: 5px;
     }
 
+    /* https://css-tricks.com/an-auto-filling-css-grid-with-max-columns/ */
     .project-list {
         /**
         * User input values.

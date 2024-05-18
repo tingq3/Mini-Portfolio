@@ -14,7 +14,7 @@
     {/each}
 </div>
 
-<Markdown source={data.readme} />
+<Markdown source={data.info.readme} />
 
 <style>
     .lang-chips {

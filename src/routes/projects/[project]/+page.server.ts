@@ -1,22 +1,9 @@
-import { getLanguageInfo, getLanguageList } from "$lib/server/language";
-import { getProjectReadme, getProjectInfo } from "$lib/server/project";
-import type { TLanguage } from "$types";
+import { getLanguagesAsMap } from "$lib/server/language";
+import { getProjectInfo } from "$lib/server/project";
 
-export async function load({ params }: { params: { project: string }}) {
-  const info = await getProjectInfo(params.project);
-  const readme = await getProjectReadme(params.project);
-
-  // FIXME: Duplicate code from main page.server.ts
-  // Need a better way to have this data hang around (perhaps a global data
-  // store file?)
-  const languages: Record<string, TLanguage> = {};
-  for (const l of await getLanguageList()) {
-    languages[l] = await getLanguageInfo(l);
-  }
-
+export function load({ params }: { params: { project: string }}) {
   return {
-    info,
-    readme,
-    languages,
+    info: getProjectInfo(params.project),
+    languages: getLanguagesAsMap(),
   };
 }

@@ -1,34 +1,76 @@
 import { create } from 'superstruct';
-import fs from 'node:fs/promises';
-import { Project } from "$types";
+import fs from 'node:fs';
+import path from 'node:path';
+import { Project, type TProject } from "$types";
 
-const BASE = 'data/projects'
+const BASE = 'data/projects';
+
+// Functions for loading data
+//==================================================
+
+const projects: string[] = [];
+const projectInfo: Record<string, TProject> = {};
 
 
-export async function getProjectsList() {
-  const dirInfo = await fs.opendir(BASE);
+/**
+ * Load list of available projects
+ */
+function loadProjectList() {
+  const dirInfo = fs.readdirSync(BASE);
 
-  const projects = []
-
-  for await (const entry of dirInfo) {
-    if (entry.isDirectory()) {
-      projects.push(entry.name);
+  for (const entry of dirInfo) {
+    if (fs.statSync(path.join(BASE, entry)).isDirectory()) {
+      projects.push(entry);
     }
   }
-
-  return projects;
 }
 
 /**
  * Load project info from its info.json file
  */
-export async function getProjectInfo(slug: string) {
-  const info = await fs.readFile(`${BASE}/${slug}/info.json`);
+function loadProjectInfo(slug: string) {
+  const info = fs.readFileSync(`${BASE}/${slug}/info.json`);
   const proj = JSON.parse(info.toString());
-  return create({ ...proj, slug }, Project);
+  projectInfo[slug] = create({
+    ...proj,
+    readme: loadProjectReadme(slug),
+    slug
+  }, Project);
 }
 
-export async function getProjectReadme(slug: string) {
-  const readme = await fs.readFile(`${BASE}/${slug}/README.md`);
+/**
+ * Load project README.md
+ */
+function loadProjectReadme(slug: string) {
+  const readme = fs.readFileSync(`${BASE}/${slug}/README.md`);
   return readme.toString();
 }
+
+// Functions for accessing data
+//==================================================
+
+export function getProjectSlugs(): string[] {
+  return projects;
+}
+
+export function getProjectInfo(slug: string) {
+  return projectInfo[slug];
+}
+
+export function getProjectsAsMap() {
+  return projectInfo;
+}
+
+export function getProjectsAsArray() {
+  return projects.map(p => getProjectInfo(p));
+}
+
+// Load all project data
+//==================================================
+
+loadProjectList();
+for (const proj of projects) {
+  loadProjectInfo(proj);
+}
+// Sort list by sort order specified in info files
+projects.sort((a, b) => getProjectInfo(b).sort - getProjectInfo(a).sort)
