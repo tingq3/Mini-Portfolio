@@ -1,7 +1,6 @@
 <script lang="ts">
     import { tooltip } from '$lib/tooltip';
     import Color from 'color';
-    import tippy from 'tippy.js';
 
     /** Name to show for chip */
     export let name: string;

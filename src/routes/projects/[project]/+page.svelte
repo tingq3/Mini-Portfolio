@@ -2,6 +2,7 @@
     import Markdown from "$components/Markdown.svelte";
     import LangChip from "$components/LangChip.svelte";
     import Navbar from "$components/Navbar.svelte";
+    import AsciinemaPlayer from "$components/AsciinemaPlayer.svelte";
 
     export let data: import('./$types').PageData;
 </script>
@@ -20,6 +21,13 @@
             source={data.info.readme}
         />
     </div>
+    <!--
+        Asciinema seems to be broken currently:
+        https://github.com/asciinema/asciinema-player/issues/259
+    -->
+    <!-- {#if data.info.hasDemo}
+        <AsciinemaPlayer castUrl="/projects/{data.info.slug}/demo.asciinema" />
+    {/if} -->
 </main>
 
 <style>
