@@ -1,5 +1,5 @@
 {
   "name": "Rust",
-  "description": "Rust is a very good programming language",
-  "color": "#F6B26B"
+  "description": "Rust is a high-level compiled language with powerful static analysis to ensure correctness",
+  "color": "#F66D00"
 }
