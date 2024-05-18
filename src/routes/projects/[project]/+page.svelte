@@ -6,7 +6,7 @@
     export let data: import('./$types').PageData;
 </script>
 
-<Navbar page={data.info.name} />
+<Navbar path={[{ url: 'projects', txt: 'Projects' }, { url: data.info.slug, txt: data.info.name}]} />
 
 <main>
     <div id="info-container">

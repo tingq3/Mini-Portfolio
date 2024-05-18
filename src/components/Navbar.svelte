@@ -1,20 +1,31 @@
 <script lang="ts">
     import { dev } from "$app/environment";
 
-    export let page: string;
+    export let path: { url: string, txt: string }[];
 
     function reload() {
         fetch('/reload', { method: 'POST' })
             .then(() => location.reload())
             .catch(e => console.error("Error reloading data", e));
     }
+
+    function pathTo(i: number) {
+        return path.slice(0, i+1).map(p => p.url).join("/");
+    }
 </script>
 <nav>
     <span style:grid-area="navigator">
-        {#if page === ""}
+        {#if path.length === 0}
             <h1>Maddy Guthridge / Portfolio</h1>
         {:else}
-            <h1><a href="/">Maddy Guthridge / Portfolio</a> / {page}</h1>
+            <h1>
+                <a href="/">Maddy Guthridge</a> /
+                {#each path.slice(0, -1) as p, i}
+                    <a href="/{pathTo(i)}">{p.txt}</a>
+                    {'/ '}
+                {/each}
+                {path[path.length - 1].txt}
+            </h1>
         {/if}
     </span>
     {#if dev}

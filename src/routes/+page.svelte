@@ -37,7 +37,7 @@
     }
 </script>
 
-<Navbar page="" />
+<Navbar path="" />
 
 <p>This is my data-driven portfolio website.</p>
 
