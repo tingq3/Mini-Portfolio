@@ -28,8 +28,15 @@ To create a production version of your app:
 npm run build
 ```
 
-To run the production server
+To run the production server:
 
 ```bash
-node build
+node -r dotenv/config build
+```
+
+This requires a `.env` file with the following properties:
+
+```ini
+HOST=127.0.0.1
+PORT=5096
 ```
