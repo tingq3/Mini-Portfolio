@@ -1,0 +1,10 @@
+{
+  "$schema": "../project.schema.json",
+  "name": "Shuck Shell",
+  "description": "A simple Bash-like shell, programmed in C",
+  "color": "#864A06",
+  "status": "Complete",
+  "languages": ["c"],
+  "frameworks": [],
+  "skills": ["os"]
+}

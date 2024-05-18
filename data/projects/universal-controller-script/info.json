@@ -10,6 +10,7 @@
   "frameworks": ["fl-studio-midi-controller-scripting"],
   "skills": [
     "type-safety",
-    "oop"
+    "oop",
+    "design-patterns"
   ]
 }

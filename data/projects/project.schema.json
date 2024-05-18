@@ -9,7 +9,8 @@
     "status",
     "languages",
     "frameworks",
-    "skills"
+    "skills",
+    "color"
   ],
   "properties": {
     "name": {

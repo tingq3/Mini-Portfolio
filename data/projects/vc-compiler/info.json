@@ -2,6 +2,7 @@
   "$schema": "../project.schema.json",
   "name": "VC Compiler",
   "description": "A compiler written in Java that converts a C-like language into Java Bytecode",
+  "sort": 7,
   "color": "#ff5050",
   "status": "Complete",
   "languages": ["java", "jasmin"],

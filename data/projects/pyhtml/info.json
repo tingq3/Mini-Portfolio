@@ -1,0 +1,16 @@
+{
+  "$schema": "../project.schema.json",
+  "name": "PyHTML Enhanced",
+  "description": "A library for building HTML documents with a simple and learnable syntax",
+  "color": "#FFCB06",
+  "status": "Active",
+  "languages": ["python", "html"],
+  "frameworks": [],
+  "skills": ["web-scraping", "type-safety"],
+  "repo": "https://github.com/COMP1010UNSW/pyhtml-enhanced",
+  "package": {
+    "command": "pip install pyhtml-enhanced",
+    "url": "https://pypi.org/project/pyhtml-enhanced/"
+  },
+  "sort": 6
+}
