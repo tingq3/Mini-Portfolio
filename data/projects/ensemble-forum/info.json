@@ -2,6 +2,7 @@
   "$schema": "../project.schema.json",
   "name": "Ensemble Forum",
   "description": "A next-gen education-centred web forum designed for teachers and students alike",
+  "sort": 3,
   "color": "#cc66ff",
   "status": "Complete",
   "repo": "https://github.com/EnsembleForum/Ensemble",
@@ -12,6 +13,7 @@
   ],
   "skills": [
     "type-safety",
-    "test-driven-development"
+    "test-driven-development",
+    "sql"
   ]
 }

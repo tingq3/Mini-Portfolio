@@ -6,7 +6,7 @@
   "status": "Active",
   "repo": "https://github.com/MiguelGuthridge/portfolio",
   "site": "https://portfolio.maddyguthridge.com",
-  "languages": ["typescript"],
+  "languages": ["typescript", "html"],
   "frameworks": ["sveltekit"],
   "skills": []
 }

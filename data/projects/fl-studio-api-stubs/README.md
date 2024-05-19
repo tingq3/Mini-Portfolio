@@ -1,6 +1,10 @@
 # FL Studio API Stubs
 
-FL Studio API Stubs is a Python library containing type definitions and
-thorough documentation for FL Studio's Python scripting APIs. It can be easily
-installed as a project dependency to simplify the process of developing,
-maintaining and validating Python scripts that integrate with FL Studio.
+FL Studio API Stubs thoroughly documents the MIDI Controller Scripting API in
+the FL Studio audio workstation. The documentation can be accessed through an
+easily-installed Python package to aid with development, or accessed online
+through a detailed documentation site.
+
+The documentation is of such high quality and offers such excellent
+maintainability that in March of 2024, it was officially adopted by Image-Line,
+and will likely replace their existing documentation in the future.

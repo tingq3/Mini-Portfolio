@@ -2,7 +2,7 @@
     import Markdown from "$components/Markdown.svelte";
     import LangChip from "$components/LangChip.svelte";
     import Navbar from "$components/Navbar.svelte";
-    import AsciinemaPlayer from "$components/AsciinemaPlayer.svelte";
+    // import AsciinemaPlayer from "$components/AsciinemaPlayer.svelte";
 
     export let data: import('./$types').PageData;
 </script>

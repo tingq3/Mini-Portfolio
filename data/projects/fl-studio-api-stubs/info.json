@@ -5,14 +5,14 @@
   "color": "#ff6600",
   "sort": 6,
   "status": "Active",
-  "repo": "https://github.com/MiguelGuthridge/FL-Studio-API-Stubs",
-  "docs": "https://miguelguthridge.github.io/FL-Studio-API-Stubs/",
+  "repo": "https://github.com/IL-Group/FL-Studio-API-Stubs",
+  "docs": "https://il-group.github.io/FL-Studio-API-Stubs/",
   "languages": ["python"],
   "frameworks": [
     "fl-studio-midi-controller-scripting",
     "mkdocs"
   ],
-  "skills": [],
+  "skills": ["midi"],
   "package": {
     "url": "https://pypi.org/project/fl-studio-api-stubs/",
     "command": "pip install fl-studio-api-stubs"

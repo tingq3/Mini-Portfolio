@@ -1,0 +1,15 @@
+{
+  "$schema": "../project.schema.json",
+  "name": "Concussion Shell",
+  "description": "A (joke) shell that runs in a Python REPL",
+  "color": "#A81B0B",
+  "status": "Complete",
+  "repo": "https://github.com/MiguelGuthridge/concussion",
+  "languages": ["python"],
+  "frameworks": [],
+  "skills": ["os"],
+  "package": {
+    "url": "https://pypi.org/project/concussion/",
+    "command": "pip install concussion"
+  }
+}
