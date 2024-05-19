@@ -20,6 +20,14 @@ npm run dev
 npm run dev -- --open
 ```
 
+### Testing
+
+* Tests can be run with `npm t`. The dev server will be automatically started
+  and stopped.
+* Type checking can be run with `npm run check`.
+* Linting can be run with `npm run lint`. Automatic fixes can be applied using
+  `npm run lint-fix`.
+
 ## Building
 
 To create a production version of your app:
@@ -34,9 +42,9 @@ To run the production server:
 node -r dotenv/config build
 ```
 
-This requires a `.env` file with the following properties:
+This requires a `.env` file with the following keys:
 
 ```ini
-HOST=127.0.0.1
-PORT=5096
+HOST=127.0.0.1  # the hostname to use
+PORT=5096  # the port number to use
 ```
