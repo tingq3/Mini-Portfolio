@@ -6,11 +6,24 @@ import {
   record,
   array,
   optional,
-  boolean,
   type Infer,
+  enums,
 } from 'superstruct';
 
-export const Label = object({
+/**
+ * Visibility of the label. One of:
+ *
+ * * `'visible'`: label is visible in all locations
+ * * `'filtered'`: label is not displayed in filter controls
+ * * `'unlisted'`: label is only shown when explicitly linked to
+ * * `'hidden'`: label is not linked anywhere on the site, but is shown on its
+ *   primary page.
+ * * `'private'`: label is not accessible anywhere on the site.
+ */
+const LabelVisibility = enums(['visible', 'filtered', 'unlisted', 'hidden', 'private']);
+
+/** Represents information contained within a label's info.json */
+export const LabelInfo = object({
   /** User-facing name of the label */
   name: string(),
 
@@ -22,6 +35,9 @@ export const Label = object({
 
   /** Color to use when representing the label */
   color: string(),
+
+  /** Visibility of this label */
+  visibility: defaulted(LabelVisibility, 'visible'),
 
   /**
    * Used to associate this label with other categories.
@@ -58,23 +74,25 @@ export const Label = object({
     url: string(),
   })),
 
-  // Components not from info.json (added during load)
-  // ==================================================
-
-  /** Slug of label, added during loading */
-  slug: string(),
-
-  /** `README.md` of label, added during loading */
-  readme: string(),
-
-  /** Whether the label has an asciinema demo in `demo.cast` */
-  hasDemo: boolean(),
-
-  /** Whether the label has an icon in `icon.png` */
-  hasIcon: boolean(),
-
-  /** Whether the label has a banner image in `banner.png` */
-  hasBanner: boolean(),
 });
 
-export type TLabel = Infer<typeof Label>;
+/** Represents a label */
+export type Label = {
+  /** Slug of label */
+  slug: string,
+
+  /** Info about the label, loaded from `info.json` */
+  info: Infer<typeof LabelInfo>
+
+  /** `README.md` of label */
+  readme: string,
+
+  /** Whether the label has an asciinema demo in `demo.cast` */
+  hasDemo: boolean,
+
+  /** Whether the label has an icon in `icon.png` */
+  hasIcon: boolean,
+
+  /** Whether the label has a banner image in `banner.png` */
+  hasBanner: boolean,
+}
