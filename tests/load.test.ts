@@ -3,6 +3,7 @@
  *
  * Tests to ensure that pages can be loaded without issue.
  */
+import request from 'sync-request-curl';
 import { getProjectSlugs } from "$lib/server/project";
 import { getLanguageSlugs } from "$lib/server/language";
 
@@ -10,41 +11,38 @@ import { getLanguageSlugs } from "$lib/server/language";
 const BASE_URL = 'http://localhost:5173';
 
 
-async function checkPageForError(path: string) {
-  if (!path.startsWith('/')) {
-    path = `/${path}`;
-  }
-  const res = await fetch(`${BASE_URL}/${path}`);
+function checkPageForError(path: string) {
+  const res = request('GET', `${BASE_URL}${path}`);
 
-  if (res.status >= 400) {
-    throw new Error(`GET /${path} got unexpected status ${res.status}`);
+  if (res.statusCode >= 400) {
+    throw new Error(`GET ${path} got unexpected status ${res.statusCode}`);
   }
 }
 
 // Main page
 
-test('load main page', async () => {
-  expect(checkPageForError('/')).resolves.toBeUndefined();
+test('load main page', () => {
+  expect(checkPageForError('/')).toBeUndefined();
 });
 
-test('load languages page', async () => {
-  expect(checkPageForError('/language')).resolves.toBeUndefined();
+test('load languages page', () => {
+  expect(checkPageForError('/languages')).toBeUndefined();
 });
 
 // Generated pages
 
-describe('load project pages', async () => {
+describe('load project pages', () => {
   test.each(
     getProjectSlugs()
-  )('load project page %s', async (slug: string) => {
-    await expect(checkPageForError(`projects/${slug}`)).resolves.toBeUndefined();
+  )('load project page %s', (slug: string) => {
+    expect(checkPageForError(`/projects/${slug}`)).toBeUndefined();
   });
 });
 
-describe('load language pages', async () => {
+describe('load language pages', () => {
   test.each(
     getLanguageSlugs()
-  )('load language page %s', async (slug: string) => {
-    await expect(checkPageForError(`languages/${slug}`)).resolves.toBeUndefined();
+  )('load language page %s', (slug: string) => {
+    expect(checkPageForError(`/languages/${slug}`)).toBeUndefined();
   });
 });

@@ -1,0 +1,33 @@
+module.exports = {
+  setupFilesAfterEnv: [
+    "jest-extended/all"
+  ],
+  maxWorkers: 1,
+  transform: {
+    "^.+\\.svelte$": [
+      "svelte-jester",
+      {
+        preprocess: true
+      }
+    ],
+    "^.+\\.js$": "babel-jest",
+    // https://github.com/kulshekhar/ts-jest/issues/4081#issuecomment-1515758013
+    "^.+\\.ts$": ["ts-jest", { tsconfig: './tsconfig.jest.json' }],
+  },
+  testEnvironment: "jsdom",
+  moduleFileExtensions: [
+    "js",
+    "ts",
+    "svelte"
+  ],
+  // https://koenvg.medium.com/setting-up-jest-with-sveltekit-4f0a0e379668#3f2e
+	moduleNameMapper: {
+		'^\\$lib(.*)$': '<rootDir>/src/lib$1',
+		'^\\$types(.*)$': '<rootDir>/src/types$1',
+		'^\\$components(.*)$': '<rootDir>/src/components$1',
+		'^\\$app(.*)$': [
+			'<rootDir>/.svelte-kit/dev/runtime/app$1',
+			'<rootDir>/.svelte-kit/build/runtime/app$1'
+		]
+	}
+};
