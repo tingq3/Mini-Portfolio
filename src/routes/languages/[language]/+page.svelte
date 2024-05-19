@@ -1,7 +1,5 @@
 <script lang="ts">
-    import Markdown from '$components/Markdown.svelte';
-    import LangChip from '$components/LanguageChip.svelte';
-    import Navbar from '$components/Navbar.svelte';
+    import { Markdown, Navbar } from '$components';
 
     export let data: import('./$types').PageData;
 </script>

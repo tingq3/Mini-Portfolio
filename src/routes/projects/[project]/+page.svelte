@@ -1,10 +1,7 @@
 <script lang="ts">
-    import Markdown from '$components/Markdown.svelte';
-    import LanguageChip from '$components/LanguageChip.svelte';
-    import FrameworkChip from '$components/FrameworkChip.svelte';
-    import Navbar from '$components/Navbar.svelte';
-    import ChipList from '$components/ChipList.svelte';
-    // import AsciinemaPlayer from "$components/AsciinemaPlayer.svelte";
+    import { Navbar, Markdown, Separator } from '$components';
+    import { ChipList, LanguageChip, FrameworkChip } from '$components/chip';
+    // import AsciinemaPlayer from "$components";
 
     export let data: import('./$types').PageData;
 </script>
@@ -22,6 +19,7 @@
                 <LanguageChip info={data.languages[lang]} selected link />
             {/each}
             <!-- Frameworks -->
+            <Separator />
             {#each data.info.frameworks as lang}
                 <FrameworkChip info={data.frameworks[lang]} selected link />
             {/each}

@@ -4,11 +4,9 @@
 
     import { filterProjectsByLanguages } from '$lib/util';
 
-    import ProjectCard from '$components/ProjectCard.svelte';
-    import LangChip from '$components/LanguageChip.svelte';
-    import Navbar from '$components/Navbar.svelte';
-    import Markdown from '$components/Markdown.svelte';
-    import ChipList from '$components/ChipList.svelte';
+    import { Navbar, Markdown } from '$components';
+    import { ProjectCard } from '$components/card';
+    import { ChipList, LanguageChip } from '$components/chip';
 
     export let data: import('./$types').PageData;
 
@@ -47,7 +45,7 @@
 
 <ChipList>
     {#each data.languages as lang (lang.slug)}
-        <LangChip
+        <LanguageChip
             on:click={() => selectLang(lang.slug)}
             selected={selectedLangs.includes(lang.slug)}
             info={lang}

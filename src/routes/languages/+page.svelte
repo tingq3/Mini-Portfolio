@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Navbar from '$components/Navbar.svelte';
-    import LanguageCard from '$components/LanguageCard.svelte';
+    import { Navbar } from '$components';
+    import { LanguageCard } from '$components/card';
 
     export let data: import('./$types').PageData;
 </script>

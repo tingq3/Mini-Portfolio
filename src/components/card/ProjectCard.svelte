@@ -2,8 +2,7 @@
     import type { TProject } from '$types';
     import type { TLanguageMap } from '$types/language';
     import Card from './Card.svelte';
-    import ChipList from './ChipList.svelte';
-    import LangChip from './LanguageChip.svelte';
+    import { ChipList, LanguageChip } from '$components/chip';
 
     export let info: TProject;
     export let languages: TLanguageMap;
@@ -17,7 +16,7 @@
     <p>{info.description}</p>
     <ChipList>
         {#each info.languages as lang}
-            <LangChip link selected info={languages[lang]} />
+            <LanguageChip link selected info={languages[lang]} />
         {/each}
     </ChipList>
 </Card>
