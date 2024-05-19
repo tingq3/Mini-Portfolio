@@ -1,16 +1,16 @@
 <script lang="ts">
-    import { dev } from "$app/environment";
+    import { dev } from '$app/environment';
 
     export let path: { url: string, txt: string }[];
 
     function reload() {
-        fetch('/reload', { method: 'POST' })
-            .then(() => location.reload())
-            .catch(e => console.error("Error reloading data", e));
+      fetch('/reload', { method: 'POST' })
+        .then(() => location.reload())
+        .catch(e => console.error('Error reloading data', e));
     }
 
     function pathTo(i: number) {
-        return path.slice(0, i+1).map(p => p.url).join("/");
+      return path.slice(0, i + 1).map(p => p.url).join('/');
     }
 </script>
 <nav>

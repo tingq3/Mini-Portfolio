@@ -4,12 +4,10 @@
  * Tests to ensure that pages can be loaded without issue.
  */
 import request from 'sync-request-curl';
-import { getProjectSlugs } from "$lib/server/project";
-import { getLanguageSlugs } from "$lib/server/language";
-
+import { getProjectSlugs } from '$lib/server/project';
+import { getLanguageSlugs } from '$lib/server/language';
 
 const BASE_URL = 'http://localhost:5173';
-
 
 function checkPageForError(path: string) {
   const res = request('GET', `${BASE_URL}${path}`);

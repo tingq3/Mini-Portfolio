@@ -1,14 +1,14 @@
 import { create } from 'superstruct';
 import fs from 'node:fs';
 import path from 'node:path';
-import { Language, type TLanguage } from "$types";
-import { filterProjectsByLanguages } from "$lib/util";
+import { Language, type TLanguage } from '$types';
+import { filterProjectsByLanguages } from '$lib/util';
 import { getProjectsAsArray } from './project';
 
 const BASE = 'data/languages';
 
 // Functions for loading data
-//==================================================
+//= =================================================
 
 const languages: string[] = [];
 const languageInfo: Record<string, TLanguage> = {};
@@ -55,13 +55,13 @@ export function reloadLanguageData() {
   }
   // Sort languages by usage frequency
   languages.sort((a, b) =>
-    filterProjectsByLanguages([b], getProjectsAsArray()).length
-    - filterProjectsByLanguages([a], getProjectsAsArray()).length
-  )
+    filterProjectsByLanguages([b], getProjectsAsArray()).length -
+    filterProjectsByLanguages([a], getProjectsAsArray()).length
+  );
 }
 
 // Functions for accessing data
-//==================================================
+//= =================================================
 
 /**
  * Returns array of language slugs, by default filtering out languages excluded
@@ -96,5 +96,5 @@ export function getLanguagesAsArray(filter?: boolean) {
 }
 
 // Load all language data
-//==================================================
+//= =================================================
 reloadLanguageData();

@@ -1,7 +1,7 @@
 <script lang="ts">
     import Color from 'color';
 
-    export let link: string
+    export let link: string;
     export let title: string;
     export let description: string;
     export let color: string;
@@ -19,7 +19,6 @@
         <p>{description}</p>
     </div>
 </a>
-
 
 <style>
     a {

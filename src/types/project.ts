@@ -1,7 +1,7 @@
-import { any, array, boolean, defaulted, enums, number, object, optional, string, type Infer } from "superstruct";
+import { any, array, boolean, defaulted, enums, number, object, optional, string, type Infer } from 'superstruct';
 
 /** Status of project development */
-const ProjectStatus = enums(["In-progress", "Active", "Complete", "Incomplete"]);
+const ProjectStatus = enums(['In-progress', 'Active', 'Complete', 'Incomplete']);
 
 /** Represents a project */
 export const Project = object({
@@ -35,10 +35,10 @@ export const Project = object({
     url: string(),
   })),
   /** Schema (included so that superstruct doesn't freak out) */
-  "$schema": any(),
+  $schema: any(),
 
   // Components not from info.json (added during load)
-  //==================================================
+  //= =================================================
 
   /** Slug of project, added during loading */
   slug: string(),

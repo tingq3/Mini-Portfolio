@@ -1,18 +1,23 @@
 <script lang="ts">
     export let source: string;
 
-    import { marked } from "marked";
+    import { marked } from 'marked';
     // https://github.com/markedjs/marked/discussions/2982#discussioncomment-6979586
     const renderer = {
-        link(href: string, title: string | null | undefined, text: string) {
-            const link = marked.Renderer.prototype.link.call(this, href, title, text);
-            return link.replace("<a","<a target='_blank' rel='noreferrer' ");
-        }
+      link(href: string, title: string | null | undefined, text: string) {
+        const link = marked.Renderer.prototype.link.call(this, href, title, text);
+        return link.replace('<a', "<a target='_blank' rel='noreferrer' ");
+      }
     };
     marked.use({ renderer });
 </script>
 
 <div class="markdown-render">
+    <!--
+        We only render markdown specifically from the `data/` directory, so
+        this is safe.
+    -->
+    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
     {@html marked(source)}
 </div>
 

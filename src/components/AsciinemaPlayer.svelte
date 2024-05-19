@@ -1,20 +1,19 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import 'asciinema-player/dist/bundle/asciinema-player.css';
-    // asciinema doesn't have a types module
-    // @ts-expect-error
+    // @ts-expect-error -- asciinema doesn't have a types module
     import * as AsciinemaPlayer from 'asciinema-player';
 
     /** URL of the Asciinema recording */
     export let castUrl: string;
 
     onMount(() => {
-        const player = AsciinemaPlayer.create(castUrl, document.getElementById('asciinema-player'));
+      const player = AsciinemaPlayer.create(castUrl, document.getElementById('asciinema-player'));
 
-        return () => {
-            player.dispose();
-        };
-    })
+      return () => {
+        player.dispose();
+      };
+    });
 
 </script>
 

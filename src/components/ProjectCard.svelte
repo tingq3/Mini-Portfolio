@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { TProject } from "$types";
-    import Card from "./Card.svelte";
+    import type { TProject } from '$types';
+    import Card from './Card.svelte';
 
     export let info: TProject;
 </script>

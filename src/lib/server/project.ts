@@ -1,16 +1,15 @@
 import { create } from 'superstruct';
 import fs from 'node:fs';
 import path from 'node:path';
-import { Project, type TProject } from "$types";
+import { Project, type TProject } from '$types';
 
 const BASE = 'data/projects';
 
 // Functions for loading data
-//==================================================
+//= =================================================
 
 let projects: string[] = [];
 let projectInfo: Record<string, TProject> = {};
-
 
 /**
  * Load list of available projects
@@ -64,11 +63,11 @@ export function reloadProjectData() {
     projectInfo[proj] = loadProjectInfo(proj);
   }
   // Sort list by sort order specified in info files
-  projects.sort((a, b) => getProjectInfo(b).sort - getProjectInfo(a).sort)
+  projects.sort((a, b) => getProjectInfo(b).sort - getProjectInfo(a).sort);
 }
 
 // Functions for accessing data
-//==================================================
+//= =================================================
 
 export function getProjectSlugs(): string[] {
   return projects;
@@ -87,5 +86,5 @@ export function getProjectsAsArray() {
 }
 
 // Load all project data
-//==================================================
+//= =================================================
 reloadProjectData();

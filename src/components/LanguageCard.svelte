@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { TLanguage } from "$types";
-    import Card from "./Card.svelte";
+    import type { TLanguage } from '$types';
+    import Card from './Card.svelte';
 
     export let info: TLanguage;
 </script>

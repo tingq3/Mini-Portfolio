@@ -1,4 +1,4 @@
-import { getLanguagesAsArray } from "$lib/server/language";
+import { getLanguagesAsArray } from '$lib/server/language';
 
 export function load() {
   return {

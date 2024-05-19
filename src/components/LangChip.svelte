@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { TLanguage } from "$types";
-    import Chip from "./Chip.svelte";
+    import type { TLanguage } from '$types';
+    import Chip from './Chip.svelte';
 
     export let info: TLanguage;
     export let link: boolean = true;

@@ -1,8 +1,7 @@
 import sanitize from 'sanitize-filename';
 import fs from 'fs';
-import { error } from "@sveltejs/kit";
+import { error } from '@sveltejs/kit';
 import mime from 'mime-types';
-
 
 export function GET({ params, setHeaders }) {
   const { project, file } = params;
@@ -27,7 +26,7 @@ export function GET({ params, setHeaders }) {
   setHeaders({
     'Content-Type': mimeType,
     'Content-Length': content.length.toString(),
-  })
+  });
 
   return new Response(content);
 }

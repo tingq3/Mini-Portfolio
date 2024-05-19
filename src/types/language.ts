@@ -1,4 +1,4 @@
-import { boolean, defaulted, object, string, type Infer } from "superstruct"
+import { boolean, defaulted, object, string, type Infer } from 'superstruct';
 
 /** Represents a programming language */
 export const Language = object({

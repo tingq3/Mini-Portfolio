@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { flip } from "svelte/animate";
+    import { flip } from 'svelte/animate';
     import { fade } from 'svelte/transition';
 
-    import { filterProjectsByLanguages } from "$lib/util";
+    import { filterProjectsByLanguages } from '$lib/util';
 
-    import ProjectCard from "$components/ProjectCard.svelte";
-    import LangChip from "$components/LangChip.svelte";
-    import Navbar from "$components/Navbar.svelte";
+    import ProjectCard from '$components/ProjectCard.svelte';
+    import LangChip from '$components/LangChip.svelte';
+    import Navbar from '$components/Navbar.svelte';
 
     export let data: import('./$types').PageData;
 
@@ -18,22 +18,22 @@
      * selection
      */
     function updateProjectList() {
-        if (selectedLangs.length === 0) {
-            selectedProjects = [...data.projects];
-            return;
-        }
+      if (selectedLangs.length === 0) {
+        selectedProjects = [...data.projects];
+        return;
+      }
 
-        selectedProjects = filterProjectsByLanguages(selectedLangs, data.projects);
+      selectedProjects = filterProjectsByLanguages(selectedLangs, data.projects);
     }
 
     /** Called when a language chip is clicked */
     function selectLang(language: string) {
-        if (selectedLangs.includes(language)) {
-            selectedLangs = selectedLangs.filter(l => l !== language);
-        } else {
-            selectedLangs = [...selectedLangs, language];
-        }
-        updateProjectList();
+      if (selectedLangs.includes(language)) {
+        selectedLangs = selectedLangs.filter(l => l !== language);
+      } else {
+        selectedLangs = [...selectedLangs, language];
+      }
+      updateProjectList();
     }
 </script>
 

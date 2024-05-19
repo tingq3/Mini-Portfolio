@@ -7,11 +7,9 @@ import tippy, { type Props } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
 
-
 const defaultOptions = {
   theme: 'light-border',
-}
-
+};
 
 /** Add a tooltip to an element */
 export function tooltip(node: Element, options: Partial<Props> | undefined) {

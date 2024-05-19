@@ -9,7 +9,7 @@
     /** Color to use for the chip */
     export let color: string;
     /** Location to link to if desired */
-    export let link: string | undefined = undefined;
+    export let link: string | undefined;
     /** Whether the chip should render as selected */
     export let selected: boolean = false;
 
