@@ -49,6 +49,7 @@
         box-shadow: 0 0 0 var(--border-width) var(--border-color);
         padding: 5px 10px;
         width: min-content;
+        text-wrap: nowrap;
         transition:
             border-color .5s,
             background-color .5s;
