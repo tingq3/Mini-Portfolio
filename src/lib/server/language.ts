@@ -94,7 +94,3 @@ export function getLanguagesAsMap() {
 export function getLanguagesAsArray(filter?: boolean) {
   return getLanguageSlugs(filter).map(l => getLanguageInfo(l));
 }
-
-// Load all language data
-// ==================================================
-reloadLanguageData();

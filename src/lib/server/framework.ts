@@ -94,7 +94,3 @@ export function getFrameworksAsMap() {
 export function getFrameworksAsArray(filter?: boolean) {
   return getFrameworkSlugs(filter).map(l => getFrameworkInfo(l));
 }
-
-// Load all framework data
-// ==================================================
-reloadFrameworkData();

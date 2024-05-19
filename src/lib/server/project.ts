@@ -2,6 +2,8 @@ import { create } from 'superstruct';
 import fs from 'node:fs';
 import path from 'node:path';
 import { Project, type TProjectMap } from '$types';
+import { getFrameworkSlugs } from './framework';
+import { getLanguageSlugs } from './language';
 
 const BASE = 'data/projects';
 
@@ -66,6 +68,35 @@ export function reloadProjectData() {
   projects.sort((a, b) => getProjectInfo(b).sort - getProjectInfo(a).sort);
 }
 
+// Functions for validating data
+// ==================================================
+
+export function validateProjects() {
+  const frameworks = getFrameworkSlugs(false);
+  const languages = getLanguageSlugs(false);
+
+  // Report all errors in one go
+  const errors = [];
+
+  // Check all referenced frameworks and languages exist
+  for (const project of getProjectsAsArray()) {
+    for (const framework of project.frameworks) {
+      if (!frameworks.includes(framework)) {
+        errors.push(`Missing framework '${framework}' (required for project ${project.slug})`);
+      }
+    }
+    for (const language of project.languages) {
+      if (!languages.includes(language)) {
+        errors.push(`Missing language '${language}' (required for project ${project.slug})`);
+      }
+    }
+  }
+
+  if (errors.length) {
+    throw new Error(`Projects failed validation:\n* ${errors.join('\n* ')}`);
+  }
+}
+
 // Functions for accessing data
 // ==================================================
 
@@ -84,7 +115,3 @@ export function getProjectsAsMap() {
 export function getProjectsAsArray() {
   return projects.map(p => getProjectInfo(p));
 }
-
-// Load all project data
-// ==================================================
-reloadProjectData();

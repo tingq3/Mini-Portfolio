@@ -1,7 +1,7 @@
 import { reloadMainConfig } from './config';
 import { reloadFrameworkData } from './framework';
 import { reloadLanguageData } from './language';
-import { reloadProjectData } from './project';
+import { reloadProjectData, validateProjects } from './project';
 
 /** Reload all data used to drive the server */
 export function reloadData() {
@@ -9,4 +9,6 @@ export function reloadData() {
   reloadProjectData();
   reloadLanguageData();
   reloadFrameworkData();
+  // Then validate the data
+  validateProjects();
 }
