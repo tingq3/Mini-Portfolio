@@ -6,6 +6,7 @@
 import request from 'sync-request-curl';
 import { getProjectSlugs } from '$lib/server/project';
 import { getLanguageSlugs } from '$lib/server/language';
+import { reloadData } from '$lib/server';
 
 const BASE_URL = 'http://localhost:5173';
 
@@ -16,6 +17,9 @@ function checkPageForError(path: string) {
     throw new Error(`GET ${path} got unexpected status ${res.statusCode}`);
   }
 }
+
+// Load data before running tests
+reloadData();
 
 // Main page
 
