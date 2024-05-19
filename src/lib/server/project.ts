@@ -8,8 +8,8 @@ const BASE = 'data/projects';
 // Functions for loading data
 //==================================================
 
-const projects: string[] = [];
-const projectInfo: Record<string, TProject> = {};
+let projects: string[] = [];
+let projectInfo: Record<string, TProject> = {};
 
 
 /**
@@ -17,12 +17,15 @@ const projectInfo: Record<string, TProject> = {};
  */
 function loadProjectList() {
   const dirInfo = fs.readdirSync(BASE);
+  const projects = [];
 
   for (const entry of dirInfo) {
     if (fs.statSync(path.join(BASE, entry)).isDirectory()) {
       projects.push(entry);
     }
   }
+
+  return projects;
 }
 
 /**
@@ -31,7 +34,7 @@ function loadProjectList() {
 function loadProjectInfo(slug: string) {
   const info = fs.readFileSync(`${BASE}/${slug}/info.json`);
   const proj = JSON.parse(info.toString());
-  projectInfo[slug] = create({
+  return create({
     ...proj,
     slug,
     readme: loadProjectReadme(slug),
@@ -55,10 +58,10 @@ function checkForDemoRecording(slug: string) {
 }
 
 export function reloadProjectData() {
-  projects.length = 0;
-  loadProjectList();
+  projects = loadProjectList();
+  projectInfo = {};
   for (const proj of projects) {
-    loadProjectInfo(proj);
+    projectInfo[proj] = loadProjectInfo(proj);
   }
   // Sort list by sort order specified in info files
   projects.sort((a, b) => getProjectInfo(b).sort - getProjectInfo(a).sort)
