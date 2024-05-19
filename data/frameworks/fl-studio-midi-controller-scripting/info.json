@@ -1,4 +1,5 @@
 {
-  "name": "FL Studio MIDI Controller Scripting",
-  "description": "The MIDI Controller Scripting API allows developers to write code that FL Studio can use to communicate with external hardware devices using MIDI"
+  "name": "MIDI Controller Scripting",
+  "description": "MIDI Controller Scripting is a Python API for the FL Studio audio workstation, used for controlling external music hardware",
+  "color": "#ff6600"
 }

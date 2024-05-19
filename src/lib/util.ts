@@ -7,3 +7,11 @@ export function filterProjectsByLanguages(langs: string[], projects: TProject[])
       undefined
     );
 }
+
+export function filterProjectsByFrameworks(frameworks: string[], projects: TProject[]) {
+  return projects
+    .filter(
+      p => p.frameworks.find(l => frameworks.includes(l)) !==
+      undefined
+    );
+}

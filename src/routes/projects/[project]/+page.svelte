@@ -1,6 +1,7 @@
 <script lang="ts">
     import Markdown from '$components/Markdown.svelte';
-    import LangChip from '$components/LangChip.svelte';
+    import LanguageChip from '$components/LanguageChip.svelte';
+    import FrameworkChip from '$components/FrameworkChip.svelte';
     import Navbar from '$components/Navbar.svelte';
     import ChipList from '$components/ChipList.svelte';
     // import AsciinemaPlayer from "$components/AsciinemaPlayer.svelte";
@@ -16,8 +17,13 @@
 <main>
     <div id="info-container">
         <ChipList>
+            <!-- Languages -->
             {#each data.info.languages as lang}
-                <LangChip info={data.languages[lang]} selected link />
+                <LanguageChip info={data.languages[lang]} selected link />
+            {/each}
+            <!-- Frameworks -->
+            {#each data.info.frameworks as lang}
+                <FrameworkChip info={data.frameworks[lang]} selected link />
             {/each}
         </ChipList>
 

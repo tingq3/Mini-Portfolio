@@ -8,7 +8,7 @@ import { getProjectsAsArray } from './project';
 const BASE = 'data/languages';
 
 // Functions for loading data
-//= =================================================
+// ==================================================
 
 const languages: string[] = [];
 const languageInfo: TLanguageMap = {};
@@ -61,7 +61,7 @@ export function reloadLanguageData() {
 }
 
 // Functions for accessing data
-//= =================================================
+// ==================================================
 
 /**
  * Returns array of language slugs, by default filtering out languages excluded
@@ -96,5 +96,5 @@ export function getLanguagesAsArray(filter?: boolean) {
 }
 
 // Load all language data
-//= =================================================
+// ==================================================
 reloadLanguageData();

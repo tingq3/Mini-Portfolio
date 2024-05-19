@@ -3,7 +3,7 @@
     import type { TLanguageMap } from '$types/language';
     import Card from './Card.svelte';
     import ChipList from './ChipList.svelte';
-    import LangChip from './LangChip.svelte';
+    import LangChip from './LanguageChip.svelte';
 
     export let info: TProject;
     export let languages: TLanguageMap;

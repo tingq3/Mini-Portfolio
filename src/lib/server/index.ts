@@ -1,4 +1,5 @@
 import { reloadMainConfig } from './config';
+import { reloadFrameworkData } from './framework';
 import { reloadLanguageData } from './language';
 import { reloadProjectData } from './project';
 
@@ -7,4 +8,5 @@ export function reloadData() {
   reloadMainConfig();
   reloadProjectData();
   reloadLanguageData();
+  reloadFrameworkData();
 }

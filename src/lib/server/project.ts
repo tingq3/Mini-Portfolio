@@ -6,7 +6,7 @@ import { Project, type TProjectMap } from '$types';
 const BASE = 'data/projects';
 
 // Functions for loading data
-//= =================================================
+// ==================================================
 
 let projects: string[] = [];
 let projectInfo: TProjectMap = {};
@@ -67,7 +67,7 @@ export function reloadProjectData() {
 }
 
 // Functions for accessing data
-//= =================================================
+// ==================================================
 
 export function getProjectSlugs(): string[] {
   return projects;
@@ -86,5 +86,5 @@ export function getProjectsAsArray() {
 }
 
 // Load all project data
-//= =================================================
+// ==================================================
 reloadProjectData();

@@ -5,7 +5,7 @@
     import { filterProjectsByLanguages } from '$lib/util';
 
     import ProjectCard from '$components/ProjectCard.svelte';
-    import LangChip from '$components/LangChip.svelte';
+    import LangChip from '$components/LanguageChip.svelte';
     import Navbar from '$components/Navbar.svelte';
     import Markdown from '$components/Markdown.svelte';
     import ChipList from '$components/ChipList.svelte';
