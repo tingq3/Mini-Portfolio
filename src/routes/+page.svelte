@@ -7,6 +7,7 @@
     import ProjectCard from '$components/ProjectCard.svelte';
     import LangChip from '$components/LangChip.svelte';
     import Navbar from '$components/Navbar.svelte';
+    import Markdown from '$components/Markdown.svelte';
 
     export let data: import('./$types').PageData;
 
@@ -37,9 +38,9 @@
     }
 </script>
 
-<Navbar path={[]} />
+<Navbar path={[]} config={data.config} />
 
-<p>This is my data-driven portfolio website.</p>
+<Markdown source={data.config.info} />
 
 <h2>Projects</h2>
 

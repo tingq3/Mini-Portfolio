@@ -38,7 +38,7 @@ export const Project = object({
   $schema: any(),
 
   // Components not from info.json (added during load)
-  //= =================================================
+  // ==================================================
 
   /** Slug of project, added during loading */
   slug: string(),

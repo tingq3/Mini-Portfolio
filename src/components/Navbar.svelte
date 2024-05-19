@@ -1,7 +1,9 @@
 <script lang="ts">
     import { dev } from '$app/environment';
+    import type { TMainConfig } from '$types';
 
     export let path: { url: string, txt: string }[];
+    export let config: TMainConfig;
 
     function reload() {
       fetch('/reload', { method: 'POST' })
@@ -16,10 +18,10 @@
 <nav>
     <span style:grid-area="navigator">
         {#if path.length === 0}
-            <h1>Maddy Guthridge / Portfolio</h1>
+            <h1>{config.name} / Portfolio</h1>
         {:else}
             <h1>
-                <a href="/">Maddy Guthridge</a> /
+                <a href="/">{config.name}</a> /
                 {#each path.slice(0, -1) as p, i}
                     <a href="/{pathTo(i)}">{p.txt}</a>
                     {'/ '}

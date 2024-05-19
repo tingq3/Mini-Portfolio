@@ -5,7 +5,7 @@
     export let data: import('./$types').PageData;
 </script>
 
-<Navbar path={[{ url: 'languages', txt: 'Languages' }]}/>
+<Navbar path={[{ url: 'languages', txt: 'Languages' }]} config={data.config}/>
 
 <div class="language-list">
     {#each data.languages as info (info.slug)}

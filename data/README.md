@@ -10,10 +10,9 @@ even more yucky.
 * [`frameworks/`](./frameworks/): software frameworks
 * [`languages/`](./languages/): programming languages
 * [`skills/`](./skills/): skills relevant to software engineering
+* [`config.json`](./config.json): overall site configuration
 
 ## Build system
 
 In order to construct a website, the data from this directory is gathered and
-processed within Next.js to create a static website.
-
-TODO: Document this once I have it working.
+processed within the server to create a (semi?) static website.
