@@ -1,11 +1,12 @@
 <script lang="ts">
-    import type { TProject } from '$types';
-    import type { TLanguageMap } from '$types/language';
+    import type { TFrameworkMap, TLanguageMap, TProject } from '$types';
     import Card from './Card.svelte';
-    import { ChipList, LanguageChip } from '$components/chip';
+    import { ChipList, FrameworkChip, LanguageChip } from '$components/chip';
+    import { Separator } from '..';
 
     export let info: TProject;
     export let languages: TLanguageMap;
+    export let frameworks: TFrameworkMap;
 </script>
 
 <Card
@@ -15,8 +16,20 @@
 >
     <p>{info.description}</p>
     <ChipList>
+        <!-- Languages -->
         {#each info.languages as lang}
-            <LanguageChip link selected info={languages[lang]} />
+            <LanguageChip info={languages[lang]} selected link />
+        {/each}
+        <!-- Frameworks -->
+        {#if info.frameworks.length}
+            <!--
+                FIXME: Projects with no languages will have a yucky
+                separator at the start of the chip list
+            -->
+            <Separator />
+        {/if}
+        {#each info.frameworks as lang}
+            <FrameworkChip info={frameworks[lang]} selected link />
         {/each}
     </ChipList>
 </Card>

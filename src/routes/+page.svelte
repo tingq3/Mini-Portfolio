@@ -59,7 +59,11 @@
         transition:fade={{ duration: 300 }}
         animate:flip={{ duration: 300 }}
     >
-        <ProjectCard {info} languages={data.languagesMap} />
+        <ProjectCard
+            {info}
+            languages={data.languagesMap}
+            frameworks={data.frameworksMap}
+        />
     </div>
     {/each}
 </div>

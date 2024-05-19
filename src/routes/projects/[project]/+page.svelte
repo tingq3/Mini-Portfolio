@@ -19,7 +19,13 @@
                 <LanguageChip info={data.languages[lang]} selected link />
             {/each}
             <!-- Frameworks -->
-            <Separator />
+            {#if data.info.frameworks.length}
+                <!--
+                    FIXME: Projects with no languages will have a yucky
+                    separator at the start of the chip list
+                -->
+                <Separator />
+            {/if}
             {#each data.info.frameworks as lang}
                 <FrameworkChip info={data.frameworks[lang]} selected link />
             {/each}
