@@ -3,6 +3,10 @@ module.exports = {
     "jest-extended/all"
   ],
   maxWorkers: 1,
+  // Run dev server during tests
+  // https://www.npmjs.com/package/jest-dev-server
+  globalSetup: '<rootDir>/tests/setup/globalSetup.ts',
+  globalTeardown: '<rootDir>/tests/setup/globalTeardown.ts',
   transform: {
     "^.+\\.svelte$": [
       "svelte-jester",
