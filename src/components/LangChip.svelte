@@ -3,7 +3,7 @@
     import Chip from './Chip.svelte';
 
     export let info: TLanguage;
-    export let link: boolean = true;
+    export let link: boolean = false;
     export let selected: boolean = false;
 </script>
 

@@ -16,4 +16,8 @@ export const Language = object({
   exclude: defaulted(boolean(), false),
 });
 
+/** Represents a programming language */
 export type TLanguage = Infer<typeof Language>;
+
+/** A map from a language slug to its language info */
+export type TLanguageMap = Record<string, TLanguage>;

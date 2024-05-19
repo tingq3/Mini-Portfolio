@@ -3,7 +3,6 @@
 
     export let link: string;
     export let title: string;
-    export let description: string;
     export let color: string;
 
     $: baseColor = Color(color).lightness(85).hex();
@@ -16,7 +15,7 @@
         style:--hover-color={hoverColor}
     >
         <h3>{title}</h3>
-        <p>{description}</p>
+        <slot />
     </div>
 </a>
 

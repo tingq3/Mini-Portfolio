@@ -48,4 +48,8 @@ export const Project = object({
   hasDemo: boolean(),
 });
 
+/** Represents a project */
 export type TProject = Infer<typeof Project>;
+
+/** A mapping of project slugs to their info */
+export type TProjectMap = Record<string, TProject>;

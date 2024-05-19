@@ -1,7 +1,7 @@
 import { create } from 'superstruct';
 import fs from 'node:fs';
 import path from 'node:path';
-import { Project, type TProject } from '$types';
+import { Project, type TProjectMap } from '$types';
 
 const BASE = 'data/projects';
 
@@ -9,7 +9,7 @@ const BASE = 'data/projects';
 //= =================================================
 
 let projects: string[] = [];
-let projectInfo: Record<string, TProject> = {};
+let projectInfo: TProjectMap = {};
 
 /**
  * Load list of available projects

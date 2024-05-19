@@ -2,6 +2,7 @@
     import Markdown from '$components/Markdown.svelte';
     import LangChip from '$components/LangChip.svelte';
     import Navbar from '$components/Navbar.svelte';
+    import ChipList from '$components/ChipList.svelte';
     // import AsciinemaPlayer from "$components/AsciinemaPlayer.svelte";
 
     export let data: import('./$types').PageData;
@@ -14,11 +15,11 @@
 
 <main>
     <div id="info-container">
-        <div class="lang-chips">
+        <ChipList>
             {#each data.info.languages as lang}
-                <LangChip info={data.languages[lang]} selected />
+                <LangChip info={data.languages[lang]} selected link />
             {/each}
-        </div>
+        </ChipList>
 
         <Markdown
             source={data.info.readme}
@@ -45,10 +46,5 @@
         border-radius: 10px;
         box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.37);
         padding: 20px;
-    }
-
-    .lang-chips {
-        display: flex;
-        gap: 10px;
     }
 </style>

@@ -1,7 +1,7 @@
 import { create } from 'superstruct';
 import fs from 'node:fs';
 import path from 'node:path';
-import { Language, type TLanguage } from '$types';
+import { Language, type TLanguage, type TLanguageMap } from '$types';
 import { filterProjectsByLanguages } from '$lib/util';
 import { getProjectsAsArray } from './project';
 
@@ -11,7 +11,7 @@ const BASE = 'data/languages';
 //= =================================================
 
 const languages: string[] = [];
-const languageInfo: Record<string, TLanguage> = {};
+const languageInfo: TLanguageMap = {};
 
 /**
  * Load list of available languages

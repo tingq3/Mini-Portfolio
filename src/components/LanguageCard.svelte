@@ -8,6 +8,7 @@
 <Card
     link="/languages/{info.slug}"
     title={info.name}
-    description={info.description}
     color={info.color}
-/>
+>
+    <p>{info.description}</p>
+</Card>

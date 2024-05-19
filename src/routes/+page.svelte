@@ -8,6 +8,7 @@
     import LangChip from '$components/LangChip.svelte';
     import Navbar from '$components/Navbar.svelte';
     import Markdown from '$components/Markdown.svelte';
+    import ChipList from '$components/ChipList.svelte';
 
     export let data: import('./$types').PageData;
 
@@ -44,16 +45,15 @@
 
 <h2>Projects</h2>
 
-<div class="lang-chips">
+<ChipList>
     {#each data.languages as lang (lang.slug)}
         <LangChip
             on:click={() => selectLang(lang.slug)}
-            link={false}
             selected={selectedLangs.includes(lang.slug)}
             info={lang}
         />
     {/each}
-</div>
+</ChipList>
 
 <div class="project-list">
     {#each selectedProjects as info (info.slug)}
@@ -61,17 +61,12 @@
         transition:fade={{ duration: 300 }}
         animate:flip={{ duration: 300 }}
     >
-        <ProjectCard {info} />
+        <ProjectCard {info} languages={data.languagesMap} />
     </div>
     {/each}
 </div>
 
 <style>
-    .lang-chips {
-        display: flex;
-        gap: 5px;
-    }
-
     /* https://css-tricks.com/an-auto-filling-css-grid-with-max-columns/ */
     .project-list {
         /**
