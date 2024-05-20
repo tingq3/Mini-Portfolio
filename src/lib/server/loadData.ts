@@ -156,7 +156,7 @@ function loadClassifier(base: string, slug: ClassifierSlug): Classifier | ErrorL
 
   for (const label of findItemsInDirectory(dir) as LabelSlug[]) {
     // Try to load the label info
-    const result = loadLabel(dir, label);
+    const result = loadLabel(base, slug, label);
     if (Array.isArray(result)) {
       // If it fails, store the errors
       errors.push(...result);
@@ -181,8 +181,12 @@ function loadClassifier(base: string, slug: ClassifierSlug): Classifier | ErrorL
 }
 
 /** Load all information about a label */
-function loadLabel(base: string, slug: LabelSlug): Label | ErrorList {
-  const dir = path.join(base, slug);
+function loadLabel(
+  base: string,
+  classifier: ClassifierSlug,
+  slug: LabelSlug,
+): Label | ErrorList {
+  const dir = path.join(base, classifier, slug);
 
   const errors: ErrorList = [];
 
@@ -203,6 +207,7 @@ function loadLabel(base: string, slug: LabelSlug): Label | ErrorList {
 
   return {
     slug,
+    classifier,
     info,
     readme,
     // Check for existence of extra files

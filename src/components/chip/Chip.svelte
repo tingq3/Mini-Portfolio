@@ -8,9 +8,9 @@
     export let description: string;
     /** Color to use for the chip */
     export let color: string;
-    /** Location to link to if desired */
+    /** Location to link to on click (or `undefined` for no link) */
     export let link: string | undefined;
-    /** Whether the chip should render as selected */
+    /** Whether the chip should render as selected (filled) */
     export let selected: boolean = false;
 
     $: fillColor = selected ? Color(color).lightness(80).hex() : Color(color).lightness(95).hex();

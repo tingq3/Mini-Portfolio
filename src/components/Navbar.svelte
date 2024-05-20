@@ -1,9 +1,9 @@
 <script lang="ts">
     import { dev } from '$app/environment';
-    import type { TMainConfig } from '$types';
+    import type { PortfolioGlobals } from '$types';
 
     export let path: { url: string, txt: string }[];
-    export let config: TMainConfig;
+    export let globals: PortfolioGlobals;
 
     function reload() {
       fetch('/reload', { method: 'POST' })
@@ -18,10 +18,10 @@
 <nav>
     <span style:grid-area="navigator">
         {#if path.length === 0}
-            <h1>{config.name} / Portfolio</h1>
+            <h1>{globals.config.name} / Portfolio</h1>
         {:else}
             <h1>
-                <a href="/">{config.name}</a> /
+                <a href="/">{globals.config.name}</a> /
                 {#each path.slice(0, -1) as p, i}
                     <a href="/{pathTo(i)}">{p.txt}</a>
                     {'/ '}

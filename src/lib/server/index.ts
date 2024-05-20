@@ -28,3 +28,8 @@ export function reloadData() {
   }
   data = results;
 }
+
+/** Return a reference to the data */
+export function getData() {
+  return data;
+}

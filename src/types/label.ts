@@ -10,7 +10,7 @@ import {
   enums,
   define,
 } from 'superstruct';
-import { ClassifierSlugStruct } from './classifier';
+import { ClassifierSlugStruct, type ClassifierSlug } from './classifier';
 
 /** The slug referring to a label, unique within a classifier */
 export type LabelSlug = string & { __label_slug: string };
@@ -86,6 +86,9 @@ export const LabelInfo = object({
 export type Label = {
   /** Slug of label */
   slug: LabelSlug,
+
+  /** Slug of the classifier that this label belongs to */
+  classifier: ClassifierSlug
 
   /** Info about the label, loaded from `info.json` */
   info: Infer<typeof LabelInfo>

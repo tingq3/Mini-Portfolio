@@ -2,10 +2,8 @@
     import { flip } from 'svelte/animate';
     import { fade } from 'svelte/transition';
 
-    import { filterProjectsByLanguages } from '$lib/util';
-
     import { Navbar, Markdown } from '$components';
-    import { ProjectCard } from '$components/card';
+    import { LabelCard } from '$components/card';
     import { ChipList, LanguageChip } from '$components/chip';
 
     export let data: import('./$types').PageData;

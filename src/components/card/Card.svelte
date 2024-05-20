@@ -11,11 +11,17 @@
 
 <a href={link}>
     <div
+        id="card"
         style:--base-color={baseColor}
         style:--hover-color={hoverColor}
     >
-        <h3>{title}</h3>
-        <slot />
+        <div>
+            <h3>{title}</h3>
+            <slot />
+        </div>
+        <div>
+            <slot name="bottom" />
+        </div>
     </div>
 </a>
 
@@ -25,7 +31,9 @@
         text-decoration: none;
     }
 
-    div {
+    #card {
+        display: flex;
+        flex-direction: column;
         padding: 10px 30px;
         margin: 10px;
         background-color: var(--base-color);
@@ -36,7 +44,7 @@
             background-color .5s,
             transform .5s ease-out;
     }
-    div:hover {
+    #card:hover {
         transform: scale(1.01);
         background-color: var(--hover-color);
     }

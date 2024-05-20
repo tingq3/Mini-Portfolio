@@ -1,17 +1,13 @@
-import type { TProject } from '$types';
+import type { ClassifierSlug, Label, LabelSlug } from '$types';
 
-export function filterProjectsByLanguages(langs: string[], projects: TProject[]) {
-  return projects
-    .filter(
-      p => p.languages.find(l => langs.includes(l)) !==
-      undefined
-    );
-}
-
-export function filterProjectsByFrameworks(frameworks: string[], projects: TProject[]) {
-  return projects
-    .filter(
-      p => p.frameworks.find(l => frameworks.includes(l)) !==
-      undefined
-    );
+/**
+ * Filter the given array of labels based on the selected labels from the given
+ * classifier.
+ *
+ * Labels are only included in the result if they are associated with at least
+ * one of the selected labels.
+ */
+export function filterLabelsByAssociations(labels: Label[], classifier: ClassifierSlug, selectedLabels: LabelSlug[]) {
+  return labels
+    .filter(p => p.info.associations[classifier].find(l => selectedLabels.includes(l)) !== undefined);
 }
