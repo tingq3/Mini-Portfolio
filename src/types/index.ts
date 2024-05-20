@@ -1,5 +1,3 @@
-export { GlobalSiteConfig as MainConfig, type TMainConfig } from './globals';
-export { Project, type TProject, type TProjectMap } from './project';
-export { Language, type TLanguage, type TLanguageMap } from './language';
-export { Framework, type TFramework, type TFrameworkMap } from './framework';
-export { type Skill } from './skill';
+export { PortfolioConfigJson, type PortfolioConfig, type PortfolioGlobals } from './globals';
+export { ClassifierInfo, type Classifier, type ClassifierSlug } from './classifier';
+export { LabelInfo, type Label, type LabelSlug } from './label';

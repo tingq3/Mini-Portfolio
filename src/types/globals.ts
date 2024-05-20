@@ -1,10 +1,12 @@
 import { object, string, type Infer } from 'superstruct';
-import type { Classifier } from './classifier';
+import { ClassifierSlugStruct, type Classifier, type ClassifierSlug } from './classifier';
 
 /** Main configuration for the portfolio, `config.json` */
 export const PortfolioConfigJson = object({
   /** Name of the person to use within the website. */
   name: string(),
+  /** The default classifier to show when loading the root page of the website */
+  defaultClassifier: ClassifierSlugStruct,
 });
 
 export type PortfolioConfig = Infer<typeof PortfolioConfigJson>;
@@ -18,8 +20,8 @@ export type PortfolioGlobals = {
   readme: string
 
   /** Mapping of all classifiers */
-  classifiers: Record<string, Classifier>
+  classifiers: Record<ClassifierSlug, Classifier>
 
   /** Array of classifier slugs, used to order all classifiers */
-  classifierOrder: string[]
+  classifierOrder: ClassifierSlug[]
 }

@@ -1,13 +1,16 @@
-import { defaulted, enums, number, object, string, type Infer } from 'superstruct';
-import type { Label } from './label';
+import { array, defaulted, define, enums, number, object, string, type Infer } from 'superstruct';
+import type { Label, LabelSlug } from './label';
+
+/** The slug referring to a classifier, unique within a data-set */
+export type ClassifierSlug = string & { __classifier_slug: string };
+/** The slug referring to a classifier, unique within a data-set */
+export const ClassifierSlugStruct = define<ClassifierSlug>('ClassifierSlug', v => typeof v === 'string');
 
 /**
  * Visibility of the classifier. One of:
  *
  * * `'visible'`: classifier is visible in all locations
  * * `'unlisted'`: classifier is not displayed in site menu
- * * `'hidden'`: classifier is not linked anywhere on the site, but is shown on
- *   its primary page.
  * * `'private'`: classifier is not accessible anywhere on the site.
  */
 const LabelVisibility = enums(['visible', 'filtered', 'unlisted', 'hidden', 'private']);
@@ -23,13 +26,18 @@ export const ClassifierInfo = object({
   /** Ordering - higher values are placed earlier in lists */
   sort: defaulted(number(), 0),
 
+  /**
+   * Classifier IDs whose labels should be used for filtering on this classifier
+   */
+  filterClassifiers: defaulted(array(ClassifierSlugStruct), []),
+
   /** Visibility of this label */
   visibility: defaulted(LabelVisibility, 'visible'),
 });
 
 export type Classifier = {
   /** Slug of classifier */
-  slug: string,
+  slug: ClassifierSlug,
 
   /** Info about the classifier, loaded from `info.json` */
   info: Infer<typeof ClassifierInfo>
@@ -38,8 +46,8 @@ export type Classifier = {
   readme: string,
 
   /** Labels within this classifier */
-  labels: Record<string, Label>,
+  labels: Record<LabelSlug, Label>,
 
   /** Sort order for labels within this classifier */
-  labelOrder: string[],
+  labelOrder: LabelSlug[],
 };

@@ -6,11 +6,19 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { array, create, StructError, type Infer } from 'superstruct';
+import { create } from 'superstruct';
 
-import { PortfolioConfigJson, type PortfolioConfig, type PortfolioGlobals } from '$types/globals';
-import { ClassifierInfo, type Classifier } from '$types/classifier';
-import { LabelInfo, type Label } from '$types/label';
+import {
+  PortfolioConfigJson,
+  ClassifierInfo,
+  LabelInfo,
+  type PortfolioGlobals,
+  type PortfolioConfig,
+  type Classifier,
+  type ClassifierSlug,
+  type Label,
+  type LabelSlug,
+} from '$types';
 
 /** Array of errors encountered while loading data */
 type ErrorList = (string | Error)[];
@@ -33,7 +41,7 @@ export default function loadData(dir: string): PortfolioGlobals | ErrorList {
   // Now load the classifiers
   const classifiers: Record<string, Classifier> = {};
 
-  for (const classifier of findItemsInDirectory(dir)) {
+  for (const classifier of findItemsInDirectory(dir) as ClassifierSlug[]) {
     // Try to load the classifier info
     const result = loadClassifier(dir, classifier);
     if (Array.isArray(result)) {
@@ -82,10 +90,12 @@ function tryOp<T>(errors: ErrorList, fn: () => T): T {
  * Accepts a record of items containing a `sort` key, and returns an array of
  * their slugs (keys within the main record) sorted based on this key.
  */
-function sortBasedOnSortKey<T extends { sort: number }>(
-  items: Record<string, { info: T }>,
-): string[] {
-  const entries = Object.entries(items);
+function sortBasedOnSortKey<SlugType extends string, ObjectInfo extends { sort: number }>(
+  items: Record<SlugType, { slug: SlugType, info: ObjectInfo }>,
+): SlugType[] {
+  // I hate that I have to do a type cast on this -- I understand why
+  // TypeScript can't infer it but also it's really annoying
+  const entries = Object.entries(items) as [SlugType, { slug: SlugType, info: ObjectInfo }][];
   // I wish Node 18 had .toSorted, that code would be really pretty imo
   entries.sort(([, a], [, b]) => b.info.sort - a.info.sort);
   return entries.map(([slug]) => slug);
@@ -125,7 +135,7 @@ function loadGlobalConfig(dir: string): PortfolioConfig {
 }
 
 /** Load all information about a classifier */
-function loadClassifier(base: string, slug: string): Classifier | ErrorList {
+function loadClassifier(base: string, slug: ClassifierSlug): Classifier | ErrorList {
   const dir = path.join(base, slug);
 
   const errors: ErrorList = [];
@@ -144,7 +154,7 @@ function loadClassifier(base: string, slug: string): Classifier | ErrorList {
   // Now find all the labels
   const labels: Record<string, Label> = {};
 
-  for (const label of findItemsInDirectory(dir)) {
+  for (const label of findItemsInDirectory(dir) as LabelSlug[]) {
     // Try to load the label info
     const result = loadLabel(dir, label);
     if (Array.isArray(result)) {
@@ -171,7 +181,7 @@ function loadClassifier(base: string, slug: string): Classifier | ErrorList {
 }
 
 /** Load all information about a label */
-function loadLabel(base: string, slug: string): Label | ErrorList {
+function loadLabel(base: string, slug: LabelSlug): Label | ErrorList {
   const dir = path.join(base, slug);
 
   const errors: ErrorList = [];

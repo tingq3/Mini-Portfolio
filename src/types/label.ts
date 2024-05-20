@@ -8,7 +8,14 @@ import {
   optional,
   type Infer,
   enums,
+  define,
 } from 'superstruct';
+import { ClassifierSlugStruct } from './classifier';
+
+/** The slug referring to a label, unique within a classifier */
+export type LabelSlug = string & { __label_slug: string };
+/** The slug referring to a label, unique within a classifier */
+const LabelSlugStruct = define<LabelSlug>('LabelSlug', v => typeof v === 'string');
 
 /**
  * Visibility of the label. One of:
@@ -47,7 +54,7 @@ export const LabelInfo = object({
    *   should be associated with this label.
    */
   associations: defaulted(
-    record(string(), array(string())),
+    record(ClassifierSlugStruct, array(LabelSlugStruct)),
     {},
   ),
 
@@ -73,13 +80,12 @@ export const LabelInfo = object({
     /** URL for viewing the label's package listing */
     url: string(),
   })),
-
 });
 
 /** Represents a label */
 export type Label = {
   /** Slug of label */
-  slug: string,
+  slug: LabelSlug,
 
   /** Info about the label, loaded from `info.json` */
   info: Infer<typeof LabelInfo>
