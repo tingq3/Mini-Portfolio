@@ -15,11 +15,16 @@
       "python",
       "html"
     ],
+    "frameworks": [
+      "mypy",
+      "pytest"
+    ],
     "skills": [
       "web-scraping",
       "type-safety",
       "packages",
-      "frontend"
+      "frontend",
+      "documentation"
     ],
     "status": [
       "active"

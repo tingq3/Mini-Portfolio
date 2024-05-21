@@ -88,20 +88,41 @@
       let newSelections = [...OrdRec.fromItems(classifier.labels).keys()];
 
       for (const [filterClassifier, labels] of selectedFilters.items()) {
+        // Whether we should filter elements using this classifier
+        // This is set to `true` if there is a selected filter label
+        let useFilter = false;
+        // Build a list of all entries matched by this classifier so we can
+        // union the search within this classifier, but do an intersection
+        // between classifiers
+        const entriesMatchedHere: LabelSlug[] = [];
         for (const [filterLabel, filterSelected] of labels.items()) {
           // If this filter is selected
           if (filterSelected) {
-            // Filter the entries such that we only include the entries
-            // which link to this filter
-            // This performs an intersection operation for all selected chips
-            // May need to rewrite if I decide I want a union operation
-            newSelections = newSelections
+            useFilter = true;
+            // Find entries linked by this particular label from the previous
+            // iteration
+            const matches = newSelections
               .filter(entry => entryLinksToFilter(
                 OrdRec.fromItems(classifier.labels).get(entry),
                 filterClassifier,
                 filterLabel,
               ));
+
+            // For each match, add it to the array of matches if it hasn't
+            // already been found
+            for (const match of matches) {
+              if (!entriesMatchedHere.includes(match)) {
+                entriesMatchedHere.push(match);
+              }
+            }
           }
+        }
+        // Now update the overall selections if an entry in this label was
+        // selected
+        if (useFilter) {
+          // Using a filter rather than just using the `entriesMatchedHere`
+          // list to preserve the order
+          newSelections = newSelections.filter(e => entriesMatchedHere.includes(e));
         }
       }
 

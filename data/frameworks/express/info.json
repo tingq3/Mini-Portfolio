@@ -4,7 +4,11 @@
   "color": "#F7E200",
   "associations": {
     "languages": [
-      "typescript"
+      "typescript",
+      "javascript"
+    ],
+    "skills": [
+      "backend"
     ]
   }
 }

@@ -16,7 +16,9 @@
       "python"
     ],
     "frameworks": [
-      "pytest"
+      "pytest",
+      "mkdocs",
+      "mypy"
     ],
     "skills": [
       "test-driven-development",

@@ -1,0 +1,15 @@
+{
+  "name": "React",
+  "description": "React is a frontend library for building composable and reactive web apps",
+  "color": "#58C4DC",
+  "associations": {
+    "languages": [
+      "typescript",
+      "javascript",
+      "html"
+    ],
+    "skills": [
+      "frontend"
+    ]
+  }
+}

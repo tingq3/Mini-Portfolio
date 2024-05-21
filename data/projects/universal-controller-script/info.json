@@ -11,13 +11,15 @@
       "python"
     ],
     "frameworks": [
-      "fl-studio-midi-controller-scripting"
+      "fl-studio-midi-controller-scripting",
+      "mypy"
     ],
     "skills": [
       "type-safety",
       "oop",
       "design-patterns",
-      "midi"
+      "midi",
+      "documentation"
     ],
     "status": [
       "active"

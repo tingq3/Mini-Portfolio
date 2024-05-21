@@ -17,7 +17,8 @@
     ],
     "frameworks": [
       "fl-studio-midi-controller-scripting",
-      "mkdocs"
+      "mkdocs",
+      "mypy"
     ],
     "skills": [
       "midi",

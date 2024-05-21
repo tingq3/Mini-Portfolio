@@ -13,7 +13,9 @@
     ],
     "frameworks": [
       "express",
-      "next"
+      "next",
+      "jest",
+      "react"
     ],
     "skills": [
       "full-stack",

@@ -12,7 +12,9 @@
     ],
     "frameworks": [
       "flask",
-      "piccolo-orm"
+      "piccolo-orm",
+      "mypy",
+      "pytest"
     ],
     "skills": [
       "type-safety",

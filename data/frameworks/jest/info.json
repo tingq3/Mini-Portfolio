@@ -1,0 +1,14 @@
+{
+  "name": "Jest",
+  "description": "Jest is a flexible testing framework for JavaScript and TypeScript",
+  "color": "#F7E200",
+  "associations": {
+    "languages": [
+      "javascript",
+      "typescript"
+    ],
+    "skills": [
+      "test-driven-development"
+    ]
+  }
+}

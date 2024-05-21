@@ -4,7 +4,8 @@
   "color": "#F96743",
   "associations": {
     "languages": [
-      "typescript"
+      "typescript",
+      "javascript"
     ],
     "skills": [
       "full-stack"

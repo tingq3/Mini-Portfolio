@@ -15,7 +15,8 @@
       "python"
     ],
     "frameworks": [
-      "fl-studio-midi-controller-scripting"
+      "fl-studio-midi-controller-scripting",
+      "mypy"
     ],
     "skills": [
       "midi",

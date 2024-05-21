@@ -1,5 +1,14 @@
 {
   "name": "NCurses",
   "description": "NCurses is a library for building UIs for terminal apps",
-  "color": "#F7E200"
+  "color": "#C7D302",
+  "associations": {
+    "languages": [
+      "python",
+      "c"
+    ],
+    "skills": [
+      "systems"
+    ]
+  }
 }

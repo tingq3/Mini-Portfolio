@@ -20,7 +20,8 @@
     ],
     "skills": [
       "static-analysis",
-      "packages"
+      "packages",
+      "compilers"
     ],
     "status": [
       "complete"
