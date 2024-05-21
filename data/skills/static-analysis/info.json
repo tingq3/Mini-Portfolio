@@ -1,6 +1,5 @@
 {
   "name": "Static analysis",
   "description": "Static analysis is the analysis of computer software, done without executing the code",
-  "tools": [],
-  "languages": []
+  "color": "#F66D00"
 }
