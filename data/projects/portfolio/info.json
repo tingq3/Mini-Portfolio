@@ -2,6 +2,7 @@
   "name": "Portfolio",
   "description": "My portfolio website -- you're looking at it",
   "color": "#0099ff",
+  "sort": 5,
   "links": {
     "repo": "https://github.com/MiguelGuthridge/portfolio",
     "site": "https://portfolio.maddyguthridge.com"

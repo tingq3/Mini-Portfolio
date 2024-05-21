@@ -1,5 +1,6 @@
 {
   "name": "Project status",
   "description": "The status of projects",
+  "sort": 90,
   "visibility": "unlisted"
 }

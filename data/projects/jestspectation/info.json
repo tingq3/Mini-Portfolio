@@ -2,7 +2,7 @@
   "name": "Jestspectation",
   "description": "A pattern matching system to make clear and reliable test cases",
   "color": "#ff3399",
-  "sort": 5,
+  "sort": 3,
   "links": {
     "repo": "https://github.com/MiguelGuthridge/Jestspectation",
     "docs": "https://miguelguthridge.github.io/Jestspectation/"
