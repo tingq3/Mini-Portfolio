@@ -71,7 +71,13 @@
         targetScrollPosition + e.deltaY
       )
     );
-    ele.scrollTo({ left: targetScrollPosition, behavior: 'smooth' });
+    // If scroll distance is too small, just scroll instantly
+    // This should reduce jank for people scrolling with trackpads
+    let behavior: ScrollBehavior = 'smooth';
+    if (e.deltaY > -100 && e.deltaY < 100) {
+      behavior = 'instant';
+    }
+    ele.scrollTo({ left: targetScrollPosition, behavior });
     e.preventDefault();
   }
 
