@@ -1,5 +1,15 @@
 {
   "name": "TypeScript",
   "description": "TypeScript is a type-safe superset of JavaScript",
-  "color": "#27609E"
+  "color": "#27609E",
+  "sort": 5,
+  "associations": {
+    "languages": [
+      "javascript"
+    ],
+    "skills": [
+      "type-safety",
+      "full-stack"
+    ]
+  }
 }

@@ -1,5 +1,14 @@
 {
   "name": "Next",
   "description": "Next is a JavaScript full-stack web framework that uses React.js",
-  "color": "#0DCDF3"
+  "color": "#0DCDF3",
+  "associations": {
+    "languages": [
+      "typescript"
+    ],
+    "skills": [
+      "full-stack",
+      "frontend"
+    ]
+  }
 }

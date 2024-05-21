@@ -1,0 +1,12 @@
+{
+  "name": "Frontend",
+  "description": "Frontend development focuses on building user interfaces for software",
+  "color": "#FFE83A",
+  "sort": 1,
+  "associations": {
+    "skills": [
+      "backend",
+      "full-stack"
+    ]
+  }
+}

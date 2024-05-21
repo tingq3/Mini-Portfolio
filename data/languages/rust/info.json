@@ -1,5 +1,12 @@
 {
   "name": "Rust",
   "description": "Rust is a high-level compiled language with powerful static analysis to ensure correctness",
-  "color": "#F66D00"
+  "color": "#F66D00",
+  "sort": 8,
+  "associations": {
+    "skills": [
+      "type-safety",
+      "concurrency"
+    ]
+  }
 }

@@ -1,0 +1,12 @@
+{
+  "name": "Systems",
+  "description": "Systems programming is programming that interacts with the operating system at a low level",
+  "color": "#8C2100",
+  "associations": {
+    "languages": [
+      "c",
+      "python",
+      "rust"
+    ]
+  }
+}

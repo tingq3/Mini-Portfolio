@@ -1,5 +1,13 @@
 {
   "name": "SvelteKit",
   "description": "SvelteKit is a markup language for building websites using the SvelteKit framework",
-  "color": "#F96743"
+  "color": "#F96743",
+  "associations": {
+    "languages": [
+      "typescript"
+    ],
+    "skills": [
+      "full-stack"
+    ]
+  }
 }

@@ -1,5 +1,10 @@
 {
   "name": "SymPy",
   "description": "SymPy is a symbolic mathematics library for Python",
-  "color": "#62A539"
+  "color": "#62A539",
+  "associations": {
+    "languages": [
+      "python"
+    ]
+  }
 }

@@ -4,7 +4,7 @@
   "color": "#EA2026",
   "associations": {
     "skills": [
-      "oop"
+      "design-patterns"
     ]
   }
 }

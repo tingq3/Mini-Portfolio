@@ -1,0 +1,12 @@
+{
+  "name": "Backend",
+  "description": "Backend development focuses on implementing business logic for applications",
+  "color": "#DE4517",
+  "sort": 4,
+  "associations": {
+    "skills": [
+      "frontend",
+      "full-stack"
+    ]
+  }
+}

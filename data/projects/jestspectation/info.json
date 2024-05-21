@@ -18,6 +18,11 @@
     "frameworks": [
       "pytest"
     ],
+    "skills": [
+      "test-driven-development",
+      "algorithms",
+      "packages"
+    ],
     "status": [
       "active"
     ]

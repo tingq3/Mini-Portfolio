@@ -1,5 +1,10 @@
 {
   "name": "Express",
   "description": "Express is a JavaScript web framework",
-  "color": "#F7E200"
+  "color": "#F7E200",
+  "associations": {
+    "languages": [
+      "typescript"
+    ]
+  }
 }

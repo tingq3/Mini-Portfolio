@@ -1,5 +1,13 @@
 {
   "name": "MIDI Controller Scripting",
   "description": "MIDI Controller Scripting is a Python API for the FL Studio audio workstation, used for controlling external music hardware",
-  "color": "#ff6600"
+  "color": "#ff6600",
+  "associations": {
+    "languages": [
+      "python"
+    ],
+    "skills": [
+      "midi"
+    ]
+  }
 }

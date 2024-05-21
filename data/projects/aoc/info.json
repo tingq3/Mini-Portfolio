@@ -1,6 +1,6 @@
 {
-  "name": "Advent of Code 2023",
-  "description": "My solutions for the 2023 Advent of Code, written in Rust",
+  "name": "Advent of Code",
+  "description": "Advent of Code is a 25-day algorithms programming challenge",
   "color": "#F7E200",
   "links": {
     "repo": "https://github.com/MiguelGuthridge/aoc-2023"

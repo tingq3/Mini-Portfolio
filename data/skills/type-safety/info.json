@@ -2,6 +2,7 @@
   "name": "Type safety",
   "description": "Type safety refers to when static analysis is used to check for type errors within code",
   "color": "#27609E",
+  "sort": 20,
   "associations": {
     "frameworks": [
       "mypy"

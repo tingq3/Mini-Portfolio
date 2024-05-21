@@ -1,5 +1,12 @@
 {
   "name": "Java",
   "description": "Java is a high-level object-oriented language that uses the Java Virtual Machine",
-  "color": "#EA2026"
+  "color": "#EA2026",
+  "sort": 1,
+  "associations": {
+    "skills": [
+      "oop",
+      "design-patterns"
+    ]
+  }
 }

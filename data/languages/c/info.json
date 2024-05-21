@@ -1,5 +1,10 @@
 {
   "name": "C",
   "description": "C is a low-level compiled language, used for performance-critical tasks",
-  "color": "#3E48CC"
+  "color": "#3E48CC",
+  "associations": {
+    "skills": [
+      "os"
+    ]
+  }
 }

@@ -17,7 +17,9 @@
     ],
     "skills": [
       "web-scraping",
-      "type-safety"
+      "type-safety",
+      "packages",
+      "frontend"
     ],
     "status": [
       "active"

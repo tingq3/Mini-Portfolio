@@ -13,7 +13,8 @@
     "skills": [
       "type-safety",
       "algorithms",
-      "cryptography"
+      "cryptography",
+      "concurrency"
     ],
     "status": [
       "complete"

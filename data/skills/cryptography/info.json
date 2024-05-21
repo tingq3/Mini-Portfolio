@@ -1,5 +1,6 @@
 {
   "name": "Cryptography",
   "description": "Cryptography is the process of encoding secret information",
-  "color": "#27609E"
+  "color": "#823815",
+  "sort": 1
 }

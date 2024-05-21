@@ -17,7 +17,8 @@
     "skills": [
       "type-safety",
       "test-driven-development",
-      "sql"
+      "sql",
+      "backend"
     ],
     "status": [
       "complete"

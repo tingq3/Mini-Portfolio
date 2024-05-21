@@ -19,7 +19,8 @@
       "ncurses"
     ],
     "skills": [
-      "static-analysis"
+      "static-analysis",
+      "packages"
     ],
     "status": [
       "complete"

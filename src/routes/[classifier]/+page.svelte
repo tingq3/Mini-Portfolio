@@ -125,8 +125,6 @@
 
 <Markdown source={classifier.readme} />
 
-<h2>{classifier.info.name}</h2>
-
 <!-- List the labels which we can use to filter entries -->
 <ChipList
   labels={

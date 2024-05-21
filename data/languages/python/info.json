@@ -1,5 +1,12 @@
 {
   "name": "Python",
   "description": "Python is a powerful interpreted language known for its ease-of-use",
-  "color": "#3776AA"
+  "color": "#3776AA",
+  "sort": 10,
+  "associations": {
+    "skills": [
+      "backend",
+      "type-safety"
+    ]
+  }
 }
