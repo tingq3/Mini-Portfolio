@@ -2,6 +2,7 @@
   "name": "OS/161",
   "description": "A teaching operating system, developed by Harvard University",
   "color": "#70CB89",
+  "sort": 1,
   "associations": {
     "languages": [
       "c"

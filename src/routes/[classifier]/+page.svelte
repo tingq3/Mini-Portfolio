@@ -143,6 +143,11 @@
       selected,
     }))))
   }
+  on:click={e => {
+    // When a label is clicked, toggle its selection
+    const { classifier, label } = e.detail;
+    selectFilter(classifier, label);
+  }}
 />
 
 <!-- List all entry cards -->

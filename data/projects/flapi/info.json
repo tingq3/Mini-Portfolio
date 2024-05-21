@@ -1,7 +1,7 @@
 {
   "name": "Flapi",
   "description": "A remote control framework for FL Studio",
-  "color": "#ff6600",
+  "color": "#E24D17",
   "sort": 1,
   "links": {
     "repo": "https://github.com/MiguelGuthridge/Flapi"
