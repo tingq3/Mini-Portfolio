@@ -15,8 +15,8 @@ export function load({ params: { classifier, label } }: { params: { classifier: 
     throw error(404, `Label '${label}' does not exist within classifier '${classifier}`);
   }
   return {
-    classifier: classifier,
-    label: label,
+    classifier,
+    label,
     globals: getData()
   };
 }

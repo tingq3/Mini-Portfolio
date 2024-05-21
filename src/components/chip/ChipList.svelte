@@ -13,6 +13,8 @@
     { label: Label, selected?: boolean }
     >
   >;
+  /** Whether to link each chip to its respective page */
+  export let link: boolean = false;
 
   // Dispatch clicks on the chips to be forwarded alongside their classifier
   // and label
@@ -117,6 +119,7 @@
         <LabelChip
           {label}
           {selected}
+          {link}
           on:click={e => bubbleClick(label.classifier, label.slug, e)}
         />
       {/each}
@@ -127,6 +130,7 @@
       <LabelChip
         {label}
         {selected}
+        {link}
         on:click={e => bubbleClick(label.classifier, label.slug, e)}
       />
     {/each}

@@ -2,7 +2,7 @@
     import { type PortfolioGlobals, type Label, type ClassifierSlug, type LabelSlug } from '$types';
     import Card from './Card.svelte';
     import { ChipList } from '$components/chip';
-    import OrdRec, { fromRecord, type OrderedRecord } from '$lib/OrderedRecord';
+    import OrdRec, { type OrderedRecord } from '$lib/OrderedRecord';
 
     export let label: Label;
     export let globals: PortfolioGlobals;
@@ -10,13 +10,13 @@
     // List of classifier slugs associated by this label
     $: usedClassifiers = OrdRec.fromItems(globals.classifiers).keys().filter(c => c in label.info.associations);
     // List of associated labels, grouped by classifier
-    $: associatedLabels = fromRecord(
+    $: associatedLabels = OrdRec.fromRecord(
       // This feels absolutely disgusting but I simply cannot think of a nicer
       // way to do it
       Object.fromEntries(usedClassifiers.map(
         c => [
           c,
-          fromRecord(
+          OrdRec.fromRecord(
             Object.fromEntries(
               label.info.associations[c].map(slug => [
                 slug,
@@ -38,5 +38,5 @@
     color={label.info.color}
 >
     <p>{label.info.description}</p>
-    <ChipList labels={associatedLabels} />
+    <ChipList labels={associatedLabels} link={true} />
 </Card>

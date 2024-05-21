@@ -18,20 +18,16 @@
      */
     const noTypeCheck = (x: any) => x;
 
-    const globalClassifiers = OrdRec.fromItems(data.globals.classifiers);
-
-    const classifier = globalClassifiers.get(data.classifier);
+    $: globalClassifiers = OrdRec.fromItems(data.globals.classifiers);
+    $: classifier = globalClassifiers.get(data.classifier);
 
     // Start with all labels within this classifier selected
-    let selectedEntries = [...OrdRec.fromItems(classifier.labels).keys()];
+    $: selectedEntries = [...OrdRec.fromItems(classifier.labels).keys()];
 
     // And start with no filters selected
     // selectedFilters is a mapping from classifiers to their labels, with each
     // label having a boolean to indicate whether it is selected
-    let selectedFilters: OrderedRecord<
-      ClassifierSlug,
-      OrderedRecord<LabelSlug, boolean>
-    > = OrdRec.fromRecord(
+    $: selectedFilters = OrdRec.fromRecord(
       // Create an OrderedRecord<LabelSlug, boolean> for each classifier in the
       // list of classifiers to filter by
       Object.fromEntries(
@@ -142,7 +138,10 @@
     }
 </script>
 
-<Navbar path={[]} globals={data.globals} />
+<Navbar
+    path={[{ url: classifier.slug, txt: classifier.info.name }]}
+    globals={data.globals}
+/>
 
 <main>
   <div id="readme">
