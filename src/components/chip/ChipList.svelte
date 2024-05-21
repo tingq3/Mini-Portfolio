@@ -56,6 +56,8 @@
 
 <style>
     div {
+        overflow: scroll;
+        padding-bottom: 5px;
         display: flex;
         gap: 5px;
         align-items: center;
