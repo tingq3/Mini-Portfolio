@@ -30,6 +30,8 @@ type ErrorList = (string | Error)[];
 export default function loadData(dir: string): PortfolioGlobals | ErrorList {
   const errors: ErrorList = [];
 
+  // TODO: Want a better way to report locations of errors
+  // perhaps tryOp could also take a filename to mention the errors in?
   const config = tryOp(errors, () => loadGlobalConfig(dir));
   const readme = tryOp(errors, () => loadReadme(dir));
 
