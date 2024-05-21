@@ -1,4 +1,6 @@
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck -- This file isn't actually used, I'm just messing about with
+// the type system
 type Associations<T extends Record<keyof T, string>> = {
   [P in keyof T]?: Array<T[P]>
 }
@@ -12,7 +14,7 @@ type Fruits<T extends Record<keyof T, string>> = { [K in keyof T]: {
 } };
 
 type InferFruitMap<T extends Fruits<Record<string, string>>> =
-  { [K in keyof T]: Extract<keyof T[K]['contents'], string> } & {}
+  { [K in keyof T]: Extract<keyof T[K]['contents'], string> } & object
 
 const fruitMap = <T extends Fruits<Record<string, string>>>(t: T extends Fruits<InferFruitMap<T>> ? T : Fruits<InferFruitMap<T>>): Fruits<InferFruitMap<T>> => t;
 

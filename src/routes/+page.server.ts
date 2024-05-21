@@ -1,14 +1,7 @@
-import { getMainConfig } from '$lib/server/config';
-import { getFrameworksAsMap } from '$lib/server/framework';
-import { getLanguagesAsArray, getLanguagesAsMap } from '$lib/server/language';
-import { getProjectsAsArray } from '$lib/server/project';
+import { getData } from '$lib/server';
+import { redirect } from '@sveltejs/kit';
 
 export function load() {
-  return {
-    projects: getProjectsAsArray(),
-    languages: getLanguagesAsArray(),
-    languagesMap: getLanguagesAsMap(),
-    frameworksMap: getFrameworksAsMap(),
-    config: getMainConfig(),
-  };
+  // When loading the main page, redirect them to the default classifier page
+  throw redirect(308, `/${getData().config.defaultClassifier}`);
 }

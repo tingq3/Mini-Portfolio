@@ -11,13 +11,13 @@ import type { PortfolioGlobals } from '$types/globals';
 export default function validateData(data: PortfolioGlobals): string[] {
   const errors: string[] = [];
   // Check classifier's filters
-  for (const classifier of data.classifierOrder) {
+  for (const classifier of data.classifiers.keys()) {
     errors.push(...validateFilterClassifiers(classifier, data));
   }
   // Check associations for each label
-  for (const classifier of data.classifierOrder) {
-    for (const label of data.classifiers[classifier].labelOrder) {
-      errors.push(...validateLabelAssociations(classifier, label, data));
+  for (const [classKey, classifier] of data.classifiers.items()) {
+    for (const label of classifier.labels.keys()) {
+      errors.push(...validateLabelAssociations(classKey, label, data));
     }
   }
 
@@ -27,11 +27,11 @@ export default function validateData(data: PortfolioGlobals): string[] {
 /** Validate all filter classifiers listed for the given classifier */
 function validateFilterClassifiers(classifier: ClassifierSlug, data: PortfolioGlobals): string[] {
   const errors: string[] = [];
-  const theClassifier = data.classifiers[classifier];
+  const theClassifier = data.classifiers.get(classifier);
 
   // Check each filter item
   for (const filter of theClassifier.info.filterClassifiers) {
-    if (!data.classifierOrder.includes(filter)) {
+    if (!data.classifiers.keys().includes(filter)) {
       errors.push(`Classifier '${classifier}' filters using non-existent classifier '${filter}'`);
     }
   }
@@ -47,7 +47,7 @@ function validateLabelAssociations(
 ): string[] {
   const errors: string[] = [];
   const errHead = `Label '${classifier}/${label}'`;
-  const theLabel = data.classifiers[classifier].labels[label];
+  const theLabel = data.classifiers.get(classifier).labels.get(label);
 
   for (const classifierToCheck of Object.keys(theLabel.info.associations) as ClassifierSlug[]) {
     // Check the associated classifier exists
@@ -56,7 +56,7 @@ function validateLabelAssociations(
       continue;
     }
     // Classifier exists, check each of the labels in it
-    const labelsInClassifier = data.classifiers[classifierToCheck].labelOrder;
+    const labelsInClassifier = data.classifiers.get(classifierToCheck).labels.keys();
     for (const labelToCheck of theLabel.info.associations[classifierToCheck]) {
       // Check label exists within classifier
       if (!labelsInClassifier.includes(labelToCheck)) {
