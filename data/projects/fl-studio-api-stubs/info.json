@@ -1,20 +1,29 @@
 {
-  "$schema": "../project.schema.json",
   "name": "FL Studio API Stubs",
   "description": "Type definitions, and full documentation for FL Studio's MIDI Controller Scripting API",
   "color": "#ff6600",
   "sort": 6,
-  "status": "Active",
-  "repo": "https://github.com/IL-Group/FL-Studio-API-Stubs",
-  "docs": "https://il-group.github.io/FL-Studio-API-Stubs/",
-  "languages": ["python"],
-  "frameworks": [
-    "fl-studio-midi-controller-scripting",
-    "mkdocs"
-  ],
-  "skills": ["midi"],
+  "links": {
+    "repo": "https://github.com/IL-Group/FL-Studio-API-Stubs",
+    "docs": "https://il-group.github.io/FL-Studio-API-Stubs/"
+  },
   "package": {
     "url": "https://pypi.org/project/fl-studio-api-stubs/",
     "command": "pip install fl-studio-api-stubs"
+  },
+  "associations": {
+    "languages": [
+      "python"
+    ],
+    "frameworks": [
+      "fl-studio-midi-controller-scripting",
+      "mkdocs"
+    ],
+    "skills": [
+      "midi"
+    ],
+    "status": [
+      "Active"
+    ]
   }
 }

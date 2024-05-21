@@ -9,6 +9,7 @@ import {
   type Infer,
   enums,
   define,
+  any,
 } from 'superstruct';
 import { ClassifierSlugStruct, type ClassifierSlug } from './classifier';
 
@@ -22,12 +23,12 @@ const LabelSlugStruct = define<LabelSlug>('LabelSlug', v => typeof v === 'string
  *
  * * `'visible'`: label is visible in all locations
  * * `'filtered'`: label is not displayed in filter controls
- * * `'unlisted'`: label is only shown when explicitly linked to
+ * * `'unlisted'`: label is only shown when explicitly associated from another
+ *   label.
  * * `'hidden'`: label is not linked anywhere on the site, but is shown on its
  *   primary page.
- * * `'private'`: label is not accessible anywhere on the site.
  */
-const LabelVisibility = enums(['visible', 'filtered', 'unlisted', 'hidden', 'private']);
+const LabelVisibility = enums(['visible', 'filtered', 'unlisted', 'hidden']);
 
 /** Represents information contained within a label's info.json */
 export const LabelInfo = object({
@@ -80,6 +81,9 @@ export const LabelInfo = object({
     /** URL for viewing the label's package listing */
     url: string(),
   })),
+
+  /** Extra information, as declared in the classifier */
+  extras: defaulted(record(string(), any()), {}),
 });
 
 /** Represents a label */

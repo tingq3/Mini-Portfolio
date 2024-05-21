@@ -1,17 +1,25 @@
 {
-  "$schema": "../project.schema.json",
   "name": "Jestspectation",
   "description": "A pattern matching system to make clear and reliable test cases",
   "color": "#ff3399",
   "sort": 5,
-  "status": "Active",
-  "repo": "https://github.com/MiguelGuthridge/Jestspectation",
-  "docs": "https://miguelguthridge.github.io/Jestspectation/",
-  "languages": ["python"],
-  "frameworks": ["pytest"],
-  "skills": [],
+  "links": {
+    "repo": "https://github.com/MiguelGuthridge/Jestspectation",
+    "docs": "https://miguelguthridge.github.io/Jestspectation/"
+  },
   "package": {
     "url": "https://pypi.org/project/jestspectation/",
     "command": "pip install jestspectation"
+  },
+  "associations": {
+    "languages": [
+      "python"
+    ],
+    "frameworks": [
+      "pytest"
+    ],
+    "status": [
+      "Active"
+    ]
   }
 }

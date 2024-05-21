@@ -1,14 +1,18 @@
 {
-  "$schema": "../project.schema.json",
   "name": "Dungeon Mania",
   "description": "A complex dungeon-crawler game, programmed in Java",
   "sort": 1,
   "color": "#6D2F2F",
-  "status": "Complete",
-  "languages": ["java"],
-  "frameworks": [],
-  "skills": [
-    "oop",
-    "design-patterns"
-  ]
+  "associations": {
+    "languages": [
+      "java"
+    ],
+    "skills": [
+      "oop",
+      "design-patterns"
+    ],
+    "status": [
+      "Complete"
+    ]
+  }
 }

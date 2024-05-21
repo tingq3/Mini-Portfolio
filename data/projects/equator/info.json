@@ -1,21 +1,28 @@
 {
-  "$schema": "../project.schema.json",
   "name": "Equator",
   "description": "A symbolic math interpreter built using Sympy",
   "color": "#00ff99",
   "sort": 1,
-  "status": "Complete",
-  "repo": "https://github.com/MiguelGuthridge/Equator",
-  "languages": ["python"],
-  "frameworks": [
-    "sympy",
-    "ncurses"
-  ],
-  "skills": [
-    "static-analysis"
-  ],
+  "links": {
+    "repo": "https://github.com/MiguelGuthridge/Equator"
+  },
   "package": {
     "url": "https://pypi.org/project/equatorpy/",
     "command": "pip install equatorpy"
+  },
+  "associations": {
+    "languages": [
+      "python"
+    ],
+    "frameworks": [
+      "sympy",
+      "ncurses"
+    ],
+    "skills": [
+      "static-analysis"
+    ],
+    "status": [
+      "Complete"
+    ]
   }
 }

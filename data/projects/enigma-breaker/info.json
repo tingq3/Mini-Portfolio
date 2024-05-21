@@ -1,18 +1,22 @@
 {
-  "$schema": "../project.schema.json",
   "name": "Enigma Machine Breaker",
   "description": "An enigma machine emulation and brute-force breaker, written in Rust",
   "sort": 4,
   "color": "#ffff66",
-  "status": "Complete",
-  "repo": "https://github.com/MiguelGuthridge/Enigma-Breaker",
-  "languages": [
-    "rust"
-  ],
-  "frameworks": [],
-  "skills": [
-    "type-safety",
-    "algorithms",
-    "cryptography"
-  ]
+  "links": {
+    "repo": "https://github.com/MiguelGuthridge/Enigma-Breaker"
+  },
+  "associations": {
+    "languages": [
+      "rust"
+    ],
+    "skills": [
+      "type-safety",
+      "algorithms",
+      "cryptography"
+    ],
+    "status": [
+      "Complete"
+    ]
+  }
 }

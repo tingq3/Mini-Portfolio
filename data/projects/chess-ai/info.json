@@ -1,14 +1,20 @@
 {
-  "$schema": "../project.schema.json",
   "name": "Unnamed Chess AI",
   "description": "A currently-incomplete chess engine written in Rust",
   "sort": -5,
   "color": "#66ff66",
-  "status": "Incomplete",
-  "repo": "https://github.com/MiguelGuthridge/chs",
-  "languages": ["rust"],
-  "frameworks": [],
-  "skills": [
-    "type-safety"
-  ]
+  "links": {
+    "repo": "https://github.com/MiguelGuthridge/chs"
+  },
+  "associations": {
+    "languages": [
+      "rust"
+    ],
+    "skills": [
+      "type-safety"
+    ],
+    "status": [
+      "Incomplete"
+    ]
+  }
 }

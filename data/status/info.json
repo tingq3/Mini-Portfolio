@@ -1,0 +1,13 @@
+{
+  "name": "Project status",
+  "description": "The status of projects",
+  "visibility": "unlisted",
+  "filterClassifiers": [
+    "languages",
+    "frameworks",
+    "skills"
+  ],
+  "extras": {
+    "status": "Status of the project"
+  }
+}

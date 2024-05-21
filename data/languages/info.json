@@ -1,0 +1,7 @@
+{
+  "name": "Languages",
+  "description": "Programming languages that I have experience with",
+  "filterClassifiers": [
+    "frameworks"
+  ]
+}

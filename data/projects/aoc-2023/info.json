@@ -1,13 +1,19 @@
 {
-  "$schema": "../project.schema.json",
   "name": "Advent of Code 2023",
   "description": "My solutions for the 2023 Advent of Code, written in Rust",
   "color": "#F7E200",
-  "status": "Complete",
-  "repo": "https://github.com/MiguelGuthridge/aoc-2023",
-  "languages": ["rust"],
-  "frameworks": [],
-  "skills": [
-    "algorithms"
-  ]
+  "links": {
+    "repo": "https://github.com/MiguelGuthridge/aoc-2023"
+  },
+  "associations": {
+    "languages": [
+      "rust"
+    ],
+    "skills": [
+      "algorithms"
+    ],
+    "status": [
+      "Complete"
+    ]
+  }
 }

@@ -1,0 +1,11 @@
+{
+  "name": "Projects",
+  "description": "Projects, assignments and other things that I have worked on",
+  "sort": 100,
+  "filterClassifiers": [
+    "status",
+    "languages",
+    "frameworks",
+    "skills"
+  ]
+}

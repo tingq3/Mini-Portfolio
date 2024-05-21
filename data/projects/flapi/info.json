@@ -1,18 +1,27 @@
 {
-  "$schema": "../project.schema.json",
   "name": "Flapi",
   "description": "A remote control framework for FL Studio",
   "color": "#ff6600",
   "sort": 1,
-  "status": "Active",
-  "repo": "https://github.com/MiguelGuthridge/Flapi",
-  "languages": ["python"],
-  "frameworks": [
-    "fl-studio-midi-controller-scripting"
-  ],
-  "skills": ["midi"],
+  "links": {
+    "repo": "https://github.com/MiguelGuthridge/Flapi"
+  },
   "package": {
     "url": "https://pypi.org/project/flapi/",
     "command": "pip install flapi"
+  },
+  "associations": {
+    "languages": [
+      "python"
+    ],
+    "frameworks": [
+      "fl-studio-midi-controller-scripting"
+    ],
+    "skills": [
+      "midi"
+    ],
+    "status": [
+      "Active"
+    ]
   }
 }

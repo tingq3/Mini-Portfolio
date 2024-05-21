@@ -1,4 +1,4 @@
-import { array, defaulted, define, enums, number, object, string, type Infer } from 'superstruct';
+import { any, array, defaulted, define, enums, number, object, record, string, type Infer } from 'superstruct';
 import type { Label, LabelSlug } from './label';
 import type { OrderedRecord } from '$lib/orderedRecord';
 
@@ -14,7 +14,7 @@ export const ClassifierSlugStruct = define<ClassifierSlug>('ClassifierSlug', v =
  * * `'unlisted'`: classifier is not displayed in site menu
  * * `'private'`: classifier is not accessible anywhere on the site.
  */
-const LabelVisibility = enums(['visible', 'filtered', 'unlisted', 'hidden', 'private']);
+const ClassifierVisibility = enums(['visible', 'unlisted']);
 
 /** Represents information contained within a classifier's info.json */
 export const ClassifierInfo = object({
@@ -32,8 +32,12 @@ export const ClassifierInfo = object({
    */
   filterClassifiers: defaulted(array(ClassifierSlugStruct), []),
 
-  /** Visibility of this label */
-  visibility: defaulted(LabelVisibility, 'visible'),
+  /** Visibility of this classifier */
+  visibility: defaulted(ClassifierVisibility, 'visible'),
+
+  // TODO: implement this
+  /** Extra properties that can be used by labels within this classifier */
+  extras: defaulted(record(string(), any()), {}),
 });
 
 export type Classifier = {

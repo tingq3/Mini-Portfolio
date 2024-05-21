@@ -1,12 +1,21 @@
 {
-  "$schema": "../project.schema.json",
   "name": "Portfolio",
   "description": "My portfolio website -- you're looking at it",
   "color": "#0099ff",
-  "status": "Active",
-  "repo": "https://github.com/MiguelGuthridge/portfolio",
-  "site": "https://portfolio.maddyguthridge.com",
-  "languages": ["typescript", "html"],
-  "frameworks": ["sveltekit"],
-  "skills": []
+  "links": {
+    "repo": "https://github.com/MiguelGuthridge/portfolio",
+    "site": "https://portfolio.maddyguthridge.com"
+  },
+  "associations": {
+    "languages": [
+      "typescript",
+      "html"
+    ],
+    "frameworks": [
+      "sveltekit"
+    ],
+    "status": [
+      "Active"
+    ]
+  }
 }

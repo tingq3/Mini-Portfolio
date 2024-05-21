@@ -1,17 +1,26 @@
 {
-  "$schema": "../project.schema.json",
   "name": "Universal Controller Script",
   "description": "An advanced compatibility layer to provide best-in-class integration between many hardware MIDI controllers and the FL Studio audio workstation",
   "color": "#cc00ff",
   "sort": 10,
-  "status": "Active",
-  "repo": "https://github.com/MiguelGuthridge/Universal-Controller-Script",
-  "languages": ["python"],
-  "frameworks": ["fl-studio-midi-controller-scripting"],
-  "skills": [
-    "type-safety",
-    "oop",
-    "design-patterns",
-    "midi"
-  ]
+  "links": {
+    "repo": "https://github.com/MiguelGuthridge/Universal-Controller-Script"
+  },
+  "associations": {
+    "languages": [
+      "python"
+    ],
+    "frameworks": [
+      "fl-studio-midi-controller-scripting"
+    ],
+    "skills": [
+      "type-safety",
+      "oop",
+      "design-patterns",
+      "midi"
+    ],
+    "status": [
+      "Active"
+    ]
+  }
 }
