@@ -6,7 +6,7 @@
     import { LabelCard } from '$components/card';
     import { ChipList } from '$components/chip';
     import type { ClassifierSlug, Label, LabelSlug } from '$types';
-    import { orderedRecord, type OrderedRecord } from '$lib/orderedRecord';
+    import OrdRec, { type OrderedRecord } from '$lib/OrderedRecord';
 
     export let data: import('./$types').PageData;
 
@@ -18,10 +18,12 @@
      */
     const noTypeCheck = (x: any) => x;
 
-    const classifier = data.globals.classifiers.get(data.classifier);
+    const globalClassifiers = OrdRec.fromItems(data.globals.classifiers);
+
+    const classifier = globalClassifiers.get(data.classifier);
 
     // Start with all labels within this classifier selected
-    let selectedEntries = [...classifier.labels.keys()];
+    let selectedEntries = [...OrdRec.fromItems(classifier.labels).keys()];
 
     // And start with no filters selected
     // selectedFilters is a mapping from classifiers to their labels, with each
@@ -29,29 +31,31 @@
     let selectedFilters: OrderedRecord<
       ClassifierSlug,
       OrderedRecord<LabelSlug, boolean>
-    > = orderedRecord(
+    > = OrdRec.fromRecord(
       // Create an OrderedRecord<LabelSlug, boolean> for each classifier in the
       // list of classifiers to filter by
       Object.fromEntries(
         classifier.info.filterClassifiers.map(
           c => {
             // Look up classifier to filter by
-            const filterC = data.globals.classifiers.get(c);
+            const filterC = globalClassifiers.get(c);
             // Return the entry
             return [
               // The classifier slug
               c,
               // An ordered record mapping label slugs to the boolean false
               // meaning all filters are deselected by default
-              orderedRecord(
+              OrdRec.fromRecord(
                 Object.fromEntries(
-                  // WHY OH WHY do I need to perform this type cast here?
-                  // Why does TypeScript not realise that false is a subset of
-                  // boolean?
-                  // This hurts my soul on a spiritual level
-                  filterC.labels.keys().map(k => [k, false] as [LabelSlug, boolean]),
+                  OrdRec.fromItems(filterC.labels)
+                    .keys()
+                    // WHY OH WHY do I need to perform this type cast here?
+                    // Why does TypeScript not realise that false is a subset of
+                    // boolean?
+                    // This hurts my soul on a spiritual level
+                    .map(k => [k, false] as [LabelSlug, boolean]),
                 ),
-                filterC.labels.keys(),
+                OrdRec.fromItems(filterC.labels).keys(),
               )
             ];
           }
@@ -81,7 +85,7 @@
      * selection.
      */
     function updateProjectList() {
-      let newSelections = [...classifier.labels.keys()];
+      let newSelections = [...OrdRec.fromItems(classifier.labels).keys()];
 
       for (const [filterClassifier, labels] of selectedFilters.items()) {
         for (const [filterLabel, filterSelected] of labels.items()) {
@@ -93,7 +97,7 @@
             // May need to rewrite if I decide I want a union operation
             newSelections = newSelections
               .filter(entry => entryLinksToFilter(
-                classifier.labels.get(entry),
+                OrdRec.fromItems(classifier.labels).get(entry),
                 filterClassifier,
                 filterLabel,
               ));
@@ -135,7 +139,9 @@
     // entire component. I'll just have to be super careful to make sure that
     // it works correctly
     noTypeCheck(selectedFilters.map((c, v) => v.map((l, selected) => ({
-      label: data.globals.classifiers.get(c).labels.get(l),
+      label: OrdRec.fromItems(
+        OrdRec.fromItems(data.globals.classifiers).get(c).labels
+      ).get(l),
       selected,
     }))))
   }
@@ -149,7 +155,7 @@
         animate:flip={{ duration: 300 }}
     >
         <LabelCard
-            label={classifier.labels.get(entrySlug)}
+            label={OrdRec.fromItems(classifier.labels).get(entrySlug)}
             globals={data.globals}
         />
     </div>

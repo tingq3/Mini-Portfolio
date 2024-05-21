@@ -19,7 +19,7 @@ import {
   type Label,
   type LabelSlug,
 } from '$types';
-import { orderedRecord } from '$lib/orderedRecord';
+import OrderedRecord from '$lib/OrderedRecord';
 
 /** Array of errors encountered while loading data */
 type ErrorList = (string | Error)[];
@@ -64,7 +64,7 @@ export default function loadData(dir: string): PortfolioGlobals | ErrorList {
   return {
     config,
     readme,
-    classifiers: orderedRecord(classifiers, sortBasedOnSortKey(classifiers)),
+    classifiers: OrderedRecord.fromRecord(classifiers, sortBasedOnSortKey(classifiers)).items(),
   };
 }
 
@@ -177,7 +177,7 @@ function loadClassifier(base: string, slug: ClassifierSlug): Classifier | ErrorL
     slug,
     info,
     readme,
-    labels: orderedRecord(labels, sortBasedOnSortKey(labels)),
+    labels: OrderedRecord.fromRecord(labels, sortBasedOnSortKey(labels)).items(),
   };
 }
 

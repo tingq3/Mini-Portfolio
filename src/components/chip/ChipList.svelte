@@ -3,7 +3,7 @@
     import { Separator } from '$components';
     import { type ClassifierSlug, type Label, type LabelSlug } from '$types';
     import { LabelChip } from '.';
-    import type { OrderedRecord } from '$lib/orderedRecord';
+    import type { OrderedRecord } from '$lib/OrderedRecord';
 
     /** Labels to use as chips, grouped by classifier */
     export let labels: OrderedRecord<

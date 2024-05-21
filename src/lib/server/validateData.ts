@@ -3,7 +3,7 @@
  *
  * Code for validating the portfolio data.
  */
-
+import OrdRec from '$lib/OrderedRecord';
 import type { ClassifierSlug, LabelSlug } from '$types';
 import type { PortfolioGlobals } from '$types/globals';
 
@@ -11,12 +11,12 @@ import type { PortfolioGlobals } from '$types/globals';
 export default function validateData(data: PortfolioGlobals): string[] {
   const errors: string[] = [];
   // Check classifier's filters
-  for (const classifier of data.classifiers.keys()) {
+  for (const [classifier] of data.classifiers) {
     errors.push(...validateFilterClassifiers(classifier, data));
   }
   // Check associations for each label
-  for (const [classKey, classifier] of data.classifiers.items()) {
-    for (const label of classifier.labels.keys()) {
+  for (const [classKey, classifier] of data.classifiers) {
+    for (const [label] of classifier.labels) {
       errors.push(...validateLabelAssociations(classKey, label, data));
     }
   }
@@ -27,11 +27,11 @@ export default function validateData(data: PortfolioGlobals): string[] {
 /** Validate all filter classifiers listed for the given classifier */
 function validateFilterClassifiers(classifier: ClassifierSlug, data: PortfolioGlobals): string[] {
   const errors: string[] = [];
-  const theClassifier = data.classifiers.get(classifier);
+  const theClassifier = OrdRec.fromItems(data.classifiers).get(classifier);
 
   // Check each filter item
   for (const filter of theClassifier.info.filterClassifiers) {
-    if (!data.classifiers.keys().includes(filter)) {
+    if (!OrdRec.fromItems(data.classifiers).keys().includes(filter)) {
       errors.push(`Classifier '${classifier}' filters using non-existent classifier '${filter}'`);
     }
   }
@@ -47,16 +47,16 @@ function validateLabelAssociations(
 ): string[] {
   const errors: string[] = [];
   const errHead = `Label '${classifier}/${label}'`;
-  const theLabel = data.classifiers.get(classifier).labels.get(label);
+  const theLabel = OrdRec.fromItems(OrdRec.fromItems(data.classifiers).get(classifier).labels).get(label);
 
   for (const classifierToCheck of Object.keys(theLabel.info.associations) as ClassifierSlug[]) {
     // Check the associated classifier exists
-    if (!data.classifiers.keys().includes(classifierToCheck)) {
+    if (!OrdRec.fromItems(data.classifiers).keys().includes(classifierToCheck)) {
       errors.push(`${errHead} associates to non-existent classifier '${classifierToCheck}'`);
       continue;
     }
     // Classifier exists, check each of the labels in it
-    const labelsInClassifier = data.classifiers.get(classifierToCheck).labels.keys();
+    const labelsInClassifier = OrdRec.fromItems(OrdRec.fromItems(data.classifiers).get(classifierToCheck).labels).keys();
     for (const labelToCheck of theLabel.info.associations[classifierToCheck]) {
       // Check label exists within classifier
       if (!labelsInClassifier.includes(labelToCheck)) {

@@ -1,6 +1,6 @@
 import { any, array, defaulted, define, enums, number, object, record, string, type Infer } from 'superstruct';
 import type { Label, LabelSlug } from './label';
-import type { OrderedRecord } from '$lib/orderedRecord';
+import type { RecordItems } from '$lib/OrderedRecord';
 
 /** The slug referring to a classifier, unique within a data-set */
 export type ClassifierSlug = string & { __classifier_slug: string };
@@ -51,5 +51,5 @@ export type Classifier = {
   readme: string,
 
   /** Labels within this classifier */
-  labels: OrderedRecord<LabelSlug, Label>,
+  labels: RecordItems<LabelSlug, Label>,
 };

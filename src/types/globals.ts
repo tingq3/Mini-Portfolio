@@ -1,6 +1,6 @@
 import { object, string, type Infer } from 'superstruct';
 import { ClassifierSlugStruct, type Classifier, type ClassifierSlug } from './classifier';
-import type { OrderedRecord } from '$lib/orderedRecord';
+import type { RecordItems } from '$lib/OrderedRecord';
 
 /** Main configuration for the portfolio, `config.json` */
 export const PortfolioConfigJson = object({
@@ -21,5 +21,5 @@ export type PortfolioGlobals = {
   readme: string
 
   /** Mapping of all classifiers */
-  classifiers: OrderedRecord<ClassifierSlug, Classifier>
+  classifiers: RecordItems<ClassifierSlug, Classifier>
 }
