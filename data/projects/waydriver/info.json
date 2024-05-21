@@ -9,6 +9,7 @@
   "associations": {
     "languages": [
       "typescript",
+      "javascript",
       "html"
     ],
     "frameworks": [
