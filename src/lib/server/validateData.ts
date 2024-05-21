@@ -51,7 +51,7 @@ function validateLabelAssociations(
 
   for (const classifierToCheck of Object.keys(theLabel.info.associations) as ClassifierSlug[]) {
     // Check the associated classifier exists
-    if (!(classifierToCheck in data.classifiers)) {
+    if (!data.classifiers.keys().includes(classifierToCheck)) {
       errors.push(`${errHead} associates to non-existent classifier '${classifierToCheck}'`);
       continue;
     }
