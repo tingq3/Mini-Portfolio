@@ -10,7 +10,8 @@
     ],
     "skills": [
       "static-analysis",
-      "compilers"
+      "compilers",
+      "design-patterns"
     ],
     "status": [
       "complete"

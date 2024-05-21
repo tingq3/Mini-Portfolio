@@ -11,7 +11,7 @@
 
 <a href={link}>
     <div
-        id="card"
+        class="card"
         style:--base-color={baseColor}
         style:--hover-color={hoverColor}
     >
@@ -31,7 +31,7 @@
         text-decoration: none;
     }
 
-    #card {
+    .card {
         display: flex;
         flex-direction: column;
         padding: 10px 30px;
@@ -44,8 +44,14 @@
             background-color .5s,
             transform .5s ease-out;
     }
-    #card:hover {
+    .card:hover {
         transform: scale(1.01);
         background-color: var(--hover-color);
+    }
+    @media only screen and (max-width: 600px) {
+        .card {
+            max-width: 100%;
+            padding: 10px 15px;
+        }
     }
 </style>

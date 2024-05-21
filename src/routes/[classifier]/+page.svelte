@@ -144,67 +144,105 @@
 
 <Navbar path={[]} globals={data.globals} />
 
-<Markdown source={classifier.readme} />
+<main>
+  <div id="readme">
+    <div>
+      <Markdown source={classifier.readme} />
+    </div>
+  </div>
 
-<!-- List the labels which we can use to filter entries -->
-<ChipList
-  labels={
-    // I can't figure out how to make the OrderedRecord type be covariant, so
-    // I'm getting a super annoying error because it's not allowing `boolean`
-    // to be compatible with `boolean | undefined`. Just silencing it with a
-    // function that converts it to `any` because you annoyingly can't use
-    // TypeScript within template markup.
-    // I hate the fact that this means that there is no type checking for the
-    // entire component. I'll just have to be super careful to make sure that
-    // it works correctly
-    noTypeCheck(selectedFilters.map((c, v) => v.map((l, selected) => ({
-      label: OrdRec.fromItems(
-        OrdRec.fromItems(data.globals.classifiers).get(c).labels
-      ).get(l),
-      selected,
-    }))))
-  }
-  on:click={e => {
-    // When a label is clicked, toggle its selection
-    const { classifier, label } = e.detail;
-    selectFilter(classifier, label);
-  }}
-/>
+  <div id="filters">
+    <!-- List the labels which we can use to filter entries -->
+    <ChipList
+      labels={
+        // I can't figure out how to make the OrderedRecord type be covariant, so
+        // I'm getting a super annoying error because it's not allowing `boolean`
+        // to be compatible with `boolean | undefined`. Just silencing it with a
+        // function that converts it to `any` because you annoyingly can't use
+        // TypeScript within template markup.
+        // I hate the fact that this means that there is no type checking for the
+        // entire component. I'll just have to be super careful to make sure that
+        // it works correctly
+        noTypeCheck(selectedFilters.map((c, v) => v.map((l, selected) => ({
+          label: OrdRec.fromItems(
+            OrdRec.fromItems(data.globals.classifiers).get(c).labels
+          ).get(l),
+          selected,
+        }))))
+      }
+      on:click={e => {
+        // When a label is clicked, toggle its selection
+        const { classifier, label } = e.detail;
+        selectFilter(classifier, label);
+      }}
+    />
+  </div>
 
-<!-- List all entry cards -->
-<div class="project-list">
+  <!-- List all entry cards -->
+  <div id="project-list">
     {#each selectedEntries as entrySlug (entrySlug)}
     <div
-        transition:fade={{ duration: 300 }}
-        animate:flip={{ duration: 300 }}
+      transition:fade={{ duration: 300 }}
+      animate:flip={{ duration: 300 }}
     >
-        <LabelCard
-            label={OrdRec.fromItems(classifier.labels).get(entrySlug)}
-            globals={data.globals}
-        />
+      <LabelCard
+        label={OrdRec.fromItems(classifier.labels).get(entrySlug)}
+        globals={data.globals}
+      />
     </div>
     {/each}
-</div>
+  </div>
+</main>
 
 <style>
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  #readme {
+    width: 100%;
+  }
+  #readme > div {
+    margin: 5px;
+  }
+  #filters {
+    width: 100%;
+  }
+  #project-list {
+    width: 100%;
+
     /* https://css-tricks.com/an-auto-filling-css-grid-with-max-columns/ */
-    .project-list {
-        /**
-        * User input values.
-        */
-        --grid-layout-gap: 20px;
-        --grid-column-count: 3;
-        --grid-item--min-width: 30em;
+    /**
+    * User input values.
+    */
+    --grid-layout-gap: 20px;
+    --grid-column-count: 3;
+    --grid-item--min-width: 30em;
 
-        /**
-        * Calculated values.
-        */
-        --gap-count: calc(var(--grid-column-count) - 1);
-        --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
-        --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+    /**
+    * Calculated values.
+    */
+    --gap-count: calc(var(--grid-column-count) - 1);
+    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+    --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
 
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
-        grid-gap: var(--grid-layout-gap);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+    grid-gap: var(--grid-layout-gap);
+  }
+
+  /* ✨ responsive design ✨ */
+  @media only screen and (max-width: 600px) {
+    #project-list {
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
     }
+
+    #project-list > div {
+      width: 100%;
+    }
+  }
 </style>

@@ -134,7 +134,8 @@
 {/if}
 
 <style>
-  div {
+  .chip-list {
+    margin: 0 5px;
     overflow: scroll;
     padding-bottom: 5px;
     display: flex;
