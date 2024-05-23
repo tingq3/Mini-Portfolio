@@ -140,10 +140,12 @@
 <style>
   .chip-list {
     margin: 0 5px;
-    overflow: scroll;
     padding-bottom: 5px;
     display: flex;
     gap: 5px;
     align-items: center;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    scrollbar-width: thin;
   }
 </style>
