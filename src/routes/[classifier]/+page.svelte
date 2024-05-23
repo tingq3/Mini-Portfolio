@@ -3,7 +3,7 @@
     import { fade } from 'svelte/transition';
 
     import { Navbar, Markdown } from '$components';
-    import { LabelCard } from '$components/card';
+    import { CardList } from '$components/card';
     import { ChipList } from '$components/chip';
     import type { ClassifierSlug, Label, LabelSlug } from '$types';
     import OrdRec, { type OrderedRecord } from '$lib/OrderedRecord';
@@ -179,17 +179,11 @@
 
   <!-- List all entry cards -->
   <div id="project-list">
-    {#each selectedEntries as entrySlug (entrySlug)}
-    <div
-      transition:fade={{ duration: 300 }}
-      animate:flip={{ duration: 300 }}
-    >
-      <LabelCard
-        label={OrdRec.fromItems(classifier.labels).get(entrySlug)}
-        globals={data.globals}
-      />
-    </div>
-    {/each}
+    <CardList
+      {classifier}
+      entries={selectedEntries}
+      globals={data.globals}
+    />
   </div>
 </main>
 
@@ -211,37 +205,6 @@
   }
   #project-list {
     width: 100%;
-
-    /* https://css-tricks.com/an-auto-filling-css-grid-with-max-columns/ */
-    /**
-    * User input values.
-    */
-    --grid-layout-gap: 20px;
-    --grid-column-count: 3;
-    --grid-item--min-width: 30em;
-
-    /**
-    * Calculated values.
-    */
-    --gap-count: calc(var(--grid-column-count) - 1);
-    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
-    --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
-
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
-    grid-gap: var(--grid-layout-gap);
   }
 
-  /* ✨ responsive design ✨ */
-  @media only screen and (max-width: 600px) {
-    #project-list {
-      display: flex;
-      flex-direction: column;
-      max-width: 100%;
-    }
-
-    #project-list > div {
-      width: 100%;
-    }
-  }
 </style>
