@@ -1,4 +1,4 @@
-import { any, array, defaulted, define, enums, number, object, record, string, type Infer } from 'superstruct';
+import { any, array, boolean, defaulted, define, enums, number, object, record, string, type Infer } from 'superstruct';
 import type { Label, LabelSlug } from './label';
 import type { RecordItems } from '$lib/OrderedRecord';
 
@@ -37,6 +37,8 @@ const AssociationOptionsStruct = object({
   title: string(),
   /** Display options. Use `"chip"` or `"card"`. */
   display: AssociationOptionsDisplayStruct,
+  /** Whether to display the labels that associate here, rather than labels that we associate to */
+  reverseLookup: defaulted(boolean(), false),
 });
 
 /** Information about how to display associations */

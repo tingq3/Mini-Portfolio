@@ -16,12 +16,14 @@ export function getAssociationDisplayInfo(
     return {
       title: 'See also',
       display: 'chip',
+      reverseLookup: false,
     };
   } else {
     // Default representation
     return {
       title: classifier.info.name,
       display: 'chip',
+      reverseLookup: false,
     };
   }
 }
