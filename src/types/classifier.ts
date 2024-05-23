@@ -7,6 +7,8 @@ export type ClassifierSlug = string & { __classifier_slug: string };
 /** The slug referring to a classifier, unique within a data-set */
 export const ClassifierSlugStruct = define<ClassifierSlug>('ClassifierSlug', v => typeof v === 'string');
 
+export const AssociationDisplay = enums(['chip', 'card']);
+
 /**
  * Visibility of the classifier. One of:
  *
@@ -34,6 +36,17 @@ export const ClassifierInfo = object({
 
   /** Visibility of this classifier */
   visibility: defaulted(ClassifierVisibility, 'visible'),
+
+  /**
+   * How to display associations for labels in this classifier.
+   *
+   * Any classifiers not included in this array are displayed as chips.
+   */
+  associations: defaulted(array(object({
+    classifier: ClassifierSlugStruct,
+    title: string(),
+    display: AssociationDisplay,
+  })), []),
 
   // TODO: implement this
   /** Extra properties that can be used by labels within this classifier */

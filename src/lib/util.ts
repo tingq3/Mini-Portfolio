@@ -1,4 +1,5 @@
-import type { ClassifierSlug, Label, LabelSlug } from '$types';
+import type { ClassifierSlug, Label, LabelSlug, PortfolioGlobals } from '$types';
+import OrdRec, { type OrderedRecord } from '$lib/OrderedRecord';
 
 /**
  * Filter the given array of labels based on the selected labels from the given
@@ -10,4 +11,48 @@ import type { ClassifierSlug, Label, LabelSlug } from '$types';
 export function filterLabelsByAssociations(labels: Label[], classifier: ClassifierSlug, selectedLabels: LabelSlug[]) {
   return labels
     .filter(p => p.info.associations[classifier].find(l => selectedLabels.includes(l)) !== undefined);
+}
+
+/**
+ * Returns an array of classifiers associated with the given label.
+ *
+ * These are ordered by the sort order from the global data.
+ */
+export function getAssociatedClassifiers(
+  globals: PortfolioGlobals,
+  label: Label,
+): ClassifierSlug[] {
+  return OrdRec.fromItems(globals.classifiers).keys().filter(c => c in label.info.associations);
+}
+
+/**
+ * Returns an OrderedRecord of labels associated with the given label, grouped
+ * by classifier.
+ *
+ * The return format matches the type of the `labels` attr in the `ChipList`
+ * component.
+ */
+export function getAssociatedLabels(
+  globals: PortfolioGlobals,
+  label: Label,
+): OrderedRecord<ClassifierSlug, OrderedRecord<LabelSlug, { label: Label }>> {
+  const usedClassifiers = getAssociatedClassifiers(globals, label);
+  return OrdRec.fromRecord(
+    Object.fromEntries(usedClassifiers.map(
+      c => [
+        c,
+        OrdRec.fromRecord(
+          Object.fromEntries(
+            label.info.associations[c].map(slug => [
+              slug,
+              { label: OrdRec.fromItems(OrdRec.fromItems(globals.classifiers).get(c).labels).get(slug) }
+            ]),
+          ),
+          label.info.associations[c],
+        ),
+      // Another manual type cast because Object.fromEntries is kinda stupid
+      ] as [ClassifierSlug, OrderedRecord<LabelSlug, { label: Label}>]
+    )),
+    usedClassifiers,
+  );
 }

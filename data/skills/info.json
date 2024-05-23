@@ -1,5 +1,12 @@
 {
   "name": "Skills",
   "description": "Skills that are demonstrated by my projects and experience",
-  "sort": 60
+  "sort": 60,
+  "associations": [
+    {
+      "classifier": "projects",
+      "title": "Projects demonstrating this skill",
+      "display": "card"
+    }
+  ]
 }

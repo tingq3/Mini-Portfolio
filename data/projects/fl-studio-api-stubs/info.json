@@ -16,7 +16,7 @@
       "python"
     ],
     "frameworks": [
-      "fl-studio-midi-controller-scripting",
+      "midi-controller-scripting",
       "mkdocs",
       "mypy"
     ],

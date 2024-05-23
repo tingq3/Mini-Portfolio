@@ -145,7 +145,8 @@
     gap: 5px;
     align-items: center;
     overflow-y: hidden;
-    overflow-x: scroll;
+    /* Scroll only if overflowing */
+    overflow-x: auto;
     scrollbar-width: thin;
   }
 </style>

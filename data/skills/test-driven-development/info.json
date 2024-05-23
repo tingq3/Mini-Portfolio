@@ -5,7 +5,8 @@
   "sort": 3,
   "associations": {
     "frameworks": [
-      "pytest"
+      "pytest",
+      "jest"
     ]
   }
 }
