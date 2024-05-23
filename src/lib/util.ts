@@ -1,5 +1,10 @@
-import type { ClassifierSlug, Label, LabelSlug, PortfolioGlobals } from '$types';
+import type { Classifier, ClassifierSlug, Label, LabelSlug, PortfolioGlobals } from '$types';
 import OrdRec, { type OrderedRecord } from '$lib/OrderedRecord';
+
+/** Return a reference to the classifier with the given slug */
+export function getClassifier(globals: PortfolioGlobals, classifier: ClassifierSlug): Classifier {
+  return OrdRec.fromItems(globals.classifiers).get(classifier);
+}
 
 /**
  * Filter the given array of labels based on the selected labels from the given

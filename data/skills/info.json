@@ -2,11 +2,18 @@
   "name": "Skills",
   "description": "Skills that are demonstrated by my projects and experience",
   "sort": 60,
-  "associations": [
-    {
-      "classifier": "projects",
+  "associations": {
+    "projects": {
       "title": "Projects demonstrating this skill",
       "display": "card"
+    },
+    "frameworks": {
+      "title": "Related frameworks",
+      "display": "chip"
+    },
+    "languages": {
+      "title": "Related languages",
+      "display": "chip"
     }
-  ]
+  }
 }

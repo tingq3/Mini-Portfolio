@@ -7,7 +7,40 @@ export type ClassifierSlug = string & { __classifier_slug: string };
 /** The slug referring to a classifier, unique within a data-set */
 export const ClassifierSlugStruct = define<ClassifierSlug>('ClassifierSlug', v => typeof v === 'string');
 
-export const AssociationDisplay = enums(['chip', 'card']);
+/**
+ * How to display associations:
+ *
+ * * `"chip"`: use a chip
+ * * `"card"`: use a card
+ */
+export const AssociationOptionsDisplayStruct = enums(['chip', 'card']);
+
+/**
+ * How to display associations:
+ *
+ * * `"chip"`: use a chip
+ * * `"card"`: use a card
+ */
+export type AssociationOptionsDisplay = Infer<typeof AssociationOptionsDisplayStruct>;
+
+/**
+ * Information about how to display associations.
+ *
+ * By default, the name of the classifier will be used, and it will be shown as
+ * a list of chips.
+ *
+ * If the classifier is the same as the current label, by default it will be
+ * named "See also" and displayed as cards.
+ */
+const AssociationOptionsStruct = object({
+  /** Title to use when displaying the associations under this classifier. */
+  title: string(),
+  /** Display options. Use `"chip"` or `"card"`. */
+  display: AssociationOptionsDisplayStruct,
+});
+
+/** Information about how to display associations */
+export type AssociationOptions = Infer<typeof AssociationOptionsStruct>;
 
 /**
  * Visibility of the classifier. One of:
@@ -42,11 +75,10 @@ export const ClassifierInfo = object({
    *
    * Any classifiers not included in this array are displayed as chips.
    */
-  associations: defaulted(array(object({
-    classifier: ClassifierSlugStruct,
-    title: string(),
-    display: AssociationDisplay,
-  })), []),
+  associations: defaulted(
+    record(ClassifierSlugStruct, AssociationOptionsStruct),
+    {},
+  ),
 
   // TODO: implement this
   /** Extra properties that can be used by labels within this classifier */
