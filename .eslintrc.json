@@ -52,6 +52,10 @@
 
       "@typescript-eslint/no-floating-promises": "error",
 
+      // Require operators to be at the starts of lines if there is a line
+      // break
+      "@stylistic/js/operator-linebreak": ["error", "before"],
+
       // Everything below here is standard 1531
 
       "@typescript-eslint/no-var-requires": 0,
