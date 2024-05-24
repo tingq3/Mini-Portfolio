@@ -4,5 +4,12 @@
   "sort": 70,
   "filterClassifiers": [
     "languages"
-  ]
+  ],
+  "associations": {
+    "projects": {
+      "title": "Projects utilising this framework",
+      "display": "card",
+      "reverseLookup": true
+    }
+  }
 }

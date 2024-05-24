@@ -6,7 +6,8 @@
   "associations": {
     "skills": [
       "frontend",
-      "full-stack"
+      "full-stack",
+      "sql"
     ]
   }
 }
