@@ -67,7 +67,7 @@ export const ClassifierInfo = object({
   /**
    * Classifier IDs whose labels should be used for filtering on this classifier
    */
-  filterClassifiers: defaulted(array(ClassifierSlugStruct), []),
+  filterClassifiers: defaulted(array(ClassifierSlugStruct), () => ([])),
 
   /** Visibility of this classifier */
   visibility: defaulted(ClassifierVisibility, 'visible'),
@@ -79,12 +79,12 @@ export const ClassifierInfo = object({
    */
   associations: defaulted(
     record(ClassifierSlugStruct, AssociationOptionsStruct),
-    {},
+    () => ({}),
   ),
 
   // TODO: implement this
   /** Extra properties that can be used by labels within this classifier */
-  extras: defaulted(record(string(), any()), {}),
+  extras: defaulted(record(string(), any()), () => ({})),
 });
 
 export type Classifier = {

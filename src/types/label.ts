@@ -56,7 +56,7 @@ export const LabelInfo = object({
    */
   associations: defaulted(
     record(ClassifierSlugStruct, array(LabelSlugStruct)),
-    {},
+    () => ({}),
   ),
 
   /** URLs associated with the label */
@@ -71,7 +71,7 @@ export const LabelInfo = object({
       /** URL of the documentation site for the label */
       docs: optional(string()),
     }),
-    {},
+    () => ({}),
   ),
 
   /** Information about the package distribution of the label */
@@ -83,7 +83,7 @@ export const LabelInfo = object({
   })),
 
   /** Extra information, as declared in the classifier */
-  extras: defaulted(record(string(), any()), {}),
+  extras: defaulted(record(string(), any()), () => ({})),
 });
 
 /** Represents a label */
