@@ -2,10 +2,5 @@
   "name": "Documentation",
   "description": "Documentation is information that describes the details of a project",
   "color": "#EA52D1",
-  "sort": 10,
-  "associations": {
-    "frameworks": [
-      "mkdocs"
-    ]
-  }
+  "sort": 10
 }

@@ -1,5 +1,12 @@
 {
   "name": "In-progress",
   "description": "This project is being actively developed, but isn't functional yet",
-  "color": "#F547F5"
+  "color": "#F547F5",
+  "associations": {
+    "status": [
+      "active",
+      "complete",
+      "incomplete"
+    ]
+  }
 }

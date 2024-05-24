@@ -2,10 +2,5 @@
   "name": "MIDI",
   "description": "MIDI is a low-latency binary communication protocol used to communicate with music hardware and software",
   "color": "#D26B60",
-  "sort": 1,
-  "associations": {
-    "frameworks": [
-      "midi-controller-scripting"
-    ]
-  }
+  "sort": 1
 }

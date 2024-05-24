@@ -1,10 +1,5 @@
 {
   "name": "Operating systems",
   "description": "Operating systems are the software responsible for interfacing with computer hardware",
-  "color": "#8D3F00",
-  "associations": {
-    "languages": [
-      "c"
-    ]
-  }
+  "color": "#8D3F00"
 }

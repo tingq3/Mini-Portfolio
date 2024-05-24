@@ -2,5 +2,10 @@
   "name": "SQL",
   "description": "SQL is a query language designed for efficiently searching databases",
   "color": "#EA2026",
-  "sort": -2
+  "sort": -2,
+  "associations": {
+    "skills": [
+      "backend"
+    ]
+  }
 }

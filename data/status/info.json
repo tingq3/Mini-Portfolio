@@ -2,5 +2,16 @@
   "name": "Project status",
   "description": "The status of projects",
   "sort": 90,
-  "visibility": "unlisted"
+  "visibility": "unlisted",
+  "associations": {
+    "projects": {
+      "title": "Projects with this status",
+      "display": "card",
+      "reverseLookup": true
+    },
+    "status": {
+      "title": "Other statuses",
+      "display": "chip"
+    }
+  }
 }
