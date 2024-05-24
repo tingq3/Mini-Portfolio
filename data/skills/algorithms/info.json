@@ -1,8 +1,5 @@
 {
   "name": "Algorithms",
   "description": "Algorithms are the building-blocks of software. Well-designed algorithms result in efficient code.",
-  "color": "#3AA9FF",
-  "associations": {
-    "projects": ["aoc"]
-  }
+  "color": "#3AA9FF"
 }

@@ -1,5 +1,6 @@
 import type { PortfolioGlobals } from '$types';
 import loadData from './loadData';
+import transformData from './transformData';
 import validateData from './validateData';
 
 // TODO: Use an environment variable to avoid having this be hard-coded
@@ -18,7 +19,8 @@ export function reloadData() {
     process.exit(1);
   }
   // Now validate the data
-  const errors = validateData(results);
+  const errors = transformData(results);
+  errors.push(...validateData(results));
   if (errors.length) {
     console.error('!!! Errors occurred while validating data!');
     for (const err of errors) {

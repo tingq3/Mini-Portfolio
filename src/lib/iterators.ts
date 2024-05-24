@@ -14,3 +14,7 @@ export function iterLabelsByClassifier(globals: PortfolioGlobals): [ClassifierSl
     .items()
     .map(([cs, ci]) => [cs, OrdRec.fromItems(ci.labels).values()]);
 }
+
+export function iterLabelsFromClassifier(globals: PortfolioGlobals, classifier: ClassifierSlug): Label[] {
+  return OrdRec.fromItems(OrdRec.fromItems(globals.classifiers).get(classifier).labels).values();
+}
