@@ -2,6 +2,7 @@
   import type { RepoInfo } from '$types/repo';
   import { repoIsWithProvider, repoProviders } from '$lib/repo';
   import { Card } from '.';
+    import { onMount } from 'svelte';
 
   export let repo: RepoInfo;
   export let color: string;
@@ -37,7 +38,11 @@
     }
   }
 
-  $: repoStarCount = fetchRepoStarCount(repo);
+  let repoStarCount: Promise<number | undefined> = Promise.resolve(undefined);
+
+  onMount(() => {
+    repoStarCount = fetchRepoStarCount(repo);
+  });
 </script>
 
 <Card
