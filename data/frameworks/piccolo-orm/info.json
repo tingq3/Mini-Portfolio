@@ -2,6 +2,7 @@
   "name": "Piccolo ORM",
   "description": "Piccolo ORM is a Python library that allows for asynchronous type-safe SQL database queries",
   "color": "#2769A0",
+  "visibility": "filtered",
   "associations": {
     "languages": [
       "python"

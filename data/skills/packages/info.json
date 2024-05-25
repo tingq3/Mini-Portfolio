@@ -1,5 +1,6 @@
 {
   "name": "Packages",
   "description": "Packages are reusable and shareable libraries that are intended to be used within other programming projects",
-  "color": "#17E238"
+  "color": "#17E238",
+  "sort": 5
 }

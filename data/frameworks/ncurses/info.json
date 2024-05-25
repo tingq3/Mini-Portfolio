@@ -2,6 +2,7 @@
   "name": "NCurses",
   "description": "NCurses is a library for building UIs for terminal apps",
   "color": "#C7D302",
+  "visibility": "filtered",
   "associations": {
     "languages": [
       "python",
