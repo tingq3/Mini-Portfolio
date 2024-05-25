@@ -1,7 +1,7 @@
 {
   "name": "Pytest",
   "description": "Pytest is a flexible testing framework for Python",
-  "color": "#C7D302",
+  "color": "#78A808",
   "sort": 4,
   "associations": {
     "languages": [

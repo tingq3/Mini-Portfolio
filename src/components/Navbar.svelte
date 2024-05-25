@@ -11,7 +11,9 @@
         .catch(e => console.error('Error reloading data', e));
     }
 
-    function pathTo(i: number) {
+    // This function needs to accept `path` as an input, otherwise the links
+    // stop being reactive due to cacheing or something
+    function pathTo(path: { url: string, txt: string }[], i: number) {
       return path.slice(0, i + 1).map(p => p.url).join('/');
     }
 </script>
@@ -23,7 +25,7 @@
             <h1>
                 <a href="/">{globals.config.name}</a> /
                 {#each path.slice(0, -1) as p, i}
-                    <a href="/{pathTo(i)}">{p.txt}</a>
+                    <a href="/{pathTo(path, i)}">{p.txt}</a>
                     {'/ '}
                 {/each}
                 {path[path.length - 1].txt}

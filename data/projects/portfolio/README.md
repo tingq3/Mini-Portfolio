@@ -10,3 +10,5 @@ content.
 * Demos of terminal apps using [Asciinema](https://asciinema.org/).
 * Intelligent cross-referencing between items using a labelling system based on
   the file hierarchy of the data directory.
+* Advanced filtering of items, using cross-references to allow users to search
+  for projects that meet their criteria.
