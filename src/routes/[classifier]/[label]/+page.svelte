@@ -1,9 +1,9 @@
 <script lang="ts">
+  import OrdRec from '$lib/OrderedRecord';
+  import { getAssociatedLabels, getClassifier } from '$lib/util';
     import { Navbar, Markdown } from '$components';
     import { ChipList } from '$components/chip';
-    import { CardGrid } from '$components/card';
-    import OrdRec from '$lib/OrderedRecord';
-    import { getAssociatedLabels, getClassifier } from '$lib/util';
+    import { CardGrid, IconCard } from '$components/card';
     import { filterAssociatedLabelsByDisplayType, getAssociationDisplayInfo } from './associations';
     // import AsciinemaPlayer from "$components";
 
@@ -36,6 +36,37 @@
         </div>
       {/each}
     </div>
+  </div>
+
+  <!-- Display links if needed -->
+  <div id="links-list">
+    {#if label.info.links.site}
+      <IconCard
+        title="Visit the website"
+        link={label.info.links.site}
+        color={label.info.color}
+      >
+      <i slot="icon" class="las la-globe"></i>
+      </IconCard>
+    {/if}
+    {#if label.info.links.docs}
+      <IconCard
+        title="View the documentation"
+        link={label.info.links.docs}
+        color={label.info.color}
+      >
+        <i slot="icon" class="lab la-readme"></i>
+      </IconCard>
+    {/if}
+    {#if label.info.links.repo}
+      <IconCard
+        title="Visit the repository"
+        link={label.info.links.repo}
+        color={label.info.color}
+      >
+        <i slot="icon" class="lab la-github"></i>
+      </IconCard>
+    {/if}
   </div>
 
   <!--
@@ -84,6 +115,13 @@
   .association-chip-row > h3 {
     margin: 0;
     height: min-content;
+  }
+
+  #links-list {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   #association-cards {

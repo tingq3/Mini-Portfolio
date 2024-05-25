@@ -2,13 +2,17 @@
     import Color from 'color';
 
     export let link: string;
+    export let newTab: boolean = false;
     export let color: string;
 
     $: baseColor = Color(color).lightness(85).hex();
     $: hoverColor = Color(color).lightness(70).hex();
 </script>
 
-<a href={link}>
+<a
+    href={link}
+    target={newTab ? '_blank' : undefined}
+>
     <div
         class="card"
         style:--base-color={baseColor}
