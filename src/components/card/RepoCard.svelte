@@ -52,7 +52,7 @@
     <h3>{repoString}</h3>
     <div class="star-count">
       {#await repoStarCount}
-        <i class="lar la-star"></i> <i class="las la-sync"></i>
+        <i class="lar la-star"></i> <i class="las la-sync spinner"></i>
       {:then stars}
         {#if stars}
           <i class="lar la-star"></i> {stars}
@@ -77,5 +77,13 @@
 
   .star-count {
     font-size: 1.5em;
+  }
+
+  .spinner {
+    animation: spin 1s infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 </style>
