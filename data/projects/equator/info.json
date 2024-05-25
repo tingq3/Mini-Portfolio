@@ -4,7 +4,10 @@
   "color": "#00ff99",
   "sort": 1,
   "links": {
-    "repo": "https://github.com/MiguelGuthridge/Equator"
+    "repo": {
+      "provider": "github",
+      "path": "MiguelGuthridge/Equator"
+    }
   },
   "package": {
     "url": "https://pypi.org/project/equatorpy/",

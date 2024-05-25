@@ -3,7 +3,10 @@
   "description": "A (joke) shell that runs in a Python REPL",
   "color": "#A81B0B",
   "links": {
-    "repo": "https://github.com/MiguelGuthridge/concussion"
+    "repo": {
+      "provider": "github",
+      "path": "MiguelGuthridge/concussion"
+    }
   },
   "package": {
     "url": "https://pypi.org/project/concussion/",

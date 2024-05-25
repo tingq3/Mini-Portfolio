@@ -4,7 +4,10 @@
   "color": "#0099ff",
   "sort": 5,
   "links": {
-    "repo": "https://github.com/MiguelGuthridge/portfolio",
+    "repo": {
+      "provider": "github",
+      "path": "MiguelGuthridge/portfolio"
+    },
     "site": "https://portfolio.maddyguthridge.com"
   },
   "associations": {

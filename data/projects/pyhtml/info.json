@@ -4,7 +4,10 @@
   "color": "#FFCB06",
   "sort": 8,
   "links": {
-    "repo": "https://github.com/COMP1010UNSW/pyhtml-enhanced"
+    "repo": {
+      "provider": "github",
+      "path": "COMP1010UNSW/PyHTML-Enhanced"
+    }
   },
   "package": {
     "command": "pip install pyhtml-enhanced",

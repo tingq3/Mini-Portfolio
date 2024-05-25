@@ -4,7 +4,10 @@
   "color": "#cc00ff",
   "sort": 10,
   "links": {
-    "repo": "https://github.com/MiguelGuthridge/Universal-Controller-Script"
+    "repo": {
+      "provider": "github",
+      "path": "MiguelGuthridge/Universal-Controller-Script"
+    }
   },
   "associations": {
     "languages": [

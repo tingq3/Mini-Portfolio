@@ -4,7 +4,10 @@
   "sort": 3,
   "color": "#cc66ff",
   "links": {
-    "repo": "https://github.com/EnsembleForum/Ensemble"
+    "repo": {
+      "provider": "github",
+      "path": "EnsembleForum/Ensemble"
+    }
   },
   "associations": {
     "languages": [

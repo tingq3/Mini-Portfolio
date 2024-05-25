@@ -4,7 +4,10 @@
   "sort": 4,
   "color": "#ffff66",
   "links": {
-    "repo": "https://github.com/MiguelGuthridge/Enigma-Breaker"
+    "repo": {
+      "provider": "github",
+      "path": "MiguelGuthridge/EnigmaBreaker"
+    }
   },
   "associations": {
     "languages": [

@@ -4,7 +4,10 @@
   "color": "#ff6600",
   "sort": 6,
   "links": {
-    "repo": "https://github.com/IL-Group/FL-Studio-API-Stubs",
+    "repo": {
+      "provider": "github",
+      "path": "IL-Group/FL-Studio-API-Stubs"
+    },
     "docs": "https://il-group.github.io/FL-Studio-API-Stubs/"
   },
   "package": {

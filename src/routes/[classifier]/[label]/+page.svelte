@@ -5,6 +5,7 @@
     import { ChipList } from '$components/chip';
     import { CardGrid, IconCard } from '$components/card';
     import { filterAssociatedLabelsByDisplayType, getAssociationDisplayInfo } from './associations';
+    import RepoCard from '$components/card/RepoCard.svelte';
     // import AsciinemaPlayer from "$components";
 
     export let data: import('./$types').PageData;
@@ -59,13 +60,10 @@
       </IconCard>
     {/if}
     {#if label.info.links.repo}
-      <IconCard
-        title="Visit the repository"
-        link={label.info.links.repo}
+      <RepoCard
+        repo={label.info.links.repo}
         color={label.info.color}
-      >
-        <i slot="icon" class="lab la-github"></i>
-      </IconCard>
+      />
     {/if}
   </div>
 

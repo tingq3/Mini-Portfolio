@@ -4,7 +4,10 @@
   "color": "#E24D17",
   "sort": 1,
   "links": {
-    "repo": "https://github.com/MiguelGuthridge/Flapi"
+    "repo": {
+      "provider": "github",
+      "path": "MiguelGuthridge/Flapi"
+    }
   },
   "package": {
     "url": "https://pypi.org/project/flapi/",

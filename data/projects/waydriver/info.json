@@ -4,7 +4,10 @@
   "color": "#009999",
   "sort": -2,
   "links": {
-    "repo": "https://github.com/Waydriver"
+    "repo": {
+      "provider": "github",
+      "path": "Waydriver"
+    }
   },
   "associations": {
     "languages": [

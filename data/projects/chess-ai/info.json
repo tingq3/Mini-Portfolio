@@ -4,7 +4,10 @@
   "sort": -5,
   "color": "#66ff66",
   "links": {
-    "repo": "https://github.com/MiguelGuthridge/chs"
+    "repo": {
+      "provider": "github",
+      "path": "MiguelGuthridge/chs"
+    }
   },
   "associations": {
     "languages": [

@@ -3,7 +3,10 @@
   "description": "Advent of Code is a 25-day algorithms programming challenge",
   "color": "#F7E200",
   "links": {
-    "repo": "https://github.com/MiguelGuthridge/aoc-2023"
+    "repo": {
+      "provider": "github",
+      "path": "MiguelGuthridge/aoc-2023"
+    }
   },
   "associations": {
     "languages": [

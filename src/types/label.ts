@@ -10,8 +10,10 @@ import {
   enums,
   define,
   any,
+  union,
 } from 'superstruct';
 import { ClassifierSlugStruct, type ClassifierSlug } from './classifier';
+import { RepoInfoStruct, RepoProviderStruct } from './repo';
 
 /** The slug referring to a label, unique within a classifier */
 export type LabelSlug = string & { __label_slug: string };
@@ -63,7 +65,7 @@ export const LabelInfo = object({
   links: defaulted(
     object({
       /** URL of the source repository of the label */
-      repo: optional(string()),
+      repo: optional(RepoInfoStruct),
 
       /** URL of the site demonstrating the label */
       site: optional(string()),
