@@ -17,9 +17,11 @@
 	"dependencies": {
 		"color": "^4.2.3",
 		"dotenv": "^16.4.5",
+		"highlight.js": "^11.9.0",
 		"jest-dev-server": "^10.0.0",
 		"jest-environment-jsdom": "^29.7.0",
 		"marked": "^12.0.2",
+		"marked-highlight": "^2.1.1",
 		"mime-types": "^2.1.35",
 		"sanitize-filename": "^1.6.3",
 		"superstruct": "^1.0.4",
