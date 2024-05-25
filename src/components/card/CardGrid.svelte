@@ -10,7 +10,7 @@
   export let globals: PortfolioGlobals;
 </script>
 
-<div class="card-list">
+<div class="card-grid">
   {#each entries as entrySlug (entrySlug)}
     <div
       transition:fade={{ duration: 300 }}
@@ -25,7 +25,7 @@
 </div>
 
 <style>
-  .card-list {
+  .card-grid {
     /* https://css-tricks.com/an-auto-filling-css-grid-with-max-columns/ */
     /**
     * User input values.
@@ -48,7 +48,7 @@
 
   /* ✨ responsive design ✨ */
   @media only screen and (max-width: 600px) {
-    .card-list {
+    .card-grid {
       display: flex;
       flex-direction: column;
       max-width: 100%;

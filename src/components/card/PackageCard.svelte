@@ -58,6 +58,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
+    height: 100%;
   }
   /* Icons */
   i {

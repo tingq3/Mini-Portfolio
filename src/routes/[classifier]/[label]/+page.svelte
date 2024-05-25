@@ -3,7 +3,7 @@
   import { getAssociatedLabels, getClassifier } from '$lib/util';
     import { Navbar, Markdown } from '$components';
     import { ChipList } from '$components/chip';
-    import { CardGrid, IconCard, RepoCard, PackageCard } from '$components/card';
+    import { CardGrid, IconCard, RepoCard, PackageCard, CardList } from '$components/card';
     import { filterAssociatedLabelsByDisplayType, getAssociationDisplayInfo } from './associations';
     // import AsciinemaPlayer from "$components";
 
@@ -40,36 +40,38 @@
 
   <!-- Display links if needed -->
   <div id="links-list">
-    {#if label.info.links.site}
-      <IconCard
-        title="Visit the website"
-        link={label.info.links.site}
-        color={label.info.color}
-      >
-      <i slot="icon" class="las la-globe"></i>
-      </IconCard>
-    {/if}
-    {#if label.info.links.docs}
-      <IconCard
-        title="View the documentation"
-        link={label.info.links.docs}
-        color={label.info.color}
-      >
-        <i slot="icon" class="lab la-readme"></i>
-      </IconCard>
-    {/if}
-    {#if label.info.links.repo}
-      <RepoCard
-        repo={label.info.links.repo}
-        color={label.info.color}
-      />
-    {/if}
-    {#if label.info.package}
-      <PackageCard
-        info={label.info.package}
-        color={label.info.color}
-      />
-    {/if}
+    <CardList>
+      {#if label.info.links.site}
+        <IconCard
+          title="Visit the website"
+          link={label.info.links.site}
+          color={label.info.color}
+        >
+        <i slot="icon" class="las la-globe"></i>
+        </IconCard>
+      {/if}
+      {#if label.info.links.docs}
+        <IconCard
+          title="View the documentation"
+          link={label.info.links.docs}
+          color={label.info.color}
+        >
+          <i slot="icon" class="lab la-readme"></i>
+        </IconCard>
+      {/if}
+      {#if label.info.links.repo}
+        <RepoCard
+          repo={label.info.links.repo}
+          color={label.info.color}
+        />
+      {/if}
+      {#if label.info.package}
+        <PackageCard
+          info={label.info.package}
+          color={label.info.color}
+        />
+      {/if}
+    </CardList>
   </div>
 
   <!--
@@ -122,9 +124,6 @@
 
   #links-list {
     width: 80%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   #association-cards {

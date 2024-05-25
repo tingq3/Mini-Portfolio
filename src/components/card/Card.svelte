@@ -61,6 +61,7 @@
     }
 
     .card-main {
+        /* Make main content of card leave some space before the bottom slot */
         flex-grow: 1;
     }
 </style>

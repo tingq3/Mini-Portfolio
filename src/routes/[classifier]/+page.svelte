@@ -6,7 +6,7 @@
     import { CardGrid } from '$components/card';
     import { ChipList } from '$components/chip';
     import type { ClassifierSlug, Label, LabelSlug } from '$types';
-    import OrdRec, { type OrderedRecord } from '$lib/OrderedRecord';
+    import OrdRec from '$lib/OrderedRecord';
     import { visibilityFilter } from '$lib/visibility';
 
     export let data: import('./$types').PageData;
