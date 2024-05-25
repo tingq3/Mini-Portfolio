@@ -7,4 +7,6 @@ content.
 ## Features
 
 * Validation of all source data, using [Superstruct](https://docs.superstructjs.org/).
-* Demos of terminal apps using [Asciinema](https://asciinema.org/)
+* Demos of terminal apps using [Asciinema](https://asciinema.org/).
+* Intelligent cross-referencing between items using a labelling system based on
+  the file hierarchy of the data directory.

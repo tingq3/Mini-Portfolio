@@ -9,3 +9,6 @@ with extremely complex requirements for player and enemy movement.
 In order to implement this project, we made heavy use of design patterns and
 the object-oriented paradigm to encapsulate complex behaviours in simple
 interfaces.
+
+As this project was a university project, the source code is not public.
+However, I am able to grant access to potential employers on request.

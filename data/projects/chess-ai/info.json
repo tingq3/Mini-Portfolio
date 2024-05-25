@@ -1,6 +1,6 @@
 {
-  "name": "Unnamed Chess AI",
-  "description": "A currently-incomplete chess engine written in Rust",
+  "name": "Chess AI",
+  "description": "A chess engine written in Rust",
   "sort": -5,
   "color": "#66ff66",
   "links": {
