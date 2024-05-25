@@ -63,7 +63,7 @@
     {:then stars}
       <!-- Only show star count if the project has stars -->
       {#if stars}
-        <div class="star-count" use:tooltip={{ content: `Project has ${stars} star${stars === 1 ? '' : 's'}` }}>
+        <div class="star-count" use:tooltip={{ content: `Repository has ${stars} star${stars === 1 ? '' : 's'}` }}>
           <i class="lar la-star"></i> {stars}
         </div>
       {/if}

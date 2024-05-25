@@ -1,13 +1,12 @@
 <script lang="ts">
-    import { flip } from 'svelte/animate';
-    import { fade } from 'svelte/transition';
-
     import { Navbar, Markdown } from '$components';
     import { CardGrid } from '$components/card';
     import { ChipList } from '$components/chip';
     import type { ClassifierSlug, Label, LabelSlug } from '$types';
     import OrdRec from '$lib/OrderedRecord';
     import { visibilityFilter } from '$lib/visibility';
+    import { onMount } from 'svelte';
+    import { applyParamsToFilter, filterToParams as filterToString } from './filterSerialize';
 
     export let data: import('./$types').PageData;
 
@@ -139,7 +138,31 @@
       // Replace selectedFilters so that the reactivity works
       selectedFilters = { ...selectedFilters };
       updateProjectList();
+
+      // Update the query string with the current filters
+      const url = new URL(window.location.href);
+      const filterString = filterToString(selectedFilters);
+      // Only add the filter property if it actually contains information
+      if (filterString.length) {
+        url.searchParams.set('filter', filterString);
+      } else {
+        // Remove filter property entirely
+        url.searchParams.delete('filter');
+      }
+      window.history.pushState(null, '', url.toString());
     }
+
+    // Apply filters from query string
+    onMount(() => {
+      const params = new URLSearchParams(window.location.search);
+      const filterString = params.get('filter');
+      if (filterString) {
+        applyParamsToFilter(selectedFilters, filterString);
+        // Replace selectedFilters so that the reactivity works
+        selectedFilters = { ...selectedFilters };
+        updateProjectList();
+      }
+    });
 </script>
 
 <Navbar
