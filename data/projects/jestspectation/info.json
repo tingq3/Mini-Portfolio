@@ -11,8 +11,8 @@
     }
   },
   "package": {
-    "url": "https://pypi.org/project/jestspectation/",
-    "command": "pip install jestspectation"
+    "provider": "pypi",
+    "id": "jestspectation"
   },
   "associations": {
     "languages": [

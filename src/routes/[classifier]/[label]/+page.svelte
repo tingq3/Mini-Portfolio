@@ -3,9 +3,8 @@
   import { getAssociatedLabels, getClassifier } from '$lib/util';
     import { Navbar, Markdown } from '$components';
     import { ChipList } from '$components/chip';
-    import { CardGrid, IconCard } from '$components/card';
+    import { CardGrid, IconCard, RepoCard, PackageCard } from '$components/card';
     import { filterAssociatedLabelsByDisplayType, getAssociationDisplayInfo } from './associations';
-    import RepoCard from '$components/card/RepoCard.svelte';
     // import AsciinemaPlayer from "$components";
 
     export let data: import('./$types').PageData;
@@ -62,6 +61,12 @@
     {#if label.info.links.repo}
       <RepoCard
         repo={label.info.links.repo}
+        color={label.info.color}
+      />
+    {/if}
+    {#if label.info.package}
+      <PackageCard
+        info={label.info.package}
         color={label.info.color}
       />
     {/if}

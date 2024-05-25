@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { RepoInfo } from '$types/repo';
-  import { repoIsWithProvider, repoProviders } from '$lib/repo';
+  import type { RepoInfo } from '$types/repoInfo';
+  import { repoIsWithProvider, repoProviders } from '$lib/repoInfo';
   import { Card } from '.';
-    import { onMount } from 'svelte';
+  import { onMount } from 'svelte';
+    import { tooltip } from '$lib/tooltip';
 
   export let repo: RepoInfo;
   export let color: string;
@@ -20,7 +21,7 @@
   $: repoIcon = (
     repoIsWithProvider(repo)
       ? repoProviders[repo.provider].icon
-      : repo.icon);
+      : repo.icon ?? 'las la-code-branch');
 
   async function fetchRepoStarCount(repo: RepoInfo): Promise<number | undefined> {
     // Manual repos can't display star counts
@@ -55,17 +56,22 @@
         <i class={repoIcon}></i>
     </div>
     <h3>{repoString}</h3>
-    <div class="star-count">
-      {#await repoStarCount}
+    {#await repoStarCount}
+      <div class="star-count" use:tooltip={{ content: 'Loading star count' }}>
         <i class="lar la-star"></i> <i class="las la-sync spinner"></i>
-      {:then stars}
-        {#if stars}
+      </div>
+    {:then stars}
+      <!-- Only show star count if the project has stars -->
+      {#if stars}
+        <div class="star-count" use:tooltip={{ content: `Project has ${stars} star${stars === 1 ? '' : 's'}` }}>
           <i class="lar la-star"></i> {stars}
-        {/if}
-      {:catch e}
+        </div>
+      {/if}
+    {:catch e}
+      <div class="star-count">
         <i class="lar la-star"></i> {e}
-      {/await}
-    </div>
+      </div>
+    {/await}
   </span>
 </Card>
 
@@ -81,6 +87,9 @@
   }
 
   .star-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     font-size: 1.5em;
   }
 

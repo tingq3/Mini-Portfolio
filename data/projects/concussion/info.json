@@ -9,8 +9,8 @@
     }
   },
   "package": {
-    "url": "https://pypi.org/project/concussion/",
-    "command": "pip install concussion"
+    "provider": "pypi",
+    "id": "concussion"
   },
   "associations": {
     "languages": [

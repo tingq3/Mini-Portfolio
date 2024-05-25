@@ -10,8 +10,8 @@
     }
   },
   "package": {
-    "command": "pip install pyhtml-enhanced",
-    "url": "https://pypi.org/project/pyhtml-enhanced/"
+    "provider": "pypi",
+    "id": "pyhtml-enhanced"
   },
   "associations": {
     "languages": [

@@ -10,8 +10,8 @@
     }
   },
   "package": {
-    "url": "https://pypi.org/project/equatorpy/",
-    "command": "pip install equatorpy"
+    "provider": "pypi",
+    "id": "equatorpy"
   },
   "associations": {
     "languages": [

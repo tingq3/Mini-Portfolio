@@ -10,8 +10,8 @@
     }
   },
   "package": {
-    "url": "https://pypi.org/project/flapi/",
-    "command": "pip install flapi"
+    "provider": "pypi",
+    "id": "flapi"
   },
   "associations": {
     "languages": [

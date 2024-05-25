@@ -11,8 +11,8 @@
     "docs": "https://il-group.github.io/FL-Studio-API-Stubs/"
   },
   "package": {
-    "url": "https://pypi.org/project/fl-studio-api-stubs/",
-    "command": "pip install fl-studio-api-stubs"
+    "provider": "pypi",
+    "id": "fl-studio-api-stubs"
   },
   "associations": {
     "languages": [

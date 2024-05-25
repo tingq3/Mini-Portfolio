@@ -1,14 +1,10 @@
-import type { ProviderRepoInfo, RepoProvider, RepoInfo } from '$types/repo';
+import type { ProvidedRepoInfo, RepoProvider, RepoInfo } from '$types/repoInfo';
 
 /** Info required to register a repo provider */
-type ProviderInfo = {
+type RepoProviderInfo = {
   /** Name of provider (eg GitHub) */
   name: string
-  /**
-   * Icon id to use (from LineAwesome)
-   *
-   * https://icons8.com/line-awesome
-   */
+  /** Icon id to use (from LineAwesome) */
   icon: string
   /** Return a URL for the repo given the repo string */
   makeUrl: (repo: string) => string
@@ -22,7 +18,7 @@ type ProviderInfo = {
   getStarCount: ((repo: string) => Promise<number | undefined>) | undefined
 };
 
-export const repoProviders: Record<RepoProvider, ProviderInfo> = {
+export const repoProviders: Record<RepoProvider, RepoProviderInfo> = {
   // GitHub
   github: {
     name: 'GitHub',
@@ -52,6 +48,7 @@ export const repoProviders: Record<RepoProvider, ProviderInfo> = {
   }
 };
 
-export function repoIsWithProvider(repo: RepoInfo): repo is ProviderRepoInfo {
+/** Returns whether a repo uses a provider */
+export function repoIsWithProvider(repo: RepoInfo): repo is ProvidedRepoInfo {
   return 'provider' in repo;
 }

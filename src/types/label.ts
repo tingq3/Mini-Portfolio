@@ -12,7 +12,8 @@ import {
   any,
 } from 'superstruct';
 import { ClassifierSlugStruct, type ClassifierSlug } from './classifier';
-import { RepoInfoStruct } from './repo';
+import { RepoInfoStruct } from './repoInfo';
+import { PackageInfoStruct } from './packageInfo';
 
 /** The slug referring to a label, unique within a classifier */
 export type LabelSlug = string & { __label_slug: string };
@@ -88,12 +89,7 @@ export const LabelInfo = object({
   ),
 
   /** Information about the package distribution of the label */
-  package: optional(object({
-    /** Installation command */
-    command: string(),
-    /** URL for viewing the label's package listing */
-    url: string(),
-  })),
+  package: optional(PackageInfoStruct),
 
   /** Extra information, as declared in the classifier */
   extras: defaulted(record(string(), any()), () => ({})),

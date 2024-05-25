@@ -2,12 +2,12 @@
  * Type definitions for links to repos
  */
 
-import { enums, object, string, union, type Infer } from 'superstruct';
+import { enums, object, optional, string, union, type Infer } from 'superstruct';
 
-/** Names of repos that are officially supported */
-export const supportedRepos = ['github', 'gitlab'] as const;
+/** Names of repository hosts that are officially supported */
+export const supportedHosts = ['github', 'gitlab'] as const;
 
-export const RepoProviderStruct = enums(supportedRepos);
+export const RepoProviderStruct = enums(supportedHosts);
 
 export type RepoProvider = Infer<typeof RepoProviderStruct>;
 
@@ -20,7 +20,7 @@ const ProviderRepoInfoStruct = object({
 });
 
 /** Repository info gathered using provider definition */
-export type ProviderRepoInfo = Infer<typeof ProviderRepoInfoStruct>;
+export type ProvidedRepoInfo = Infer<typeof ProviderRepoInfoStruct>;
 
 /** Repository info set manually */
 const ManualRepoInfoStruct = object({
@@ -28,8 +28,8 @@ const ManualRepoInfoStruct = object({
   title: string(),
   /** URL to link to */
   url: string(),
-  /** Icon to use for the button */
-  icon: string(),
+  /** Icon to use on the card (from LineAwesome) */
+  icon: optional(string()),
 });
 
 /** Repository info set manually */
@@ -43,4 +43,5 @@ export const RepoInfoStruct = union([
   ManualRepoInfoStruct,
 ]);
 
-export type RepoInfo = ProviderRepoInfo | ManualRepoInfo;
+/** Information about a repo */
+export type RepoInfo = ProvidedRepoInfo | ManualRepoInfo;
