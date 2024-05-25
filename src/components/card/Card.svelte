@@ -47,11 +47,17 @@
         height: 90%;
         transition:
             background-color .5s,
-            transform .5s ease-out;
+            box-shadow .5s;
     }
     .card:hover {
-        transform: scale(1.01);
+        /* Don't scale cards since that makes the text render weirdly on Firefox */
+        /* transform: scale(1.01); */
         background-color: var(--hover-color);
+        box-shadow:
+            /* Default shadow */
+            5px 5px 10px rgba(61, 61, 61, 0.178),
+            /* Glow */
+            0 0 20px var(--base-color);
     }
     @media only screen and (max-width: 600px) {
         .card {
