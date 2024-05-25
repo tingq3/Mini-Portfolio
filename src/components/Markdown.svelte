@@ -1,7 +1,7 @@
 <script lang="ts">
 import { marked } from 'marked';
 import hljs from 'highlight.js';
-import 'highlight.js/styles/default.css';
+import 'highlight.js/styles/stackoverflow-light.css';
 import { onMount } from 'svelte';
 
 export let source: string;
@@ -39,6 +39,10 @@ onMount(() => {
     border-width: 1px;
     /* Kinda bold but not obnoxiously so */
     font-weight: 600;
+  }
+  /* Override the background colour from code highlighting */
+  .markdown-render :global(code) {
+    background-color: rgb(245, 245, 245);
   }
 
   .markdown-render :global(a) {
