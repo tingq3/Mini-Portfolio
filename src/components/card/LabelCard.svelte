@@ -17,5 +17,5 @@
   color={label.info.color}
 >
   <p>{label.info.description}</p>
-  <ChipList labels={associatedLabels} link={true} />
+  <ChipList slot="bottom" labels={associatedLabels} link={true} />
 </Card>

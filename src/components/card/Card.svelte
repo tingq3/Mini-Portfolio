@@ -15,11 +15,11 @@
         style:--base-color={baseColor}
         style:--hover-color={hoverColor}
     >
-        <div>
+        <div class="card-main">
             <h3>{title}</h3>
             <slot />
         </div>
-        <div>
+        <div class="card-bottom">
             <slot name="bottom" />
         </div>
     </div>
@@ -53,5 +53,9 @@
             max-width: 100%;
             padding: 10px 15px;
         }
+    }
+
+    .card-main {
+        flex-grow: 1;
     }
 </style>
