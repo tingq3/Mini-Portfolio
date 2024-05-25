@@ -3,7 +3,7 @@
     import { fade } from 'svelte/transition';
 
     import { Navbar, Markdown } from '$components';
-    import { CardList } from '$components/card';
+    import { CardGrid } from '$components/card';
     import { ChipList } from '$components/chip';
     import type { ClassifierSlug, Label, LabelSlug } from '$types';
     import OrdRec, { type OrderedRecord } from '$lib/OrderedRecord';
@@ -179,7 +179,7 @@
 
   <!-- List all entry cards -->
   <div id="project-list">
-    <CardList
+    <CardGrid
       {classifier}
       entries={selectedEntries}
       globals={data.globals}

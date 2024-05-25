@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Navbar, Markdown } from '$components';
     import { ChipList } from '$components/chip';
-    import { CardList } from '$components/card';
+    import { CardGrid } from '$components/card';
     import OrdRec from '$lib/OrderedRecord';
     import { getAssociatedLabels, getClassifier } from '$lib/util';
     import { filterAssociatedLabelsByDisplayType, getAssociationDisplayInfo } from './associations';
@@ -51,7 +51,7 @@
     {#each filterAssociatedLabelsByDisplayType(data.globals, associatedLabels, classifier, 'card').items() as [assClass, assLabels] }
       <div class="association-cards-row">
         <h2>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h2>
-        <CardList
+        <CardGrid
           classifier={getClassifier(data.globals, assClass)}
           entries={assLabels.keys()}
           globals={data.globals}
