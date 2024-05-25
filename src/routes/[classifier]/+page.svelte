@@ -7,6 +7,7 @@
     import { ChipList } from '$components/chip';
     import type { ClassifierSlug, Label, LabelSlug } from '$types';
     import OrdRec, { type OrderedRecord } from '$lib/OrderedRecord';
+    import { visibilityFilter } from '$lib/visibility';
 
     export let data: import('./$types').PageData;
 
@@ -51,7 +52,10 @@
                     // This hurts my soul on a spiritual level
                     .map(k => [k, false] as [LabelSlug, boolean]),
                 ),
-                OrdRec.fromItems(filterC.labels).keys(),
+                OrdRec.fromItems(filterC.labels)
+                  // Filter out items that aren't supposed to show in filters
+                  .filter(visibilityFilter('filtered'))
+                  .keys(),
               )
             ];
           }

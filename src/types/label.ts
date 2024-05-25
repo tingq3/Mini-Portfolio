@@ -10,10 +10,9 @@ import {
   enums,
   define,
   any,
-  union,
 } from 'superstruct';
 import { ClassifierSlugStruct, type ClassifierSlug } from './classifier';
-import { RepoInfoStruct, RepoProviderStruct } from './repo';
+import { RepoInfoStruct } from './repo';
 
 /** The slug referring to a label, unique within a classifier */
 export type LabelSlug = string & { __label_slug: string };
@@ -30,7 +29,19 @@ const LabelSlugStruct = define<LabelSlug>('LabelSlug', v => typeof v === 'string
  * * `'hidden'`: label is not linked anywhere on the site, but is shown on its
  *   primary page.
  */
-const LabelVisibility = enums(['visible', 'filtered', 'unlisted', 'hidden']);
+const LabelVisibilityStruct = enums(['visible', 'filtered', 'unlisted', 'hidden']);
+
+/**
+ * Visibility of the label. One of:
+ *
+ * * `'visible'`: label is visible in all locations
+ * * `'filtered'`: label is not displayed in filter controls
+ * * `'unlisted'`: label is only shown when explicitly associated from another
+ *   label.
+ * * `'hidden'`: label is not linked anywhere on the site, but is shown on its
+ *   primary page.
+ */
+export type LabelVisibility = Infer<typeof LabelVisibilityStruct>;
 
 /** Represents information contained within a label's info.json */
 export const LabelInfo = object({
@@ -47,7 +58,7 @@ export const LabelInfo = object({
   color: string(),
 
   /** Visibility of this label */
-  visibility: defaulted(LabelVisibility, 'visible'),
+  visibility: defaulted(LabelVisibilityStruct, 'visible'),
 
   /**
    * Used to associate this label with other categories.

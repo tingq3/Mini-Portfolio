@@ -10,6 +10,7 @@ export type OrderedRecord <K extends string, V> = {
   keys: () => K[]
   values: () => V[]
   items: () => RecordItems<K, V>
+  filter: (fn: (key: K, value: V) => boolean) => OrderedRecord<K, V>
   map: <T>(fn: (key: K, value: V) => T) => OrderedRecord<K, T>
 }
 
@@ -28,6 +29,15 @@ export function fromRecord<K extends string, V>(record: Record<K, V>, order: K[]
     ),
     order,
   );
+  const filter: OrderedRecord<K, V>['filter'] = fn => {
+    const filtered = items().filter(([k, v]) => fn(k, v));
+    return fromRecord(
+      Object.fromEntries(
+        filtered,
+      ) as Record<K, V>,
+      filtered.map(([k]) => k),
+    );
+  };
   return {
     __record: record,
     __order: order,
@@ -37,6 +47,7 @@ export function fromRecord<K extends string, V>(record: Record<K, V>, order: K[]
     values,
     items,
     map,
+    filter,
   };
 }
 
