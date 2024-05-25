@@ -13,9 +13,15 @@
 
 <Card
   link="/{label.classifier}/{label.slug}"
-  title={label.info.name}
   color={label.info.color}
 >
+  <h3 slot="top">{label.info.name}</h3>
   <p>{label.info.description}</p>
   <ChipList slot="bottom" labels={associatedLabels} link={true} />
 </Card>
+
+<style>
+  h3 {
+    margin-bottom: 0;
+  }
+</style>

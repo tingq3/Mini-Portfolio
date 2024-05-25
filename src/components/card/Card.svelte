@@ -2,7 +2,6 @@
     import Color from 'color';
 
     export let link: string;
-    export let title: string;
     export let color: string;
 
     $: baseColor = Color(color).lightness(85).hex();
@@ -15,8 +14,10 @@
         style:--base-color={baseColor}
         style:--hover-color={hoverColor}
     >
+        <div class="card-top">
+            <slot name="top" />
+        </div>
         <div class="card-main">
-            <h3>{title}</h3>
             <slot />
         </div>
         <div class="card-bottom">
