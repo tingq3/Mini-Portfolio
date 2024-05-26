@@ -1,6 +1,6 @@
 {
   "name": "Universal Controller Script",
-  "description": "An advanced compatibility layer to provide best-in-class integration between many hardware MIDI controllers and the FL Studio audio workstation",
+  "description": "An advanced hardware integration layer for the FL Studio audio workstation",
   "color": "#cc00ff",
   "sort": 10,
   "links": {
@@ -27,5 +27,7 @@
     "status": [
       "active"
     ]
-  }
+  },
+  "visibility": "visible",
+  "extras": {}
 }
