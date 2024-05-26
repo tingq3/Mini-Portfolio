@@ -58,10 +58,10 @@
     // If scrolling changed direction, reset the target to the current
     // position to prevent jank
     if (
-    // Aiming further left but we're scrolling right
-      (targetScrollPosition > ele.scrollLeft && e.deltaY < 0) ||
-    // Aiming further right but we're scrolling left
-    (targetScrollPosition < ele.scrollLeft && e.deltaY > 0)
+      // Aiming further left but we're scrolling right
+      (targetScrollPosition > ele.scrollLeft && e.deltaY < 0)
+      // Aiming further right but we're scrolling left
+      || (targetScrollPosition < ele.scrollLeft && e.deltaY > 0)
     ) {
       targetScrollPosition = ele.scrollLeft;
     }
