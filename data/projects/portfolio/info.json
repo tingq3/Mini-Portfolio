@@ -27,5 +27,7 @@
     "status": [
       "active"
     ]
-  }
+  },
+  "visibility": "visible",
+  "extras": {}
 }

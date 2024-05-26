@@ -1,7 +1,7 @@
 <script lang="ts">
     import Color from 'color';
 
-    export let link: string;
+    export let link: string | false = false;
     export let newTab: boolean = false;
     export let color: string;
 
@@ -10,7 +10,7 @@
 </script>
 
 <a
-    href={link}
+    href={link || undefined}
     target={newTab ? '_blank' : undefined}
 >
     <div

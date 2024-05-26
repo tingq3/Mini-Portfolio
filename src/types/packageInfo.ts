@@ -2,7 +2,7 @@
  * Type definitions for links to repos
  */
 
-import { enums, object, string, union, type Infer } from 'superstruct';
+import { enums, literal, object, string, union, type Infer } from 'superstruct';
 
 /** Names of package repos that are supported by the system */
 export const supportedPackageRepos = ['pypi', 'npm'] as const;
@@ -24,6 +24,7 @@ export type ProvidedPackageInfo = Infer<typeof ProviderPackageInfoStruct>;
 
 /** Package info set manually */
 const ManualPackageInfoStruct = object({
+  provider: literal('custom'),
   /** Title text to display for the package repository (eg "PyPI") */
   providerName: string(),
   /** URL to link to */

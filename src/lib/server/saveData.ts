@@ -22,6 +22,6 @@ export async function saveLabel(label: Label) {
   await fs.writeFile(
     `${labelDir}/README.md`,
     // Remove trailing space and add a trailing new-line
-    label.readme.split('\n').map(l => l.trim()).join('\n') + '\n',
+    label.readme.trim().split('\n').map(l => l.trimEnd()).join('\n') + '\n',
   );
 }

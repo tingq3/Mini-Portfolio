@@ -12,4 +12,3 @@ hardware controls in an intuitive and consistent manner.
 After over 2 years of design and development, there are now
 ***over 300 musicians*** who use Universal Controller Script to streamline their
 music production workflow.
-

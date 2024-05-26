@@ -3,9 +3,12 @@
   import { getAssociatedLabels, getClassifier } from '$lib/util';
     import { Navbar, Markdown } from '$components';
     import { ChipList } from '$components/chip';
-    import { CardGrid, IconCard, RepoCard, PackageCard, CardList } from '$components/card';
+    import { CardGrid, IconCard, RepoCard, PackageCard, CardList, Card } from '$components/card';
     import { filterAssociatedLabelsByDisplayType, getAssociationDisplayInfo } from '../associations';
     import MarkdownEditor from '$components/MarkdownEditor.svelte';
+    import type { Label } from '$types';
+    import { supportedPackageRepos, type PackageProvider } from '$types/packageInfo';
+    import { packageProviders } from '$lib/packageInfo';
     // import AsciinemaPlayer from "$components";
 
     export let data: import('./$types').PageData;
@@ -16,7 +19,11 @@
     // List of associated labels, grouped by classifier
     $: associatedLabels = getAssociatedLabels(data.globals, label);
 
+    $: linkContent = label.info.links;
+
     async function onSubmit() {
+      // TODO: Update label links from link content
+      // TODO: Update package info
       const res = await fetch('', {
         method: 'POST',
         body: JSON.stringify(label),
@@ -26,6 +33,21 @@
       });
 
       console.log('Update: got status', res.status);
+    }
+
+    function onChangePackageProvider(newValue: PackageProvider | 'custom') {
+      const prevInfo = label.info.package;
+      // Provider to custom
+      if (prevInfo && prevInfo.provider !== 'custom' && newValue === 'custom') {
+        label.info.package = {
+          provider: 'custom',
+          providerName: packageProviders[prevInfo.provider].name,
+          command: packageProviders[prevInfo.provider].makeInstallCmd(prevInfo.id),
+          url: packageProviders[prevInfo.provider].makeUrl(prevInfo.id),
+          icon: packageProviders[prevInfo.provider].icon,
+        };
+      }
+      // TODO: improve this
     }
 </script>
 
@@ -49,6 +71,71 @@
     </div>
     <!-- Edit markdown contents -->
     <MarkdownEditor bind:source={label.readme} />
+
+    <!-- Options to edit links and package information -->
+    <CardList>
+      <!-- Website -->
+      <Card color={linkContent.site ? label.info.color : '#AAAAAA'}>
+        <h3 slot="top">Website</h3>
+        <div>
+          <input
+            type="url"
+            class="text-input"
+            bind:value={linkContent.site}
+          >
+        </div>
+      </Card>
+      <!-- Documentation -->
+      <Card color={linkContent.docs ? label.info.color : '#AAAAAA'}>
+        <h3 slot="top">Documentation</h3>
+        <div>
+          <input
+            type="url"
+            class="text-input"
+            bind:value={linkContent.docs}
+          >
+        </div>
+      </Card>
+      <!-- TODO: Repo -->
+      <!-- TODO: Package -->
+      <Card color={label.info.package?.provider ? label.info.color : '#AAAAAA'}>
+        <h3 slot="top">Package</h3>
+        <div>
+          <!-- Choose package provider -->
+          <!--
+            TODO: Can't figure out how to make this update properly, is very yucky
+            Honestly I should just make this its own component so I can hide
+            the utter awfulness.
+          -->
+          <select
+            value={label.info.package ? label.info.package.provider : 'custom'}
+            on:change={() => {}}
+          >
+            <option value="custom">
+              Custom
+            </option>
+            <!-- Each of the allowed providers -->
+            {#each supportedPackageRepos as repo}
+              <option value={repo}>
+                <i class={packageProviders[repo].icon}></i> {packageProviders[repo].name}
+              </option>
+            {/each}
+          </select>
+          <!-- If provider is a default one -->
+          {#if label.info.package === undefined}
+            Bruh
+          {:else if label.info.package.provider === 'custom'}
+            <input class="text-input" bind:value={label.info.package.providerName} />
+            <input class="text-input" bind:value={label.info.package.url} />
+            <input class="text-input" bind:value={label.info.package.command} />
+            <input class="text-input" bind:value={label.info.package.icon} />
+          {:else}
+            <input class="text-input" bind:value={label.info.package.id} />
+          {/if}
+        </div>
+      </Card>
+    </CardList>
+
     <!-- Show chips for the associations that want them -->
     <div>
       {#each filterAssociatedLabelsByDisplayType(data.globals, associatedLabels, classifier, 'chip').items() as [assClass, assLabels] }
@@ -59,65 +146,6 @@
       {/each}
     </div>
   </div>
-
-  <!-- Display links if needed -->
-  <div id="links-list">
-    <CardList>
-      {#if label.info.links.site}
-        <IconCard
-          title="Visit the website"
-          link={label.info.links.site}
-          color={label.info.color}
-        >
-        <i slot="icon" class="las la-globe"></i>
-        </IconCard>
-      {/if}
-      {#if label.info.links.docs}
-        <IconCard
-          title="View the documentation"
-          link={label.info.links.docs}
-          color={label.info.color}
-        >
-          <i slot="icon" class="lab la-readme"></i>
-        </IconCard>
-      {/if}
-      {#if label.info.links.repo}
-        <RepoCard
-          repo={label.info.links.repo}
-          color={label.info.color}
-        />
-      {/if}
-      {#if label.info.package}
-        <PackageCard
-          info={label.info.package}
-          color={label.info.color}
-        />
-      {/if}
-    </CardList>
-  </div>
-
-  <!--
-      Asciinema seems to be broken currently:
-      https://github.com/asciinema/asciinema-player/issues/259
-  -->
-  <!-- {#if label.hasDemo}
-    <AsciinemaPlayer castUrl="/projects/{label.slug}/demo.asciinema" />
-  {/if} -->
-
-  <!-- Show cards for the associations that want them -->
-  <div id="association-cards">
-    {#each filterAssociatedLabelsByDisplayType(data.globals, associatedLabels, classifier, 'card').items() as [assClass, assLabels] }
-      <div class="association-cards-row">
-        <h2>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h2>
-        <CardGrid
-          classifier={getClassifier(data.globals, assClass)}
-          entries={assLabels.keys()}
-          globals={data.globals}
-        />
-      </div>
-    {/each}
-  </div>
-
   <input type="submit" value="Save" />
 </form>
 
@@ -168,14 +196,6 @@
   .association-chip-row > h3 {
     margin: 0;
     height: min-content;
-  }
-
-  #links-list {
-    width: 80%;
-  }
-
-  #association-cards {
-    width: 80%;
   }
 
   input[type="submit"] {
