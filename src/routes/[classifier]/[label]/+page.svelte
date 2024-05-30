@@ -26,9 +26,9 @@
 
 <main>
   <div class="paper">
-    {#if label.hasBanner}
+    {#if label.info.banner}
       <img
-        src="/{label.classifier}/{label.slug}/banner.png"
+        src="/{label.classifier}/{label.slug}/{label.info.banner}"
         alt="Banner for {label.info.name}"
         class="banner-image"
       />

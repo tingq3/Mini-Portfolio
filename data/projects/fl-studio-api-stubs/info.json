@@ -31,5 +31,7 @@
     "status": [
       "active"
     ]
-  }
+  },
+  "icon": "icon.png",
+  "banner": "banner.png"
 }

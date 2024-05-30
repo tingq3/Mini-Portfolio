@@ -29,5 +29,5 @@
     ]
   },
   "visibility": "visible",
-  "extras": {}
+  "icon": "icon.png"
 }

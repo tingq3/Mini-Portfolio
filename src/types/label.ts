@@ -91,6 +91,12 @@ export const LabelInfo = object({
   /** Information about the package distribution of the label */
   package: optional(PackageInfoStruct),
 
+  /** Icon of the label, if provided */
+  icon: optional(string()),
+
+  /** Banner image for the label, if provided */
+  banner: optional(string()),
+
   /** Extra information, as declared in the classifier */
   extras: defaulted(record(string(), any()), () => ({})),
 });
@@ -111,10 +117,4 @@ export type Label = {
 
   /** Whether the label has an asciinema demo in `demo.cast` */
   hasDemo: boolean,
-
-  /** Whether the label has an icon in `icon.png` */
-  hasIcon: boolean,
-
-  /** Whether the label has a banner image in `banner.png` */
-  hasBanner: boolean,
 }

@@ -16,10 +16,10 @@
   color={label.info.color}
 >
 
-  {#if label.hasIcon}
+  {#if label.info.icon}
     <div class="card-grid">
       <img
-        src="/{label.classifier}/{label.slug}/icon.png"
+        src="/{label.classifier}/{label.slug}/{label.info.icon}"
         alt="Icon for {label.info.name}"
         class="label-icon"
       />

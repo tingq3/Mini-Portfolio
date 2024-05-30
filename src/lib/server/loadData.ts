@@ -212,8 +212,6 @@ function loadLabel(
     info,
     readme,
     // Check for existence of extra files
-    hasIcon: fs.existsSync(path.join(dir, 'icon.png')),
-    hasBanner: fs.existsSync(path.join(dir, 'banner.png')),
     hasDemo: fs.existsSync(path.join(dir, 'demo.cast')),
   };
 }
