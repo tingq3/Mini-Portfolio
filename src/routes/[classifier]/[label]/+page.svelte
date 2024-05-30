@@ -25,16 +25,25 @@
 />
 
 <main>
-  <div id="info-container">
-    <Markdown source={label.readme} />
-    <!-- Show chips for the associations that want them -->
-    <div>
-      {#each filterAssociatedLabelsByDisplayType(data.globals, associatedLabels, classifier, 'chip').items() as [assClass, assLabels] }
-        <div class="association-chip-row">
-          <h3>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h3>
-          <ChipList labels={OrdRec.fromItems([[assClass, assLabels]])} link={true} />
-        </div>
-      {/each}
+  <div class="paper">
+    {#if label.hasBanner}
+      <img
+        src="/{label.classifier}/{label.slug}/banner.png"
+        alt="Banner for {label.info.name}"
+        class="banner-image"
+      />
+    {/if}
+    <div id="info-container">
+      <Markdown source={label.readme} />
+      <!-- Show chips for the associations that want them -->
+      <div>
+        {#each filterAssociatedLabelsByDisplayType(data.globals, associatedLabels, classifier, 'chip').items() as [assClass, assLabels] }
+          <div class="association-chip-row">
+            <h3>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h3>
+            <ChipList labels={OrdRec.fromItems([[assClass, assLabels]])} link={true} />
+          </div>
+        {/each}
+      </div>
     </div>
   </div>
 
@@ -104,11 +113,24 @@
     align-items: center;
   }
 
-  #info-container {
+  .paper {
     width: 80%;
     border-radius: 10px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.37);
+  }
+  @media only screen and (max-width: 600px) {
+    .paper {
+      width: 95%;
+    }
+  }
+
+  #info-container {
     padding: 20px;
+  }
+
+  .banner-image {
+    width: 100%;
+    border-radius: 10px 10px 0 0;
   }
 
   .association-chip-row {
