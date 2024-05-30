@@ -39,7 +39,7 @@
     .card {
         display: flex;
         flex-direction: column;
-        padding: 10px 30px;
+        padding: 10px;
         margin: 10px;
         background-color: var(--base-color);
         border-radius: 15px;
