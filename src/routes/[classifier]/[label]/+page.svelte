@@ -41,10 +41,12 @@
       <!-- Show chips for the associations that want them -->
       <div>
         {#each filterAssociatedLabelsByDisplayType(data.globals, associatedLabels, classifier, 'chip').items() as [assClass, assLabels] }
-          <div class="association-chip-row">
-            <h3>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h3>
-            <ChipList labels={OrdRec.fromItems([[assClass, assLabels]])} link={true} />
-          </div>
+          {#if assLabels.keys().length}
+            <div class="association-chip-row">
+              <h3>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h3>
+              <ChipList labels={OrdRec.fromItems([[assClass, assLabels]])} link={true} />
+            </div>
+          {/if}
         {/each}
       </div>
     </div>
@@ -97,14 +99,16 @@
   <!-- Show cards for the associations that want them -->
   <div id="association-cards">
     {#each filterAssociatedLabelsByDisplayType(data.globals, associatedLabels, classifier, 'card').items() as [assClass, assLabels] }
-      <div class="association-cards-row">
-        <h2>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h2>
-        <CardGrid
-          classifier={getClassifier(data.globals, assClass)}
-          entries={assLabels.keys()}
-          globals={data.globals}
-        />
-      </div>
+      {#if assLabels.keys().length}
+        <div class="association-cards-row">
+          <h2>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h2>
+          <CardGrid
+            classifier={getClassifier(data.globals, assClass)}
+            entries={assLabels.keys()}
+            globals={data.globals}
+          />
+        </div>
+      {/if}
     {/each}
   </div>
 </main>

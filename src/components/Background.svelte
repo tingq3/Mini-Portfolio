@@ -40,7 +40,7 @@
     25,
   ].map(hueDiff => {
     const base = Color(color);
-    const newColor = base.hue(base.hue() + hueDiff).lightness(90).hex();
+    const newColor = base.hue(base.hue() + hueDiff).lightness(95).hex();
     const [posX, posY] = possiblePositions[Math.floor(Math.random() * possiblePositions.length)];
     const spread = possibleSpreads[Math.floor(Math.random() * possibleSpreads.length)];
 
