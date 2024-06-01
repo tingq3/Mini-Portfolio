@@ -5,6 +5,7 @@
     import { ChipList } from '$components/chip';
     import { CardGrid, IconCard, RepoCard, PackageCard, CardList } from '$components/card';
     import { filterAssociatedLabelsByDisplayType, getAssociationDisplayInfo } from './associations';
+    import Background from '$components/Background.svelte';
     // import AsciinemaPlayer from "$components";
 
     export let data: import('./$types').PageData;
@@ -15,6 +16,8 @@
     // List of associated labels, grouped by classifier
     $: associatedLabels = getAssociatedLabels(data.globals, label);
 </script>
+
+<Background color={label.info.color}></Background>
 
 <Navbar
   path={[
@@ -117,6 +120,7 @@
     width: 80%;
     border-radius: 10px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.37);
+    background-color: rgba(255, 255, 255, 0.75);
   }
   @media only screen and (max-width: 600px) {
     .paper {

@@ -61,6 +61,9 @@ export const ClassifierInfo = object({
   /** Short description of the classifier */
   description: string(),
 
+  /** Color */
+  color: string(),
+
   /** Ordering - higher values are placed earlier in lists */
   sort: defaulted(number(), 0),
 

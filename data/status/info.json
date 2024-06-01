@@ -1,6 +1,7 @@
 {
   "name": "Project status",
   "description": "The status of projects",
+  "color": "#47F584",
   "sort": 90,
   "visibility": "unlisted",
   "associations": {

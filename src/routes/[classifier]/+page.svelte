@@ -6,6 +6,7 @@
     import OrdRec from '$lib/OrderedRecord';
     import { visibilityFilter } from '$lib/visibility';
     import { onMount } from 'svelte';
+    import Background from '$components/Background.svelte';
     import { applyParamsToFilter, filterToParams as filterToString } from './filterSerialize';
 
     export let data: import('./$types').PageData;
@@ -164,6 +165,8 @@
       }
     });
 </script>
+
+<Background color={classifier.info.color} />
 
 <Navbar
     path={[{ url: classifier.slug, txt: classifier.info.name }]}

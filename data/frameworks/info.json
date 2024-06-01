@@ -1,6 +1,7 @@
 {
   "name": "Frameworks",
   "description": "Programming frameworks and libraries that I have worked with",
+  "color": "#B05095",
   "sort": 70,
   "filterClassifiers": [
     "languages"
