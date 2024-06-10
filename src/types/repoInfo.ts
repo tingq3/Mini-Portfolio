@@ -15,7 +15,7 @@ export type RepoProvider = Infer<typeof RepoProviderStruct>;
 const ProviderRepoInfoStruct = object({
   /** The provider of the repo (eg "github") */
   provider: RepoProviderStruct,
-  /** The repo's slug within the provider (eg MiguelGuthridge/portfolio) */
+  /** The repo's slug within the provider (eg MaddyGuthridge/portfolio) */
   path: string(),
 });
 
