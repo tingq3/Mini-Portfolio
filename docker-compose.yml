@@ -1,0 +1,11 @@
+# Portfolio
+# Example docker-compose.yml
+# Adjust as required
+services:
+  portfolio:
+    image: maddyguthridge/portfolio
+    hostname: portfolio
+    ports:
+      - 127.0.0.1:3000:3000/tcp
+    volumes:
+      - "./data:/home/node/app/data:rw"

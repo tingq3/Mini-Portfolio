@@ -48,3 +48,7 @@ This requires a `.env` file with the following keys:
 HOST=127.0.0.1  # the hostname to use
 PORT=5096  # the port number to use
 ```
+
+## Using Docker
+
+Refer to the example `docker-compose.yml`.
