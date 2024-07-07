@@ -7,7 +7,7 @@ This is my data-driven portfolio website, built using SvelteKit and TypeScript.
 * The site is entirely built from a `data/` directory, where all information
   about projects, frameworks and languages is contained.
 * Validation of all source data, using [Superstruct](https://docs.superstructjs.org/).
-* Demos of projects using [Asciinema](https://asciinema.org/).
+* Demos of projects using [Asciinema](https://asciinema.org/) (work in progress).
 
 ## Developing
 
