@@ -120,7 +120,11 @@ function findItemsInDirectory(dir: string): string[] {
   const items = [];
 
   for (const entry of dirInfo) {
-    if (fs.statSync(path.join(dir, entry)).isDirectory()) {
+    if (
+      fs.statSync(path.join(dir, entry)).isDirectory()
+      // Ignore hidden directories
+      && !entry.startsWith('.')
+    ) {
       items.push(entry);
     }
   }
