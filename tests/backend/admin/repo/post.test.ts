@@ -28,6 +28,11 @@ it("Gives an error if the repo doesn't contain a config.json, but isn't empty", 
   ).rejects.toMatchObject({ code: 400 });
 });
 
+it("Doesn't give an error if the repository is entirely empty", async () => {
+  await api.admin.repo.post('git@github.com:MadGutsBot/Empty.git', null);
+  await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT)).resolves.toBeTrue();
+});
+
 it("Doesn't clone repo when no URL provided", async () => {
   await api.admin.repo.post(null, null);
   await expect(repo().checkIsRepo()).resolves.toBeFalse();
@@ -43,4 +48,4 @@ it('Gives an error if the repo URL cannot be cloned', async () => {
   await expect(
     api.admin.repo.post('git@github.com:MadGutsBot/Invalid-Repo', null)
   ).rejects.toMatchObject({ code: 400 });
-})
+});
