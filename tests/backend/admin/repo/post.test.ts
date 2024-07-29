@@ -1,21 +1,46 @@
 /**
  * Test cases for POST /api/admin/repo
  */
+import api from '$api';
+import simpleGit, { CheckRepoActions } from 'simple-git';
 
-it.todo('Blocks unauthorized users');
+beforeEach(api.debug.clear);
 
-it.todo('Blocks access if data is already set up');
+const REPO_PATH = process.env.DATA_REPO_PATH;
 
-it.todo('Clones repo to the default branch when URL is provided');
+const repo = () => simpleGit(REPO_PATH);
 
-it.todo("Gives an error if the repo doesn't contain a config.json, but isn't empty");
+it('Clones repo to the default branch when URL is provided', async () => {
+  await api.admin.repo.post('git@github.com:MadGutsBot/Example.git', null);
+  await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT)).resolves.toBeTrue();
+});
 
-it.todo("Doesn't clone repo when no URL provided");
+it('Blocks access if data is already set up', async () => {
+  await api.admin.repo.post('git@github.com:MadGutsBot/Example.git', null);
+  await expect(
+    api.admin.repo.post('git@github.com:MadGutsBot/Example.git', null)
+  ).rejects.toMatchObject({ code: 403 });
+});
 
-it.todo('Checks out a branch when one is given');
+it("Gives an error if the repo doesn't contain a config.json, but isn't empty", async () => {
+  await expect(
+    api.admin.repo.post('git@github.com:MadGutsBot/MadGutsBot.github.io', null)
+  ).rejects.toMatchObject({ code: 400 });
+});
 
-it.todo('Creates data/config.local.json when run');
+it("Doesn't clone repo when no URL provided", async () => {
+  await api.admin.repo.post(null, null);
+  await expect(repo().checkIsRepo()).resolves.toBeFalse();
+});
 
-it.todo('data/config.local.json has repo info when set up with a repo');
+it('Checks out a branch when one is given', async () => {
+  await api.admin.repo.post('git@github.com:MadGutsBot/Example.git', 'example');
+  // Check branch name matches
+  expect((await repo().status()).current).toStrictEqual('example');
+});
 
-it.todo('data/config.local.json has null repo info when set up with no repo');
+it('Gives an error if the repo URL cannot be cloned', async () => {
+  await expect(
+    api.admin.repo.post('git@github.com:MadGutsBot/Invalid-Repo', null)
+  ).rejects.toMatchObject({ code: 400 });
+})

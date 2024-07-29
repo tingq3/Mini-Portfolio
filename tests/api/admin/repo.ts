@@ -19,13 +19,14 @@ export const get = async (token: string) => {
  * Set up the site's data repository.
  *
  * @param repoUrl The clone URL of the git repo
+ * @param branch The branch to check-out
  */
-export const post = async (repoUrl: string) => {
+export const post = async (repoUrl: string | null, branch: string | null) => {
   return apiFetch(
     'POST',
     '/api/admin/repo',
     undefined,
-    { repoUrl },
+    { repoUrl, branch },
   ) as Promise<Record<string, never>>;
 };
 
