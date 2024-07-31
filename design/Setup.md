@@ -6,6 +6,7 @@
     * `.gitignore` with a simple gitignore to ignore the local configuration
 3. Otherwise, the `.gitignore` is checked to ensure that `config.local.json`
    will be ignored (lest auth information be leaked).
-4. The user enters auth information, which is saved alongside local config
-   to `config.local.json`
-5. The site is then set up, and the user can configure things as required
+4. A secure password is generated, and stored securely in `config.local.json`.
+   It is shown to the user once, and they are prompted to take note of it.
+
+The site is then fully configured.

@@ -1,4 +1,4 @@
-import { getDataRepoPath } from '$lib/dataRepo.js';
+import { getDataRepoPath } from '$lib/server/dataRepo.js';
 import { json } from '@sveltejs/kit';
 import { rimraf } from 'rimraf';
 

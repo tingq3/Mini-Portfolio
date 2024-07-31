@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import simpleGit from 'simple-git';
 import debug from 'debug';
-import { dataRepoIsInitialized, getDataRepo, getDataRepoPath } from '$lib/dataRepo.js';
+import { dataRepoIsInitialized, getDataRepo, getDataRepoPath } from '$lib/server/dataRepo.js';
 import { appendFile, writeFile, readdir, mkdir } from 'fs/promises';
 import path from 'path';
 import { rimraf } from 'rimraf';
