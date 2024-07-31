@@ -68,6 +68,10 @@ export async function apiFetch (
     }
   }
 
+  if ([404, 405].includes(res.status)) {
+    throw new ApiError(404, `Error ${res.status} at ${method} ${route}`);
+  }
+
   // Decode the error
   let json: object;
   try {
@@ -82,9 +86,9 @@ export async function apiFetch (
   }
 
   if ([400, 401, 403].includes(res.status)) {
-    // All 400 and 403 errors have an error message according to the spec
-    const errorMessage = (json as { error: string | object }).error;
-    throw new ApiError(res.status, errorMessage);
+    // All 400 and 403 errors have an error message
+    const message = (json as { message: string }).message;
+    throw new ApiError(res.status, message);
   }
   if (![200, 304].includes(res.status)) {
     // Unknown error

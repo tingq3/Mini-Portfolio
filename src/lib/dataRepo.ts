@@ -17,9 +17,10 @@ export function getDataRepo(): SimpleGit {
 export async function dataRepoIsInitialized(): Promise<boolean> {
   const repoPath = getDataRepoPath();
 
-  // Check for config.json
+  // Check for config.local.json
+  const configLocal = path.join(repoPath, 'config.local.json');
   try {
-    await fs.access(repoPath, fs.constants.F_OK);
+    await fs.access(configLocal, fs.constants.F_OK);
   } catch {
     return false;
   }

@@ -36,7 +36,7 @@ it("Doesn't give an error if the repository is entirely empty", async () => {
 
 it("Doesn't clone repo when no URL provided", async () => {
   await api.admin.repo.post(null, null);
-  await expect(repo().checkIsRepo()).resolves.toBeFalse();
+  await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT)).resolves.toBeFalse();
 });
 
 it('Checks out a branch when one is given', async () => {
@@ -50,3 +50,9 @@ it('Gives an error if the repo URL cannot be cloned', async () => {
     api.admin.repo.post('git@github.com:MadGutsBot/Invalid-Repo', null)
   ).rejects.toMatchObject({ code: 400 });
 });
+
+it.todo('Initialises config.local.json within the data repo');
+
+it.todo('Adds config.local.json to the gitignore');
+
+it.todo("Leaves the .gitignore as-is if config.local.json is already there");

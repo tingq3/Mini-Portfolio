@@ -6,7 +6,7 @@ import { apiFetch } from './fetch';
  */
 export const clear = async () => {
   return apiFetch(
-    'POST',
+    'DELETE',
     '/api/debug/clear',
     undefined,
   ) as Promise<Record<string, never>>;
