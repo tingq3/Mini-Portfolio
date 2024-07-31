@@ -1,13 +1,14 @@
 import dotenv from 'dotenv';
 import ApiError from './ApiError';
+import fetch from 'cross-fetch';
 
 export type HttpVerb = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 dotenv.config();
 
 export const PORT = process.env.PORT as string;
-export const IP = process.env.IP as string;
-export const URL = `http://${IP}:${PORT}`;
+export const HOST = process.env.HOST as string;
+export const URL = `http://${HOST}:${PORT}`;
 
 /**
  * Fetch some data from the backend
