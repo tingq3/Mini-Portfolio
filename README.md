@@ -45,8 +45,10 @@ node -r dotenv/config build
 This requires a `.env` file with the following keys:
 
 ```ini
-HOST=127.0.0.1  # the hostname to use
+HOST=localhost  # the hostname to use
 PORT=5096  # the port number to use
+DATA_REPO_PATH="./data"  # the path to the data repository
+
 ```
 
 ## Using Docker
