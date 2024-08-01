@@ -1,9 +1,6 @@
 import api from '$api';
 import chalk from 'chalk';
 import { beforeEach, expect } from 'vitest';
-import path from 'path';
-
-const cwd = process.cwd();
 
 // Before each test, clear the server data, then echo the test name
 beforeEach(async () => {
