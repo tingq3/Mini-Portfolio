@@ -4,4 +4,4 @@
 // seconds for the server to start up.
 import { reloadData } from '$lib/server';
 
-reloadData();
+// reloadData();

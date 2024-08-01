@@ -15,24 +15,8 @@ export const get = async (token: string) => {
   ) as Promise<RepoInfo>;
 };
 
-/**
- * Set up the site's data repository.
- *
- * @param repoUrl The clone URL of the git repo
- * @param branch The branch to check-out
- */
-export const post = async (repoUrl: string | null, branch: string | null) => {
-  return apiFetch(
-    'POST',
-    '/api/admin/repo',
-    undefined,
-    { repoUrl, branch },
-  ) as Promise<Record<string, never>>;
-};
-
 const repo = {
   get,
-  post,
 };
 
 export default repo;
