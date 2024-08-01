@@ -4,8 +4,12 @@ import { array, boolean, nullable, number, object, optional, record, string, typ
  * Validator for config.local.json file
  */
 export const ConfigLocalJsonStruct = object({
-  /** Authentication data */
-  auth: object({
+  /**
+   * Authentication data.
+   *
+   * If null, then authentication is disabled, and logging in is now allowed.
+   */
+  auth: nullable(object({
     /** Username of account */
     username: string(),
     /** Information about the user's password */
@@ -38,7 +42,7 @@ export const ConfigLocalJsonStruct = object({
        */
       revokedSessions: record(string(), number()),
     })
-  }),
+  })),
 });
 
 /** Type definition for config.local.json file */
