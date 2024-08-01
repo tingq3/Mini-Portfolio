@@ -52,15 +52,15 @@ export const ConfigLocalJsonStruct = object({
 /** Type definition for config.local.json file */
 export type ConfigLocalJson = Infer<typeof ConfigLocalJsonStruct>;
 
-/** Cache of config.local.json */
-let configLocal: ConfigLocalJson | undefined;
+// /** Cache of config.local.json */
+// let configLocal: ConfigLocalJson | undefined;
 
 /** Return the local configuration, stored in `/data/config.local.json` */
 export async function getLocalConfig(): Promise<ConfigLocalJson> {
-  // Check cache
-  if (configLocal) {
-    return configLocal;
-  }
+  // // Check cache
+  // if (configLocal) {
+  //   return configLocal;
+  // }
   // Otherwise load it in
   const data = await readFile(CONFIG_LOCAL_JSON, { encoding: 'utf-8' });
 
@@ -72,7 +72,7 @@ export async function getLocalConfig(): Promise<ConfigLocalJson> {
     throw err;
   }
 
-  configLocal = parsed;
+  // configLocal = parsed;
   return parsed;
 }
 
