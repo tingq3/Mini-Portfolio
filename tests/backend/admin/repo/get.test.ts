@@ -1,6 +1,7 @@
 /**
  * Test cases for GET /api/admin/repo
  */
+import { it, expect } from 'vitest';
 
 it.todo('Blocks unauthorized users');
 

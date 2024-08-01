@@ -3,6 +3,7 @@
  *
  * Allows users to set up authentication on first-run.
  */
+import { it, expect } from 'vitest';
 
 it.todo('Blocks all access after first call');
 

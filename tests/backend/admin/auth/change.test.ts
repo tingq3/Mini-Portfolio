@@ -3,6 +3,7 @@
  *
  * Allows users to change the auth info, provided they are logged in.
  */
+import { it, expect } from 'vitest';
 
 it.todo('Blocks unauthorized users');
 

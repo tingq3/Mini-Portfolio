@@ -3,6 +3,7 @@
  *
  * Allows users to log into the site, enabling editing of the data.
  */
+import { it, expect } from 'vitest';
 
 it.todo('Returns a token when correct credentials are provided');
 
