@@ -48,6 +48,7 @@ This requires a `.env` file with the following keys:
 HOST=localhost  # the hostname to use
 PORT=5096  # the port number to use
 DATA_REPO_PATH="./data"  # the path to the data repository
+AUTH_SECRET="CHANGE ME"  # the secret key to validate tokens
 ```
 
 ## Using Docker

@@ -4,10 +4,11 @@
  * Code important for managing the first-run of the server.
  */
 
-import type { ConfigLocalJson } from "$types/localConfig";
-import { hash } from "crypto";
-import { nanoid } from "nanoid";
-import { generate as generateWords } from "random-words";
+import { unixTime } from '$lib/util';
+import type { ConfigLocalJson } from '$types/localConfig';
+import { hash } from 'crypto';
+import { nanoid } from 'nanoid';
+import { generate as generateWords } from 'random-words';
 
 /**
  * Set up auth information.
@@ -15,7 +16,11 @@ import { generate as generateWords } from "random-words";
  * This is responsible for generating and storing a secure password, thereby
  * creating the default "admin" account.
  */
-export function authSetup(): { username: string, password: string } {
+export function authSetup(): {
+  username: string,
+  password: string,
+  token: string,
+  } {
   const username = 'admin';
 
   // generate password using 4 random dictionary words
@@ -26,14 +31,28 @@ export function authSetup(): { username: string, password: string } {
 
   // Generate a salt for the password
   // Using nanoid for secure generation
-  const passwordSalt = nanoid();
+  const salt = nanoid();
 
+  // TODO: Thoroughly check this against the OWASP guidelines -- it probably
+  // doesn't match the requirements.
+  // https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
   const passwordHash = hash('SHA256', salt + password);
 
   // Store auth data
   const storedData: ConfigLocalJson['auth'] = {
     username,
-    passwordHash,
-    passwordSalt,
+    password: {
+      hash: passwordHash,
+      salt: salt,
+    },
+    sessions: {
+      notBefore: unixTime(),
+      revokedSessions: {},
+    }
+  };
+
+  return {
+    username,
+    password,
   };
 }
