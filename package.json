@@ -33,6 +33,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.24.5",
 		"@babel/preset-env": "^7.24.5",
+		"@babel/preset-typescript": "^7.24.7",
 		"@stylistic/eslint-plugin-js": "^2.1.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^5.0.1",

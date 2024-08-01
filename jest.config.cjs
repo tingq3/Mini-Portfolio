@@ -1,6 +1,7 @@
 module.exports = {
   setupFilesAfterEnv: [
-    "jest-extended/all"
+    "jest-extended/all",
+    '<rootDir>/tests/setup/serverBeforeEach.ts',
   ],
   maxWorkers: 1,
   // Run dev server during tests

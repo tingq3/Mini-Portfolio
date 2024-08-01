@@ -7,8 +7,6 @@ import simpleGit, { CheckRepoActions } from 'simple-git';
 // Git clone takes a while, increase the test timeout
 jest.setTimeout(15_000);
 
-beforeEach(api.debug.clear);
-
 const REPO_PATH = process.env.DATA_REPO_PATH;
 
 const repo = () => simpleGit(REPO_PATH);
