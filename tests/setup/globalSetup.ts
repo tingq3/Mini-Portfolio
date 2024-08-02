@@ -7,9 +7,21 @@ let server: ChildProcess | undefined;
 
 const waitTime = 10_000;
 
+/** Start the server if required */
 export async function setup() {
   const HOST = process.env.HOST;
   const PORT = process.env.PORT;
+
+  // Send a test request
+  try {
+    await api.debug.echo('Wait for server startup');
+    // If it succeeded, there is no need to start the server, it is already
+    // running
+    return;
+  } catch {
+    // It failed, start up the server
+  }
+
   if (!HOST) {
     throw Error('HOST is undefined');
   }

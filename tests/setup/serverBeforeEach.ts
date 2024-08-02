@@ -9,7 +9,7 @@ beforeEach(async () => {
   const testName = expect.getState().currentTestName;
   if (testName) {
     await api.debug.echo(
-      `${chalk.yellow('[Jest]')} Begin test ${chalk.magenta(testName)}`
+      `${chalk.yellow('[Jest]')} Begin test ${chalk.cyan(testName)}`
     );
   }
 });
