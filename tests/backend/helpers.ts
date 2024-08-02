@@ -1,4 +1,4 @@
-import api from "$api";
+import api from '$api';
 
 /** Set up the server */
 export async function setup() {

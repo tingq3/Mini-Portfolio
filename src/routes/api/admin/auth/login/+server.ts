@@ -20,7 +20,6 @@ async function fail(timer: Promise<void>) {
   return error(401, 'The username or password is incorrect');
 }
 
-
 export async function POST({ request, cookies }) {
   if (!await dataDirIsInit()) {
     return error(400, 'Server is not initialized');

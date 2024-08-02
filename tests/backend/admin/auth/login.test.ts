@@ -15,22 +15,22 @@ beforeEach(async () => {
 
 it("Gives an error when the server isn't setup", async () => {
   await api.debug.clear();
-  expect(api.admin.auth.login(credentials.username, credentials.password))
+  await expect(api.admin.auth.login(credentials.username, credentials.password))
     .rejects.toMatchObject({ code: 400 });
-})
+});
 
 it('Returns a token when correct credentials are provided', async () => {
-  expect(api.admin.auth.login(credentials.username, credentials.password))
+  await expect(api.admin.auth.login(credentials.username, credentials.password))
     .resolves.toStrictEqual({ token: expect.any(String) });
 });
 
 it('Blocks logins with non-existent usernames', async () => {
-  expect(api.admin.auth.login(credentials.username + 'hi', credentials.password))
+  await expect(api.admin.auth.login(credentials.username + 'hi', credentials.password))
     .rejects.toMatchObject({ code: 401 });
 });
 
 it('Blocks logins with incorrect passwords', async () => {
-  expect(api.admin.auth.login(credentials.username, credentials.password + 'hi'))
+  await expect(api.admin.auth.login(credentials.username, credentials.password + 'hi'))
     .rejects.toMatchObject({ code: 401 });
 });
 

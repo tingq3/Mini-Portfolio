@@ -36,7 +36,7 @@ function getTokenSecret(): string {
     throw new Error('AUTH_SECRET environment variable must be set to a value');
   }
   if (!dev && secret === 'CHANGE ME') {
-    throw new Error('AUTH_SECRET must be changed when running in production')
+    throw new Error('AUTH_SECRET must be changed when running in production');
   }
   return secret;
 }
@@ -105,7 +105,6 @@ export async function revokeSession(token: string): Promise<void> {
   // Add to the revoked sessions
   config.auth.sessions.revokedSessions[sessionData.sessionId] = sessionData.exp;
   await setLocalConfig(config);
-  return;
 }
 
 /** Credentials provided after first run */

@@ -3,6 +3,6 @@
  *
  * Allows users to edit the site configuration
  */
-import { it } from "vitest";
+import { it } from 'vitest';
 
 it.todo('TODO');

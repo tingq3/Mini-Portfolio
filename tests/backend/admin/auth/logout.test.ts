@@ -1,8 +1,8 @@
 /** Test cases for POST /api/admin/auth/logout */
 
-import api from "$api";
-import { expect, it } from "vitest";
-import { setup } from "../../helpers";
+import api from '$api';
+import { expect, it } from 'vitest';
+import { setup } from '../../helpers';
 
 it("Gives an error if the server isn't setup", async () => {
   const { token } = await setup();

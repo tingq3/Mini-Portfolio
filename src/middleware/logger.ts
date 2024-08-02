@@ -4,11 +4,11 @@ import chalk, { type ChalkInstance } from 'chalk';
 /** Colorize request method for pretty-printing */
 function colorRequestMethod(method: string): string {
   const mapping: Record<string, ChalkInstance> = {
-    'get': chalk.blue,
-    'post': chalk.green,
-    'put': chalk.yellow,
-    'delete': chalk.red
-  }
+    get: chalk.blue,
+    post: chalk.green,
+    put: chalk.yellow,
+    delete: chalk.red
+  };
 
   return mapping[method.toLowerCase()](method) ?? method;
 }

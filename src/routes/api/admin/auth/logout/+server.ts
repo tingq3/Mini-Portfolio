@@ -2,7 +2,6 @@ import { revokeSession } from '$lib/server/auth.js';
 import { dataDirIsInit } from '$lib/server/data/dataDir.js';
 import { error, json } from '@sveltejs/kit';
 
-
 export async function POST({ request, cookies }) {
   const token = request.headers.get('Authorization');
   if (!token) {
@@ -14,7 +13,7 @@ export async function POST({ request, cookies }) {
   }
 
   try {
-    await revokeSession(token)
+    await revokeSession(token);
   } catch (e) {
     return error(401, `${e}`);
   }

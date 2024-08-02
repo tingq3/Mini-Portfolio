@@ -10,7 +10,7 @@ import { DATA_REPO_PATH as DATA_PATH } from '$env/static/private';
 import consts from '$lib/consts';
 
 // Git clone takes a while, increase the test timeout
-vi.setConfig({ testTimeout: 15_000 })
+vi.setConfig({ testTimeout: 15_000 });
 
 const REPO_PATH = process.env.DATA_REPO_PATH;
 

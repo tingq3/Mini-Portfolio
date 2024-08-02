@@ -29,7 +29,7 @@ export async function POST({ request, cookies }) {
   // If data dir is empty, set up default configuration
   if (!await dataDirContainsData()) {
     firstTime = true;
-    initConfig();
+    await initConfig();
   }
 
   return json({ credentials, firstTime }, { status: 200 });

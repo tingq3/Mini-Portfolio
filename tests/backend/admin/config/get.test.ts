@@ -3,6 +3,6 @@
  *
  * Returns the current site configuration.
  */
-import { it } from "vitest";
+import { it } from 'vitest';
 
 it.todo('TODO');
