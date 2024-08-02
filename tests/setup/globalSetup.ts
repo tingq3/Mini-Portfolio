@@ -1,22 +1,37 @@
-import { setup } from 'jest-dev-server';
+import { ChildProcess, spawn } from 'node:child_process';
 import dotenv from 'dotenv';
+import api from '$api';
 dotenv.config();
 
-module.exports = async () => {
-  console.log('\nStarting server...');
-  const command = `npm run dev -- --host ${process.env.HOST} --port ${process.env.PORT}`;
-  globalThis.servers = await setup({
-    command,
-    launchTimeout: 50 * 1000,
-    // Server started manually in another terminal? Simply run the test.
-    // Used port actions are ['ask', 'error', 'ignore', 'kill'].
-    usedPortAction: 'ignore',
-    port: parseInt(process.env.PORT as string),
-    host: process.env.HOST,
-    debug: true,
-    waitOnScheme: {
-      delay: 1000,
-    }
-  });
-  console.log('Server is up!');
-};
+let server: ChildProcess | undefined;
+
+const waitTime = 10_000;
+
+export async function setup() {
+  const HOST = process.env.HOST;
+  const PORT = process.env.PORT;
+  if (!HOST) {
+    throw Error('HOST is undefined');
+  }
+  if (!PORT) {
+    throw Error('PORT is undefined');
+  }
+  server = spawn('npm', ['run', 'dev', '--', '--host', HOST, '--port', PORT])
+
+  const start = Date.now();
+
+  while (Date.now() - start < waitTime) {
+    try {
+      await api.debug.echo('Wait for server startup');
+      return;
+    } catch {}
+  }
+  // If we reach this point, the server failed to start in-time
+  server.kill('SIGTERM');
+  console.error('Server failed to start');
+  process.exit(1);
+}
+
+export function teardown() {
+  server?.kill('SIGINT');
+}

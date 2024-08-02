@@ -6,6 +6,8 @@ export default mergeConfig(defaultConfig, defineConfig({
     // globals: true,
     setupFiles: [
       'tests/setup/serverBeforeEach.ts',
-    ]
+    ],
+    fileParallelism: false,
+    globalSetup: ['tests/setup/globalSetup.ts']
   },
 }));
