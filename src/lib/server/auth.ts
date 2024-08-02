@@ -1,10 +1,10 @@
 import { nanoid } from 'nanoid';
-import { validate, number, string, type } from 'superstruct';
+import { validate, number, string, type, type Infer } from 'superstruct';
 import jwt, { type Algorithm as JwtAlgorithm } from 'jsonwebtoken';
 import { unixTime } from '$lib/util';
 import { hash } from 'crypto';
 import { generate as generateWords } from 'random-words';
-import { setLocalConfig, type ConfigLocalJson } from './data/localConfig';
+import { getLocalConfig, setLocalConfig, type ConfigLocalJson } from './data/localConfig';
 import consts from '$lib/consts';
 
 /** Maximum lifetime of a session */
@@ -50,28 +50,58 @@ export function generateToken(): string {
 }
 
 /** Decode the given token, and return the session if it passes validation */
-export function validateToken(token: string): string | undefined {
-  try {
-    const payload = jwt.verify(token, getTokenSecret(), { algorithms: [algorithm] });
-    const [err, data] = validate(payload, JwtPayload);
-    if (err) {
-      // Token failed validation
-      console.log(err);
-      return undefined;
-    }
-    // Ensure that the session isn't in our revoked list
-    // And also that it wasn't issued before our notBefore time
-    return data.sessionId;
-  } catch (e) {
-    // Print the error
-    console.log(e);
-    return undefined;
+export async function validateToken(token: string): Promise<Infer<typeof JwtPayload>> {
+  // If the token starts with 'Bearer ', strip that out
+  if (token.startsWith('Bearer ')) {
+    token = token.replace('Bearer ', '');
   }
+  // Disallow token validation if auth is disabled
+  const config = await getLocalConfig();
+  if (!config.auth) {
+    throw Error('Authentication is disabled');
+  }
+  // Otherwise attempt to validate the token
+  let payload: unknown;
+  try {
+    payload = jwt.verify(token, getTokenSecret(), { algorithms: [algorithm] });
+  } catch (e) {
+    // Token failed to validate
+    if (e instanceof Error) {
+      throw Error(`Token failed to validate: ${e.message}`);
+    } else {
+      // Should always be an error
+      throw Error('Token failed to validate');
+    }
+  }
+  const [err, data] = validate(payload, JwtPayload);
+  if (err) {
+    // Token data format is incorrect
+    throw Error('Token data is in incorrect format');
+  }
+  // Ensure that the session isn't in our revoked list
+  if (data.sessionId in config.auth.sessions.revokedSessions) {
+    throw Error('This session has been revoked');
+  }
+
+  // And also that it wasn't issued before our notBefore time
+  if (data.iat < config.auth.sessions.notBefore) {
+    throw Error('This session was created too long ago');
+  }
+  return data;
 }
 
 /** Revoke the session of the given token */
-export function revokeToken(token: string) {
-  // TODO
+export async function revokeSession(token: string): Promise<void> {
+  const config = await getLocalConfig();
+  if (!config.auth) {
+    // Can't invalidate tokens if there is not auth
+    throw Error('Authentication is disabled');
+  }
+  const sessionData = await validateToken(token);
+  // Add to the revoked sessions
+  config.auth.sessions.revokedSessions[sessionData.sessionId] = sessionData.exp;
+  await setLocalConfig(config);
+  return;
 }
 
 /** Credentials provided after first run */

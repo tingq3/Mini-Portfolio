@@ -1,4 +1,5 @@
 import { generateToken, hashAndSalt } from '$lib/server/auth.js';
+import { dataDirIsInit } from '$lib/server/data/dataDir';
 import { getLocalConfig } from '$lib/server/data/localConfig.js';
 import { error, json } from '@sveltejs/kit';
 
@@ -21,6 +22,10 @@ async function fail(timer: Promise<void>) {
 
 
 export async function POST({ request, cookies }) {
+  if (!await dataDirIsInit()) {
+    return error(400, 'Server is not initialized');
+  }
+
   const local = await getLocalConfig();
 
   if (!local.auth) {
