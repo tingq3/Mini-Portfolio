@@ -5,6 +5,7 @@ import { unixTime } from '$lib/util';
 import { hash } from 'crypto';
 import { generate as generateWords } from 'random-words';
 import { setLocalConfig, type ConfigLocalJson } from './data/localConfig';
+import consts from '$lib/consts';
 
 /** Maximum lifetime of a session */
 const sessionLifetime = '14d';
@@ -73,13 +74,20 @@ export function revokeToken(token: string) {
   // TODO
 }
 
+/** Credentials provided after first run */
+export type FirstRunCredentials = {
+  username: string,
+  password: string,
+  token: string,
+}
+
 /**
  * Set up auth information.
  *
  * This is responsible for generating and storing a secure password, thereby
  * creating the default "admin" account.
  */
-export async function authSetup(): Promise<{ username: string, password: string, token: string }> {
+export async function authSetup(): Promise<FirstRunCredentials> {
   const username = 'admin';
 
   // generate password using 4 random dictionary words
@@ -109,7 +117,8 @@ export async function authSetup(): Promise<{ username: string, password: string,
         notBefore: unixTime(),
         revokedSessions: {},
       }
-    }
+    },
+    version: consts.VERSION,
   };
 
   await setLocalConfig(config);

@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'fs/promises';
 import { nullable, number, object, record, string, validate, type Infer } from 'superstruct';
 import { getDataDir } from './dataDir';
 
+/** Path to config.local.json */
 const CONFIG_LOCAL_JSON = `${getDataDir()}/config.local.json`;
 
 /**
@@ -47,21 +48,15 @@ export const ConfigLocalJsonStruct = object({
       revokedSessions: record(string(), number()),
     })
   })),
+  /** Version of server that last accessed the config.local.json */
+  version: string(),
 });
 
 /** Type definition for config.local.json file */
 export type ConfigLocalJson = Infer<typeof ConfigLocalJsonStruct>;
 
-// /** Cache of config.local.json */
-// let configLocal: ConfigLocalJson | undefined;
-
 /** Return the local configuration, stored in `/data/config.local.json` */
 export async function getLocalConfig(): Promise<ConfigLocalJson> {
-  // // Check cache
-  // if (configLocal) {
-  //   return configLocal;
-  // }
-  // Otherwise load it in
   const data = await readFile(CONFIG_LOCAL_JSON, { encoding: 'utf-8' });
 
   // Validate data
@@ -72,12 +67,10 @@ export async function getLocalConfig(): Promise<ConfigLocalJson> {
     throw err;
   }
 
-  // configLocal = parsed;
   return parsed;
 }
 
 /** Update the local configuration, stored in `/data/config.local.json` */
 export async function setLocalConfig(newConfig: ConfigLocalJson) {
-  // configLocal = newConfig;
   await writeFile(CONFIG_LOCAL_JSON, JSON.stringify(newConfig));
 }
