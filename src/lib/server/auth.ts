@@ -81,6 +81,14 @@ export type FirstRunCredentials = {
   token: string,
 }
 
+/** Hash a password with the given salt, returning the result */
+export function hashAndSalt(salt: string, password: string): string {
+  // TODO: Thoroughly check this against the OWASP guidelines -- it probably
+  // doesn't match the requirements.
+  // https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
+  return hash('SHA256', salt + password);
+}
+
 /**
  * Set up auth information.
  *
@@ -100,10 +108,7 @@ export async function authSetup(): Promise<FirstRunCredentials> {
   // Using nanoid for secure generation
   const salt = nanoid();
 
-  // TODO: Thoroughly check this against the OWASP guidelines -- it probably
-  // doesn't match the requirements.
-  // https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
-  const passwordHash = hash('SHA256', salt + password);
+  const passwordHash = hashAndSalt(salt, password);
 
   // Set up auth config
   const config: ConfigLocalJson = {
