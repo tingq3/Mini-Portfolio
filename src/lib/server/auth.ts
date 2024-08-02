@@ -6,6 +6,7 @@ import { hash } from 'crypto';
 import { generate as generateWords } from 'random-words';
 import { getLocalConfig, setLocalConfig, type ConfigLocalJson } from './data/localConfig';
 import consts from '$lib/consts';
+import { dev } from '$app/environment';
 
 /** Maximum lifetime of a session */
 const sessionLifetime = '14d';
@@ -31,8 +32,11 @@ export const JwtPayload = type({
 /** Returns the secret value used to validate JWTs */
 function getTokenSecret(): string {
   const secret = process.env.AUTH_SECRET;
-  if (!secret || secret === 'CHANGE ME') {
+  if (!secret) {
     throw new Error('AUTH_SECRET environment variable must be set to a value');
+  }
+  if (!dev && secret === 'CHANGE ME') {
+    throw new Error('AUTH_SECRET must be changed when running in production')
   }
   return secret;
 }
