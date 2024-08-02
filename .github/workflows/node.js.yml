@@ -25,6 +25,9 @@ jobs:
     # At the very least, it'll die once the workflow ends
     - name: Run test suite
       run: npm test
+    - name: Show server output
+      if: always()
+      run: cat server.log
 
   lint:
     runs-on: ubuntu-latest

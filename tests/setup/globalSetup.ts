@@ -1,11 +1,14 @@
 import { ChildProcess, spawn } from 'node:child_process';
 import dotenv from 'dotenv';
+import fs from 'node:fs';
 import api from '$api';
 dotenv.config();
 
 let server: ChildProcess | undefined;
 
 const waitTime = 10_000;
+
+const serverLog = 'server.log';
 
 /** Start the server if required */
 export async function setup() {
@@ -28,7 +31,13 @@ export async function setup() {
   if (!PORT) {
     throw Error('PORT is undefined');
   }
-  server = spawn('npm', ['run', 'dev', '--', '--host', HOST, '--port', PORT])
+
+  const logStream = fs.createWriteStream(serverLog);
+
+  server = spawn('npm', ['run', 'dev', '--', '--host', HOST, '--port', PORT]);
+
+  server.stdout?.pipe(logStream);
+  server.stderr?.pipe(logStream);
 
   const start = Date.now();
 
@@ -36,7 +45,7 @@ export async function setup() {
     try {
       await api.debug.echo('Wait for server startup');
       return;
-    } catch {}
+    } catch { }
   }
   // If we reach this point, the server failed to start in-time
   server.kill('SIGTERM');

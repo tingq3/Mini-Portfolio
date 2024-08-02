@@ -22,7 +22,6 @@ it('Gives an error for empty tokens', async () => {
 
 it('Invalidates tokens', async () => {
   const { token } = await setup();
-  console.log(token);
   await expect(api.admin.auth.logout(token)).resolves.toStrictEqual({});
   // Now that we're logged out, logging out again should fail
   await expect(api.admin.auth.logout(token)).rejects.toMatchObject({ code: 401 });
