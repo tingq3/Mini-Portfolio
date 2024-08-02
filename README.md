@@ -42,14 +42,9 @@ To run the production server:
 node -r dotenv/config build
 ```
 
-This requires a `.env` file with the following keys:
-
-```ini
-HOST=localhost  # the hostname to use
-PORT=5096  # the port number to use
-DATA_REPO_PATH="./data"  # the path to the data repository
-AUTH_SECRET="CHANGE ME"  # the secret key to validate tokens
-```
+This requires a `.env` file, which you can create by running
+`cp .env.example .env`. Make sure to edit your `.env` file to set its variables
+as required.
 
 ## Using Docker
 
