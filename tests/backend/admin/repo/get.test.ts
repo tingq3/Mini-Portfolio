@@ -2,10 +2,19 @@
  * Test cases for GET /api/admin/repo
  */
 import { it, expect } from 'vitest';
+import { setup } from '../../helpers';
+import api from '$api';
 
-it.todo('Blocks unauthorized users');
+it('Blocks unauthorized users', async () => {
+  await setup();
+  await expect(api.admin.repo.get('')).rejects.toMatchObject({ code: 401 });
+});
 
-it.todo('Gives a 400 when no data directory is set up');
+it('Gives a 400 when no data directory is set up', async () => {
+  const { token } = await setup();
+  await api.debug.clear();
+  await expect(api.admin.repo.get(token)).rejects.toMatchObject({ code: 400 });
+});
 
 it.todo('Correctly returns repo info when a repo is set up');
 
