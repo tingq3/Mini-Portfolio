@@ -1,4 +1,4 @@
-import api from '$api';
+import api from '$endpoints';
 import chalk from 'chalk';
 import path from 'path';
 import { beforeEach, expect } from 'vitest';

@@ -1,7 +1,7 @@
 /**
  * Test cases for POST /api/admin/repo
  */
-import api from '$api';
+import api from '$endpoints';
 import gitRepos from '../gitRepos';
 import { it, test, describe, expect, vi, beforeEach } from 'vitest';
 import simpleGit, { CheckRepoActions } from 'simple-git';

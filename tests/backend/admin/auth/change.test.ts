@@ -5,7 +5,7 @@
  */
 import { it, expect } from 'vitest';
 import { setup } from '../../helpers';
-import api from '$api';
+import api from '$endpoints';
 
 it('Blocks unauthorized users', async () => {
   const { password } = await setup();

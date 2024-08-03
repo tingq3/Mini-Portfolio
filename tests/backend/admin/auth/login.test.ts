@@ -5,7 +5,7 @@
  */
 import { it, expect, beforeEach } from 'vitest';
 import { setup } from '../../helpers';
-import api from '$api';
+import api from '$endpoints';
 
 let credentials: Awaited<ReturnType<typeof setup>>;
 

@@ -3,7 +3,7 @@
  */
 import { it, expect } from 'vitest';
 import { setup } from '../../helpers';
-import api from '$api';
+import api from '$endpoints';
 
 it('Disables authentication', async () => {
   const { token, username, password } = await setup();

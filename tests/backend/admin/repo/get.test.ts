@@ -3,7 +3,7 @@
  */
 import { it, expect } from 'vitest';
 import { setup } from '../../helpers';
-import api from '$api';
+import api from '$endpoints';
 import gitRepos from '../../gitRepos';
 import simpleGit from 'simple-git';
 import { getDataDir } from '$lib/server/data/dataDir';

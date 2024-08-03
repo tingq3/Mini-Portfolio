@@ -1,7 +1,7 @@
 import { ChildProcess, spawn } from 'node:child_process';
 import dotenv from 'dotenv';
 import fs from 'node:fs';
-import api from '$api';
+import api from '$endpoints';
 dotenv.config();
 
 let server: ChildProcess | undefined;

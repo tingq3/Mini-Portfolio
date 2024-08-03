@@ -1,6 +1,6 @@
 /** Test cases for POST /api/admin/auth/logout */
 
-import api from '$api';
+import api from '$endpoints';
 import { expect, it } from 'vitest';
 import { setup } from '../../helpers';
 

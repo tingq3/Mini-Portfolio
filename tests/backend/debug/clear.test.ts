@@ -1,7 +1,7 @@
 /**
  * Test cases for DELETE /api/debug/clear
  */
-import api from '$api';
+import api from '$endpoints';
 import { getDataDir } from '$lib/server/data/dataDir';
 import { access } from 'fs/promises';
 import { it, expect } from 'vitest';
