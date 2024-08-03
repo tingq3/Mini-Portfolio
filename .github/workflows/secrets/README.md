@@ -16,6 +16,20 @@ small number of repos used for testing purposes.
 
 The test suite should then be able to clone and push to the repo in CI.
 
+### Regenerating the key
+
+```sh
+# Generate SSH key
+ssh-keygen -t ed25519 -f .github/workflows/secrets/id_ed25519 -C "maddy-portfolio" -N ""
+# Generate encryption password (copy this output)
+pwgen 32 1
+# And encrypt it
+openssl aes-256-cbc -in .github/workflows/secrets/id_ed25519 -out .github/workflows/secrets/id_ed25519.enc -pbkdf2
+```
+
+Make sure to update the `SSH_ENCRYPTION_KEY` in the repo's GitHub Actions
+secrets settings. Its value should be set to the password you copied.
+
 ### How it works
 
 See [this answer on StackOverflow](https://stackoverflow.com/a/76888551/6335363).
