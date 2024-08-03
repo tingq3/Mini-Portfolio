@@ -72,5 +72,5 @@ export async function getLocalConfig(): Promise<ConfigLocalJson> {
 
 /** Update the local configuration, stored in `/data/config.local.json` */
 export async function setLocalConfig(newConfig: ConfigLocalJson) {
-  await writeFile(CONFIG_LOCAL_JSON, JSON.stringify(newConfig));
+  await writeFile(CONFIG_LOCAL_JSON, JSON.stringify(newConfig, undefined, 2));
 }

@@ -42,7 +42,7 @@ export async function getConfig(): Promise<ConfigJson> {
 
 /** Update the configuration, stored in `/data/config.json` */
 export async function setConfig(newConfig: ConfigJson) {
-  await writeFile(CONFIG_JSON, JSON.stringify(newConfig));
+  await writeFile(CONFIG_JSON, JSON.stringify(newConfig, undefined, 2));
 }
 
 /** Set up the default server configuration */
