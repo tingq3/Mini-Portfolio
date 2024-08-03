@@ -36,12 +36,12 @@ export const logout = async (token: string) => {
  * @param oldPassword The currently-active password
  * @param newPassword The new replacement password
  */
-export const change = async (token: string, oldPassword: string, newPassword: string) => {
+export const change = async (token: string, newUsername: string, oldPassword: string, newPassword: string) => {
   return apiFetch(
     'POST',
     '/api/admin/auth/change',
     token,
-    { oldPassword, newPassword }
+    { newUsername, oldPassword, newPassword }
   ) as Promise<Record<string, never>>;
 };
 

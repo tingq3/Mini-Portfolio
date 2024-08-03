@@ -3,7 +3,14 @@ import { dataDirIsInit } from '$lib/server/data/dataDir';
 import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig.js';
 import { error, json } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
+import { object, string, validate } from 'superstruct';
 import validator from 'validator';
+
+const NewCredentials = object({
+  newUsername: string(),
+  oldPassword: string(),
+  newPassword: string(),
+});
 
 export async function POST({ request, cookies }) {
   const token = request.headers.get('Authorization');
@@ -27,7 +34,18 @@ export async function POST({ request, cookies }) {
     throw Error('Unreachable');
   }
 
-  const { oldPassword, newPassword } = await request.json();
+  const [err, newCredentials]
+    = validate(await request.json(), NewCredentials);
+
+  if (err) {
+    return error(400, `${err}`);
+  }
+
+  const { newUsername, oldPassword, newPassword } = newCredentials;
+
+  if (!newUsername) {
+    return error(400, 'New username is empty');
+  }
 
   if (hashAndSalt(local.auth.password.salt, oldPassword) !== local.auth.password.hash) {
     return error(403, 'Old password is incorrect');
@@ -44,6 +62,8 @@ export async function POST({ request, cookies }) {
     hash,
     salt,
   };
+  // Change the username
+  local.auth.username = newUsername;
   await setLocalConfig(local);
 
   return json({}, { status: 200 });
