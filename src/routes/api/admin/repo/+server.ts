@@ -25,12 +25,14 @@ export async function GET({ request, cookies }) {
 
   const repo = simpleGit(getDataDir());
 
+  const status = await repo.status();
   return json(
     {
       repo: {
         url: (await repo.remote(['get-url', 'origin']) || '').trim(),
-        branch: (await repo.status()).current,
+        branch: status.current,
         commit: await repo.revparse(['--short', 'HEAD']),
+        clean: status.isClean()
       }
     },
     { status: 200 });

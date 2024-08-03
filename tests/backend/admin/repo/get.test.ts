@@ -27,6 +27,7 @@ it('Correctly returns repo info when a repo is set up', async () => {
       url: gitRepos.TEST_REPO_RW,
       branch: 'main',
       commit: await repo.revparse(['--short', 'HEAD']),
+      clean: true,
     }
   });
 });
