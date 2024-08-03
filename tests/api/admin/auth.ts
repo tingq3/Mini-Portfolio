@@ -45,10 +45,27 @@ export const change = async (token: string, oldPassword: string, newPassword: st
   ) as Promise<Record<string, never>>;
 };
 
+/**
+ * Disable authentication, meaning that users can no-longer log into the
+ * system.
+ *
+ * @param token The auth token
+ * @param password The password to the admin account
+ */
+export const disable = async (token: string, password: string) => {
+  return apiFetch(
+    'POST',
+    '/api/admin/auth/disable',
+    token,
+    { password }
+  ) as Promise<Record<string, never>>;
+};
+
 const auth = {
   login,
   logout,
   change,
+  disable,
 };
 
 export default auth;

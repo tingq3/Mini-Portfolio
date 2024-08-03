@@ -1,5 +1,5 @@
-import { revokeSession } from '$lib/server/auth.js';
-import { dataDirIsInit } from '$lib/server/data/dataDir.js';
+import { revokeSession } from '$lib/server/auth';
+import { dataDirIsInit } from '$lib/server/data/dataDir';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ request, cookies }) {
