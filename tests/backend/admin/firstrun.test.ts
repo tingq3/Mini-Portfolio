@@ -2,6 +2,7 @@
  * Test cases for POST /api/admin/repo
  */
 import api from '$api';
+import gitRepos from '../gitRepos';
 import { it, test, describe, expect, vi, beforeEach } from 'vitest';
 import simpleGit, { CheckRepoActions } from 'simple-git';
 import { readFile } from 'node:fs/promises';
@@ -19,7 +20,7 @@ const repo = () => simpleGit(REPO_PATH);
 describe('POST /api/admin/repo', () => {
   describe('git', () => {
     it('Clones repo to the default branch when URL is provided', async () => {
-      await api.admin.firstrun('git@github.com:MadGutsBot/Example.git', null);
+      await api.admin.firstrun(gitRepos.TEST_REPO_RW, null);
       await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT)).resolves.toStrictEqual(true);
       // Default branch for this repo is 'main'
       await expect(repo().status()).resolves.toMatchObject({ current: 'main' });
@@ -27,24 +28,24 @@ describe('POST /api/admin/repo', () => {
 
     it("Gives an error if the repo doesn't contain a config.json, but isn't empty", async () => {
       await expect(
-        api.admin.firstrun('git@github.com:MadGutsBot/MadGutsBot.github.io', null)
+        api.admin.firstrun(gitRepos.NON_PORTFOLIO, null)
       ).rejects.toMatchObject({ code: 400 });
     }, 10000);
 
     it("Doesn't give an error if the repository is entirely empty", async () => {
-      await api.admin.firstrun('git@github.com:MadGutsBot/Empty.git', null);
+      await api.admin.firstrun(gitRepos.EMPTY, null);
       await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT)).resolves.toStrictEqual(true);
     });
 
     it('Checks out a branch when one is given', async () => {
-      await api.admin.firstrun('git@github.com:MadGutsBot/Example.git', 'example');
+      await api.admin.firstrun(gitRepos.TEST_REPO_RW, 'example');
       // Check branch name matches
       await expect(repo().status()).resolves.toMatchObject({ current: 'example' });
     });
 
     it('Gives an error if the repo URL cannot be cloned', async () => {
       await expect(
-        api.admin.firstrun('git@github.com:MadGutsBot/Invalid-Repo', null)
+        api.admin.firstrun(gitRepos.INVALID, null)
       ).rejects.toMatchObject({ code: 400 });
     });
   });
@@ -63,7 +64,7 @@ describe('POST /api/admin/repo', () => {
   it('Blocks access if data is already set up', async () => {
     await api.admin.firstrun(null, null);
     await expect(
-      api.admin.firstrun('git@github.com:MadGutsBot/Example.git', null)
+      api.admin.firstrun(gitRepos.TEST_REPO_RW, null)
     ).rejects.toMatchObject({ code: 403 });
   });
 
