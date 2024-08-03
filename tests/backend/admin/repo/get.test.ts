@@ -4,6 +4,9 @@
 import { it, expect } from 'vitest';
 import { setup } from '../../helpers';
 import api from '$api';
+import gitRepos from '../../gitRepos';
+import simpleGit from 'simple-git';
+import { getDataDir } from '$lib/server/data/dataDir';
 
 it('Blocks unauthorized users', async () => {
   await setup();
@@ -16,6 +19,21 @@ it('Gives a 400 when no data directory is set up', async () => {
   await expect(api.admin.repo.get(token)).rejects.toMatchObject({ code: 400 });
 });
 
-it.todo('Correctly returns repo info when a repo is set up');
+it('Correctly returns repo info when a repo is set up', async () => {
+  const { token } = (await api.admin.firstrun(gitRepos.TEST_REPO_RW, null)).credentials;
+  const repo = simpleGit(getDataDir());
+  await expect(api.admin.repo.get(token)).resolves.toStrictEqual({
+    repo: {
+      url: gitRepos.TEST_REPO_RW,
+      branch: 'main',
+      commit: await repo.revparse(['--short', 'HEAD']),
+    }
+  });
+});
 
-it.todo('Correctly returns null info when a repo is not set up');
+it('Correctly returns null info when a repo is not set up', async () => {
+  const { token } = await setup();
+  await expect(api.admin.repo.get(token)).resolves.toStrictEqual({
+    repo: null,
+  });
+});
