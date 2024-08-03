@@ -46,6 +46,19 @@ export const change = async (token: string, newUsername: string, oldPassword: st
 };
 
 /**
+ * Revoke all current API tokens
+ *
+ * @param token The auth token
+ */
+export const revoke = async (token: string) => {
+  return apiFetch(
+    'POST',
+    '/api/admin/auth/revoke',
+    token
+  ) as Promise<Record<string, never>>;
+};
+
+/**
  * Disable authentication, meaning that users can no-longer log into the
  * system.
  *
@@ -66,6 +79,7 @@ const auth = {
   logout,
   change,
   disable,
+  revoke,
 };
 
 export default auth;
