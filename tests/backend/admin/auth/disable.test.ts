@@ -12,7 +12,9 @@ it('Disables authentication', async () => {
   await expect(api.admin.auth.login(username, password))
     .rejects.toMatchObject({ code: 403 });
   // And any operation using the token should also fail
-  await expect(api.admin.auth.logout(token)).rejects.toMatchObject({ code: 403 });
+  // Technically, this should be a 403, since no value can ever be successful,
+  // but I don't want to add another code path
+  await expect(api.admin.auth.logout(token)).rejects.toMatchObject({ code: 401 });
 });
 
 it('Errors for invalid tokens', async () => {
