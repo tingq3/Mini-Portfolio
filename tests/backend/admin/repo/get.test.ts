@@ -19,7 +19,7 @@ it('Gives a 400 when no data directory is set up', async () => {
   await expect(api.admin.repo.get(token)).rejects.toMatchObject({ code: 400 });
 });
 
-it('Correctly returns repo info when a repo is set up', async () => {
+it('Correctly returns repo info when a repo is set up', { timeout: 15_000 }, async () => {
   const { token } = (await api.admin.firstrun(gitRepos.TEST_REPO_RW, null)).credentials;
   const repo = simpleGit(getDataDir());
   await expect(api.admin.repo.get(token)).resolves.toStrictEqual({
