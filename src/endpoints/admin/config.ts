@@ -26,7 +26,7 @@ export const put = async (token: string, config: PortfolioConfig) => {
     'PUT',
     '/api/admin/config',
     token,
-    { config },
+    config,
   ) as Promise<Record<string, never>>;
 };
 
