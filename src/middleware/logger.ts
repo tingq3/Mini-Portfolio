@@ -1,5 +1,10 @@
 import type { Handle } from '@sveltejs/kit';
 import chalk, { type ChalkInstance } from 'chalk';
+import Spinnies from 'spinnies';
+
+let spinners: Spinnies | undefined;
+
+let requestCount = 0;
 
 /** Colorize request method for pretty-printing */
 function colorRequestMethod(method: string): string {
@@ -47,6 +52,24 @@ function colorStatus(code: number): string {
   }
 }
 
+function formatPartialRequest(startTime: number, method: string, path: string): string {
+  return [
+    chalk.gray(new Date(startTime).toISOString()),
+    colorRequestMethod(method),
+    chalk.magenta(path),
+  ].join(' ');
+}
+
+function formatCompletedRequest(startTime: number, method: string, path: string, status: number): string {
+  return [
+    chalk.gray(new Date(startTime).toISOString()),
+    colorRequestMethod(method),
+    chalk.magenta(path),
+    formatDuration(startTime, Date.now()),
+    colorStatus(status),
+  ].join(' ');
+}
+
 /**
  * Logging middleware to display incoming requests
  *
@@ -57,15 +80,25 @@ function colorStatus(code: number): string {
  * Adapted from: https://www.reddit.com/r/sveltejs/comments/xtbkpb
  */
 export const logger: Handle = async ({ event, resolve }) => {
+  if (!spinners) {
+    spinners = new Spinnies();
+  }
+
+  const requestId = `${requestCount++}`;
   const requestStartTime = Date.now();
+
+  spinners.add(requestId, {
+    text: formatPartialRequest(requestStartTime, event.request.method, event.url.pathname),
+  });
+
   const response = await resolve(event);
 
-  console.log(
-    new Date(requestStartTime).toISOString(),
-    colorRequestMethod(event.request.method),
-    chalk.magenta(event.url.pathname),
-    formatDuration(requestStartTime, Date.now()),
-    colorStatus(response.status)
-  );
+  const responseString = formatCompletedRequest(requestStartTime, event.request.method, event.url.pathname, response.status);
+
+  if (response.status < 500) {
+    spinners.succeed(requestId, { text: responseString });
+  } else {
+    spinners.fail(requestId, { text: responseString });
+  }
   return response;
 };
