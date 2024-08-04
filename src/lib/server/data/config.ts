@@ -17,7 +17,7 @@ export const ConfigJsonStruct = object({
    * Any groups not within this array will still be accessible through their
    * pages, but won't be shown on the main page.
    */
-  mainPageGroups: array(string()),
+  listedGroups: array(string()),
   /** Version of server that last accessed the config.json */
   version: string(),
 });
@@ -49,7 +49,7 @@ export async function setConfig(newConfig: ConfigJson) {
 export async function initConfig() {
   await setConfig({
     siteName: 'My portfolio',
-    mainPageGroups: [],
+    listedGroups: [],
     version: consts.VERSION,
   });
 }

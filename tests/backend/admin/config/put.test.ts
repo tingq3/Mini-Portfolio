@@ -17,13 +17,13 @@ beforeEach(async () => {
 it('Updates the current config contents', async () => {
   await expect(api.admin.config.put(token, {
     siteName: 'Name changed',
-    mainPageGroups: [],
+    listedGroups: [],
     version: consts.VERSION,
   })).resolves.toStrictEqual({});
   // Config should have updated
   await expect(api.admin.config.get(token)).resolves.toStrictEqual({
     siteName: 'Name changed',
-    mainPageGroups: [],
+    listedGroups: [],
     version: consts.VERSION,
   });
 });

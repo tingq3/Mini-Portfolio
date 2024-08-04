@@ -17,7 +17,7 @@ beforeEach(async () => {
 it('Returns the current config contents', async () => {
   await expect(api.admin.config.get(token)).resolves.toStrictEqual({
     siteName: 'My portfolio',
-    mainPageGroups: [],
+    listedGroups: [],
     version: consts.VERSION,
   });
 });
