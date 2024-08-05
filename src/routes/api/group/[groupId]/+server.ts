@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import { dataDirIsInit } from '$lib/server/data/dataDir';
-import { createGroup, getGroupInfo } from '$lib/server/data/group.js';
+import { createGroup, getGroupInfo } from '$lib/server/data/group';
 import { validateToken } from '$lib/server/auth';
 import { object, string, StructError, validate } from 'superstruct';
 

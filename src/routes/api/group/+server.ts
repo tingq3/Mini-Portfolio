@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import { dataDirIsInit } from '$lib/server/data/dataDir';
-import { getGroupInfoBrief, listGroups, type GroupInfoBrief } from '$lib/server/data/group.js';
+import { getGroupInfoBrief, listGroups, type GroupInfoBrief } from '$lib/server/data/group';
 
 export async function GET({ request, cookies }) {
   if (!await dataDirIsInit()) {
