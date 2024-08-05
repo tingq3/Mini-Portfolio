@@ -26,7 +26,7 @@
 		"rimraf": "^6.0.1",
 		"sanitize-filename": "^1.6.3",
 		"spinnies": "^0.5.1",
-		"superstruct": "^1.0.4",
+		"superstruct": "^2.0.2",
 		"tippy.js": "^6.3.7",
 		"validator": "^13.12.0"
 	},
