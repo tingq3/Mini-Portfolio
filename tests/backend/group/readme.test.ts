@@ -13,6 +13,8 @@ beforeEach(async () => {
 
 it('Errors if the server is not set up', async () => {
   await api.debug.clear();
+  await expect(api.group.withId(groupId).readme.get())
+    .rejects.toMatchObject({ code: 400 });
   await expect(api.group.withId(groupId).readme.set(token, 'Foo'))
     .rejects.toMatchObject({ code: 400 });
 });

@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import { dataDirIsInit } from '$lib/server/data/dataDir';
-import { createGroup, getGroupInfo } from '$lib/server/data/group';
+import { createGroup, getGroupInfo, GroupInfoFullStruct, setGroupInfo } from '$lib/server/data/group';
 import { validateToken } from '$lib/server/auth';
 import { object, string, StructError, validate } from 'superstruct';
 
@@ -67,7 +67,7 @@ export async function POST({ params, request, cookies }) {
   }
   const { name, description } = body;
 
-  // Validate description
+  // Validate name
   if (!name) {
     return error(400, 'Name cannot be empty');
   }
@@ -98,6 +98,60 @@ export async function POST({ params, request, cookies }) {
   }
 
   await createGroup(groupId, name, description);
+
+  return json({}, { status: 200 });
+}
+
+export async function PUT({ params, request, cookies }) {
+  const token = request.headers.get('Authorization');
+  if (!token) {
+    return error(401, 'Authorization token is required');
+  }
+
+  if (!await dataDirIsInit()) {
+    return error(400, 'Server is not initialized');
+  }
+
+  try {
+    await validateToken(token);
+  } catch (e) {
+    return error(401, `${e}`);
+  }
+
+  const groupId = params.groupId;
+
+  try {
+    await getGroupInfo(groupId);
+  } catch (e) {
+    return error(400, `Group with ID ${groupId} doesn't exist\n${e}`);
+  }
+
+  const [err, info] = validate(await request.json(), GroupInfoFullStruct);
+
+  if (err) {
+    return error(400, err);
+  }
+
+  // Validate name
+  const name = info.name;
+  if (!name) {
+    return error(400, 'Name cannot be empty');
+  }
+  if (name.trim().length !== name.length) {
+    return error(400, 'Name cannot contain leading or trailing whitespace');
+  }
+  if (
+    illegalNameChars
+      .reduce((n, c) => n.replace(c, ''), name)
+      .length
+    !== name.length
+  ) {
+    return error(400, 'Name contains illegal whitespace characters');
+  }
+
+  // TODO: Other validation
+
+  await setGroupInfo(groupId, info);
 
   return json({}, { status: 200 });
 }
