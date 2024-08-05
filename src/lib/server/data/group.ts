@@ -2,12 +2,12 @@
  * Access group data
  */
 
-import { readdir, readFile, writeFile } from "fs/promises";
-import { array, enums, intersection, object, string, validate, type Infer } from "superstruct";
-import { getDataDir } from "./dataDir";
+import { mkdir, readdir, readFile, writeFile } from 'fs/promises';
+import { array, enums, intersection, object, string, type, validate, type Infer } from 'superstruct';
+import { getDataDir } from './dataDir';
 
 /** Brief info about a group */
-export const GroupInfoBriefStruct = object({
+export const GroupInfoBriefStruct = type({
   /** User-facing name of the group */
   name: string(),
 
@@ -63,7 +63,7 @@ export type AssociationOptions = Infer<typeof AssociationOptionsStruct>;
 /** Full information about a group */
 export const GroupInfoFullStruct = intersection([
   GroupInfoBriefStruct,
-  object({
+  type({
     /**
      * Groups whose items should be used for filtering on this group
      */
@@ -135,9 +135,40 @@ export async function setGroupInfo(groupId: string, info: GroupInfoFull) {
   );
 }
 
+/** Returns the contents of the group's README.md */
 export async function getGroupReadme(groupId: string): Promise<string> {
   return readFile(
     `${getDataDir()}/${groupId}/README.md`,
     { encoding: 'utf-8' },
   );
+}
+
+/** Update the contents of the group's README.md */
+export async function setGroupReadme(groupId: string, readme: string) {
+  await writeFile(
+    `${getDataDir()}/${groupId}/README.md`,
+    readme,
+  );
+}
+
+/** Creates a new group with the given ID and name */
+export async function createGroup(id: string, name: string, description: string) {
+  await mkdir(`${getDataDir()}/${id}`);
+
+  // If there is a description, add it to the readme text
+  let readme = `# ${name}\n`;
+  if (description) {
+    readme += `\n${description}\n`;
+  }
+
+  await setGroupInfo(id, {
+    name,
+    description,
+    // TODO: Generate a random color for the new group
+    color: '#aa00aa',
+    associations: [],
+    filterGroups: [],
+    listedItems: [],
+  });
+  await setGroupReadme(id, readme);
 }

@@ -15,72 +15,94 @@ export const list = async () => {
   ) as Promise<Record<string, GroupInfoBrief>>;
 };
 
-/**
- * Create a new group
- *
- * @param token The authentication token
- * @param name The name of the group
- * @returns An object containing the slug of the newly-created group.
- */
-export const create = async (token: string, name: string) => {
-  return apiFetch(
-    'POST',
-    '/api/group',
-    token,
-    { name },
-  ) as Promise<{ slug: string }>;
+/** Access a group with the given ID */
+export const withId = (groupId: string) => {
+  /**
+   * Create a new group
+   *
+   * @param token The authentication token
+   * @param name The name of the group
+   */
+  const create = async (token: string, name: string, description: string) => {
+    return apiFetch(
+      'POST',
+      `/api/group/${groupId}`,
+      token,
+      { name, description },
+    ) as Promise<Record<string, never>>;
+  };
+
+  /**
+   * Return info on a particular group
+   *
+   * @returns info about the group
+   */
+  const getInfo = async () => {
+    return apiFetch(
+      'GET',
+      `/api/group/${groupId}`,
+      undefined,
+    ) as Promise<GroupInfoFull>;
+  };
+
+  /**
+   * Update info on a particular group
+   *
+   * @param info info about the group
+   */
+  const setInfo = async (token: string, newInfo: GroupInfoFull) => {
+    return apiFetch(
+      'PUT',
+      `/api/group/${groupId}`,
+      token,
+      newInfo,
+    ) as Promise<Record<string, never>>;
+  };
+
+  /**
+   * Returns the README.md of the given group
+   *
+   * @returns readme.md of group
+   */
+  const getReadme = async () => {
+    return apiFetch(
+      'GET',
+      `/api/group/${groupId}/readme`,
+      undefined,
+    ) as Promise<{ readme: string }>;
+  };
+
+  /**
+   * Updates the README.md of the given group
+   *
+   * @param token Auth token
+   * @param readme README.md contents
+   */
+  const setReadme = async (token: string, readme: string) => {
+    return apiFetch(
+      'PUT',
+      `/api/group/${groupId}/readme`,
+      token,
+      { readme },
+    ) as Promise<Record<string, never>>;
+  };
+
+  return {
+    create,
+    info: {
+      get: getInfo,
+      set: setInfo,
+    },
+    readme: {
+      get: getReadme,
+      set: setReadme,
+    },
+  };
 };
 
-/**
- * Return info on a particular group
- *
- * @param group The id of the group
- * @returns info about the group
- */
-export const info = async (group: string) => {
-  return apiFetch(
-    'GET',
-    `/api/group/${group}`,
-    undefined,
-  ) as Promise<GroupInfoFull>;
-};
-
-/**
- * Returns the README.md of the given group
- *
- * @param group group ID
- * @returns readme.md of group
- */
-export const getReadme = async (group: string) => {
-  return apiFetch(
-    'PUT',
-    `/api/group/${group}/readme`,
-    undefined,
-  ) as Promise<{ readme: string }>;
-}
-
-/**
- * Updates the README.md of the given group
- *
- * @param token Auth token
- * @param group group ID
- * @param readme README.md contents
- */
-export const setReadme = async (token: string, group: string, readme: string) => {
-  return apiFetch(
-    'PUT',
-    `/api/group/${group}/readme`,
-    token,
-    { readme },
-  ) as Promise<Record<string, never>>;
-}
-
-const config = {
+const group = {
   list,
-  create,
-  info,
-  getReadme,
-  setReadme,
+  withId,
 };
 
-export default config;
+export default group;
