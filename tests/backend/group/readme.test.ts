@@ -1,6 +1,6 @@
-import api from "$endpoints";
-import { beforeEach, expect, it } from "vitest";
-import { makeGroup, setup } from "../helpers";
+import api from '$endpoints';
+import { beforeEach, expect, it } from 'vitest';
+import { makeGroup, setup } from '../helpers';
 
 let token: string;
 let groupId: string;

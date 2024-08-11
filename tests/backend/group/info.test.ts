@@ -1,8 +1,7 @@
-import api from "$endpoints";
-import { beforeEach, expect, it } from "vitest";
-import { createCustomGroupProperties, makeGroup, setup } from "../helpers";
-import { describe } from "node:test";
-import { invalidGroupNames, validGroupNames } from "../consts";
+import api from '$endpoints';
+import { beforeEach, expect, it, describe } from 'vitest';
+import { createCustomGroupProperties, makeGroup, setup } from '../helpers';
+import { invalidGroupNames, validGroupNames } from '../consts';
 
 let token: string;
 let groupId: string;
@@ -17,8 +16,8 @@ it('Gives an error if the server is not set up', async () => {
   await api.debug.clear();
   await expect(api.group.withId(groupId).info.get())
     .rejects.toMatchObject({ code: 400 });
-    await expect(api.group.withId(groupId).info.set(token, createCustomGroupProperties()))
-      .rejects.toMatchObject({ code: 400 });
+  await expect(api.group.withId(groupId).info.set(token, createCustomGroupProperties()))
+    .rejects.toMatchObject({ code: 400 });
 });
 
 it('Gives an error for invalid tokens', async () => {
@@ -33,7 +32,7 @@ it('Successfully updates the group info', async () => {
     .resolves.toStrictEqual(createCustomGroupProperties());
 });
 
-describe('Group name', async () => {
+describe('Group name', () => {
   // Invalid group names
   it.each(invalidGroupNames)('Rejects invalid group names ($case)', async ({ name }) => {
     await expect(api.group.withId(groupId).info.set(token, createCustomGroupProperties({ name })))
