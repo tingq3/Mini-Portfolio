@@ -1,3 +1,6 @@
+# Server logs
+*.log
+
 # Data directory
 /data/
 
