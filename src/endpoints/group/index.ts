@@ -17,12 +17,6 @@ export const all = async () => {
 
 /** Access a group with the given ID */
 export const withId = (groupId: string) => {
-  /**
-   * Create a new group
-   *
-   * @param token The authentication token
-   * @param name The name of the group
-   */
   const create = async (token: string, name: string, description: string) => {
     return apiFetch(
       'POST',
@@ -40,11 +34,6 @@ export const withId = (groupId: string) => {
     ) as Promise<Record<string, never>>;
   };
 
-  /**
-   * Return info on a particular group
-   *
-   * @returns info about the group
-   */
   const getInfo = async () => {
     return apiFetch(
       'GET',
@@ -53,11 +42,6 @@ export const withId = (groupId: string) => {
     ) as Promise<GroupInfoFull>;
   };
 
-  /**
-   * Update info on a particular group
-   *
-   * @param info info about the group
-   */
   const setInfo = async (token: string, newInfo: GroupInfoFull) => {
     return apiFetch(
       'PUT',
@@ -67,11 +51,6 @@ export const withId = (groupId: string) => {
     ) as Promise<Record<string, never>>;
   };
 
-  /**
-   * Returns the README.md of the given group
-   *
-   * @returns readme.md of group
-   */
   const getReadme = async () => {
     return apiFetch(
       'GET',
@@ -80,12 +59,6 @@ export const withId = (groupId: string) => {
     ) as Promise<{ readme: string }>;
   };
 
-  /**
-   * Updates the README.md of the given group
-   *
-   * @param token Auth token
-   * @param readme README.md contents
-   */
   const setReadme = async (token: string, readme: string) => {
     return apiFetch(
       'PUT',
@@ -96,14 +69,46 @@ export const withId = (groupId: string) => {
   };
 
   return {
+    /**
+     * Create a new group
+     *
+     * @param token The authentication token
+     * @param name The name of the group
+     */
     create,
+    /**
+     * Remove a group
+     *
+     * @param token The authentication token
+     */
     remove,
     info: {
+      /**
+       * Return info on a particular group
+       *
+       * @returns info about the group
+       */
       get: getInfo,
+      /**
+       * Update info on a particular group
+       *
+       * @param info info about the group
+       */
       set: setInfo,
     },
     readme: {
+      /**
+       * Returns the README.md of the given group
+       *
+       * @returns readme.md of group
+       */
       get: getReadme,
+      /**
+       * Updates the README.md of the given group
+       *
+       * @param token Auth token
+       * @param readme README.md contents
+       */
       set: setReadme,
     },
   };
