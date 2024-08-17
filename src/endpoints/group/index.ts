@@ -3,11 +3,11 @@ import type { GroupInfoBrief, GroupInfoFull } from '$lib/server/data/group';
 import { apiFetch } from '../fetch';
 
 /**
- * Return a list of groups
+ * Return brief info about all groups
  *
- * @returns list of groups
+ * @returns mappings of groups
  */
-export const list = async () => {
+export const all = async () => {
   return apiFetch(
     'GET',
     '/api/group',
@@ -110,7 +110,7 @@ export const withId = (groupId: string) => {
 };
 
 const group = {
-  list,
+  all,
   withId,
 };
 
