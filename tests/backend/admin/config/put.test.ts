@@ -44,7 +44,17 @@ it('Errors if the new config has references a non-existent page group', async ()
   })).rejects.toMatchObject({ code: 400 });
 });
 
-it.todo('Can set pages as a main page group');
+it('Can set pages as a main page group', async () => {
+  await api.group.withId('my-group').create(token, 'my-group', '');
+  await expect(api.admin.config.put(token, {
+    siteName: 'Name changed',
+    listedGroups: ['my-group'],
+    version: consts.VERSION,
+  })).resolves.toStrictEqual({});
+  // Config should have updated
+  await expect(api.admin.config.get(token))
+    .resolves.toMatchObject({ listedGroups: ['my-group'] });
+});
 
 it('Rejects invalid tokens', async () => {
   await expect(api.admin.config.put('invalid token', {
