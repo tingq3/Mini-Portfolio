@@ -1,6 +1,7 @@
 /** Group management endpoints */
 import type { GroupInfoBrief, GroupInfoFull } from '$lib/server/data/group';
 import { apiFetch } from '../fetch';
+import makeItemFunctions from './item';
 
 /**
  * Return brief info about all groups
@@ -74,6 +75,7 @@ export const withId = (groupId: string) => {
      *
      * @param token The authentication token
      * @param name The name of the group
+      * @param description The description of the group
      */
     create,
     /**
@@ -111,6 +113,8 @@ export const withId = (groupId: string) => {
        */
       set: setReadme,
     },
+    /** Access properties of items within this group */
+    item: makeItemFunctions(groupId),
   };
 };
 
