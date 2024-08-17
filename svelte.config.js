@@ -12,7 +12,6 @@ const config = {
 		// https://kit.svelte.dev/docs/configuration#alias
 		alias: {
 			// Allow importing our alias definitions
-			"$types": "src/types/",
 			"$components": "src/components/",
 			"$endpoints": "src/endpoints",
 		},
