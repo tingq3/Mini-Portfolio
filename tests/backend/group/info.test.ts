@@ -25,6 +25,18 @@ it('Gives an error for invalid tokens', async () => {
     .rejects.toMatchObject({ code: 401 });
 });
 
+describe("Gives an error if the group doesn't exist", () => {
+  it('Get info', async () => {
+    await expect(api.group.withId('invalid').info.get())
+      .rejects.toMatchObject({ code: 404 });
+  });
+
+  it('Set info', async () => {
+    await expect(api.group.withId('invalid').info.set(token, createCustomGroupProperties()))
+      .rejects.toMatchObject({ code: 404 });
+  });
+});
+
 it('Successfully updates the group info', async () => {
   await expect(api.group.withId(groupId).info.set(token, createCustomGroupProperties()))
     .toResolve();

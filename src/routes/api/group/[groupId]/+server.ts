@@ -14,7 +14,7 @@ export async function GET({ params, request, cookies }) {
   try {
     return json(await getGroupInfo(groupId), { status: 200 });
   } catch (e) {
-    return error(400, `Group with ID ${groupId} doesn't exist\n${e}`);
+    return error(404, `Group with ID ${groupId} doesn't exist\n${e}`);
   }
 }
 
@@ -123,7 +123,7 @@ export async function PUT({ params, request, cookies }) {
   try {
     await getGroupInfo(groupId);
   } catch (e) {
-    return error(400, `Group with ID ${groupId} doesn't exist\n${e}`);
+    return error(404, `Group with ID ${groupId} doesn't exist\n${e}`);
   }
 
   const [err, info] = validate(await request.json(), GroupInfoFullStruct);

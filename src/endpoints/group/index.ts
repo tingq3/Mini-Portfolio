@@ -32,6 +32,14 @@ export const withId = (groupId: string) => {
     ) as Promise<Record<string, never>>;
   };
 
+  const remove = async (token: string) => {
+    return apiFetch(
+      'DELETE',
+      `/api/group/${groupId}`,
+      token,
+    ) as Promise<Record<string, never>>;
+  };
+
   /**
    * Return info on a particular group
    *
@@ -89,6 +97,7 @@ export const withId = (groupId: string) => {
 
   return {
     create,
+    remove,
     info: {
       get: getInfo,
       set: setInfo,
