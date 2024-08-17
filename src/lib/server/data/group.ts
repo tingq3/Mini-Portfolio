@@ -5,6 +5,7 @@
 import { mkdir, readdir, readFile, writeFile } from 'fs/promises';
 import { array, enums, intersection, object, string, type, validate, type Infer } from 'superstruct';
 import { getDataDir } from './dataDir';
+import { rimraf } from 'rimraf';
 
 /** Brief info about a group */
 export const GroupInfoBriefStruct = type({
@@ -171,4 +172,9 @@ export async function createGroup(id: string, name: string, description: string)
     listedItems: [],
   });
   await setGroupReadme(id, readme);
+}
+
+/** Removes the group with the given ID */
+export async function deleteGroup(id: string) {
+  await rimraf(`${getDataDir()}/${id}`);
 }

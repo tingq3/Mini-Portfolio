@@ -26,3 +26,9 @@ it('Gives an error for invalid tokens', async () => {
   await expect(api.group.withId(group).remove('invalid'))
     .rejects.toMatchObject({ code: 401 });
 });
+
+it("Gives an error if the server isn't initialized", async () => {
+  await api.debug.clear();
+  await expect(api.group.withId(group).remove(token))
+    .rejects.toMatchObject({ code: 400 });
+});
