@@ -6,21 +6,21 @@ import type { ItemInfoFull } from '$lib/server/data/item';
 import generateTestCases from '../creationCases';
 
 // Generate repeated test cases between groups and items
-generateTestCases(
-  'item',
-  async () => {
-    const token = (await setup()).token;
-    const groupId = 'group-id';
-    await api.group.withId(groupId).create(token, 'Group', '');
-    return {
-      token,
-      groupId,
-    };
-  },
-  async ({ token, groupId }, id: string, name: string, description: string) => {
-    await api.group.withId(groupId).item.withId(id).create(token, name, description);
-  }
-);
+describe('Generated test cases', () => {
+  let token: string;
+  const groupId = 'group-id';
+
+  generateTestCases(
+    'item',
+    async () => {
+      token = (await setup()).token;
+      await api.group.withId(groupId).create(token, 'Group', '');
+    },
+    async (id: string, name: string, description: string) => {
+      await api.group.withId(groupId).item.withId(id).create(token, name, description);
+    }
+  );
+});
 
 describe('Sets up basic item properties', async () => {
   let token: string;

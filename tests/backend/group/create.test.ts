@@ -6,13 +6,19 @@ import type { GroupInfoFull } from '$lib/server/data/group';
 import generateTestCases from './creationCases';
 
 // Generate repeated test cases between groups and items
-generateTestCases(
-  'group',
-  async () => (await setup()).token,
-  async (token: string, id: string, name: string, description: string) => {
-    await api.group.withId(id).create(token, name, description);
-  }
-);
+describe('Generated test cases', () => {
+  let token: string;
+
+  generateTestCases(
+    'group',
+    async () => {
+      token = (await setup()).token;
+    },
+    async (id: string, name: string, description: string) => {
+      await api.group.withId(id).create(token, name, description);
+    }
+  );
+});
 
 describe('Sets up basic group properties', async () => {
   let token: string;
