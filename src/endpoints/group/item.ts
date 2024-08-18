@@ -21,7 +21,7 @@ export default function makeItemFunctions(groupId: string) {
     const create = async (token: string, name: string, description: string) => {
       return apiFetch(
         'POST',
-        `/api/group/${groupId}/${itemId}`,
+        `/api/group/${groupId}/item/${itemId}`,
         token,
         { name, description },
       ) as Promise<Record<string, never>>;
@@ -30,7 +30,7 @@ export default function makeItemFunctions(groupId: string) {
     const remove = async (token: string) => {
       return apiFetch(
         'DELETE',
-        `/api/group/${groupId}/${itemId}`,
+        `/api/group/${groupId}/item/${itemId}`,
         token,
       ) as Promise<Record<string, never>>;
     };
@@ -38,7 +38,7 @@ export default function makeItemFunctions(groupId: string) {
     const getInfo = async () => {
       return apiFetch(
         'GET',
-        `/api/group/${groupId}/${itemId}`,
+        `/api/group/${groupId}/item/${itemId}`,
         undefined,
       ) as Promise<ItemInfoFull>;
     };
@@ -46,7 +46,7 @@ export default function makeItemFunctions(groupId: string) {
     const setInfo = async (token: string, newInfo: ItemInfoFull) => {
       return apiFetch(
         'PUT',
-        `/api/group/${groupId}/${itemId}`,
+        `/api/group/${groupId}/item/${itemId}`,
         token,
         newInfo,
       ) as Promise<Record<string, never>>;
@@ -55,7 +55,7 @@ export default function makeItemFunctions(groupId: string) {
     const getReadme = async () => {
       return apiFetch(
         'GET',
-        `/api/group/${groupId}/${itemId}/readme`,
+        `/api/group/${groupId}/item/${itemId}/readme`,
         undefined,
       ) as Promise<{ readme: string }>;
     };
@@ -63,7 +63,7 @@ export default function makeItemFunctions(groupId: string) {
     const setReadme = async (token: string, readme: string) => {
       return apiFetch(
         'PUT',
-        `/api/group/${groupId}/${itemId}/readme`,
+        `/api/group/${groupId}/item/${itemId}/readme`,
         token,
         { readme },
       ) as Promise<Record<string, never>>;
