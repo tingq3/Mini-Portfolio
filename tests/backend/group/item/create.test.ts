@@ -5,6 +5,7 @@ import api from '$endpoints';
 import type { ItemInfoFull } from '$lib/server/data/item';
 import generateTestCases from '../creationCases';
 
+// Generate repeated test cases between groups and items
 generateTestCases(
   'item',
   async () => {
@@ -66,5 +67,10 @@ describe('Other test cases', async () => {
   it("Fails if the group doesn't exist", async () => {
     await expect(api.group.withId('invalid').item.withId('item-id').create(token, 'My item', ''))
       .rejects.toMatchObject({ code: 404 });
+  });
+
+  it('Fails for invalid tokens', async () => {
+    await expect(api.group.withId(groupId).item.withId('id').create('invalid token', 'My item', ''))
+      .rejects.toMatchObject({ code: 401 });
   });
 });

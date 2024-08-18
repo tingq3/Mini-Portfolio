@@ -64,11 +64,6 @@ export default function generateTestCases<T>(
       });
     });
 
-    it('Fails for invalid tokens', async () => {
-      await expect(api.group.withId('id').create('invalid token', 'My group', ''))
-        .rejects.toMatchObject({ code: 401 });
-    });
-
     it('Fails if the data is not set up', async () => {
       await api.debug.clear();
       await expect(create(setupData, 'id', 'Example', ''))

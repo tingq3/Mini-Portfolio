@@ -41,3 +41,15 @@ describe('Sets up basic group properties', async () => {
       .resolves.toStrictEqual({ readme: '# Group name\n\nGroup description\n' });
   });
 });
+
+describe('Other test cases', () => {
+  beforeEach(async () => {
+    // Currently no need for tokens, but may add later
+    await setup();
+  });
+
+  it('Fails for invalid tokens', async () => {
+    await expect(api.group.withId('id').create('invalid token', 'My group', ''))
+      .rejects.toMatchObject({ code: 401 });
+  });
+});
