@@ -1,8 +1,15 @@
-/** Shared test cases for getting/setting the readme files of items */
+/** Shared test cases for getting/setting the readme files of items/groups */
 
 import api from '$endpoints';
 import { beforeEach, expect, it } from 'vitest';
 
+/**
+ * Generate shared test cases for getting/setting the readme of a group or
+ * item.
+ *
+ * Similar design to `generateTestCases` from `creationCases.ts`, see that
+ * documentation for usage.
+ */
 export default function generateTestCases<T>(
   setup: () => Promise<void>,
   getReadme: () => Promise<{ readme: string }>,
