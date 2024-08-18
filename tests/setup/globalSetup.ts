@@ -17,13 +17,12 @@ export async function setup() {
 
   // Send a test request
   try {
-    await api.debug.echo('Wait for server startup');
+    await api.debug.echo('Check if server is running');
     // If it succeeded, there is no need to start the server, it is already
     // running
     return;
-  } catch {
-    // It failed, start up the server
-  }
+  } catch {}
+  // It failed, start up the server
 
   if (!HOST) {
     throw Error('HOST is undefined');
@@ -45,7 +44,7 @@ export async function setup() {
     try {
       await api.debug.echo('Wait for server startup');
       return;
-    } catch { }
+    } catch {}
   }
   // If we reach this point, the server failed to start in-time
   server.kill('SIGTERM');
