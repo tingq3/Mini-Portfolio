@@ -11,19 +11,22 @@ describe('Generated test cases', () => {
   let itemId: string;
 
   generateTestCases(
+    // Setup
     async () => {
       token = (await setup()).token;
       groupId = 'group-id';
       itemId = 'item-id';
       await makeGroup(token, groupId);
       await makeItem(token, groupId, itemId);
-      return { token, data: { groupId, itemId } };
     },
-    data => api.group.withId(data.groupId).item.withId(data.itemId).readme.get(),
-    async (token, data, newReadme) => {
-      await api.group.withId(data.groupId).item.withId(data.itemId).readme.set(token, newReadme);
+    // Get readme
+    () => api.group.withId(groupId).item.withId(itemId).readme.get(),
+    // Set readme
+    async (newReadme) => {
+      await api.group.withId(groupId).item.withId(itemId).readme.set(token, newReadme);
     },
-    data => readFile(`${getDataDir()}/${data.groupId}/${data.itemId}/README.md`, { encoding: 'utf-8' }),
+    // Get readme from disk
+    () => readFile(`${getDataDir()}/${groupId}/${itemId}/README.md`, { encoding: 'utf-8' }),
   );
 });
 
@@ -46,5 +49,10 @@ describe('Other cases', () => {
   it("Errors if the item doesn't exist", async () => {
     await expect(api.group.withId(groupId).item.withId('invalid-item').readme.set(token, 'New readme'))
       .rejects.toMatchObject({ code: 404 });
+  });
+
+  it('Rejects README updates for invalid tokens', async () => {
+    await expect(api.group.withId(groupId).item.withId(itemId).readme.set('invalid token', 'New readme'))
+      .rejects.toMatchObject({ code: 401 });
   });
 });
