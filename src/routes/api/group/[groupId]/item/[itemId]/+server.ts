@@ -118,7 +118,7 @@ export async function PUT({ params, request, cookies }) {
   const { groupId, itemId } = params;
 
   await getItemInfo(groupId, itemId)
-    .catch(e => error(404, `Group with ID ${groupId} doesn't exist\n${e}`));
+    .catch(e => error(404, `Item with ID ${itemId} in group ${groupId} doesn't exist\n${e}`));
 
   const [err, info] = validate(await request.json(), ItemInfoFullStruct);
   if (err) {
@@ -165,7 +165,7 @@ export async function DELETE({ params, request, cookies }) {
   const { groupId, itemId } = params;
 
   await getItemInfo(groupId, itemId)
-    .catch(e => error(404, `Group with ID ${groupId} doesn't exist\n${e}`));
+    .catch(e => error(404, `Item with ID ${itemId} in group ${groupId} doesn't exist\n${e}`));
 
   // Now delete the group
   await deleteItem(groupId, itemId);
