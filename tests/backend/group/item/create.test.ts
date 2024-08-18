@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, test } from 'vitest';
 import { makeGroup, setup } from '../../helpers';
 import api from '$endpoints';
-import { invalidGroupIds, invalidGroupNames, validGroupIds, validGroupNames } from '../../consts';
+import { invalidIds, invalidNames, validIds, validNames } from '../../consts';
 import type { ItemInfoFull } from '$lib/server/data/item';
 
 let token: string;
@@ -34,20 +34,20 @@ describe('Sets up basic item properties', async () => {
   });
 
   it('Readme contains item name and item description', async () => {
-    await expect(api.group.withId(groupId).readme.get())
+    await expect(api.group.withId(groupId).item.withId(itemId).readme.get())
       .resolves.toStrictEqual({ readme: '# Item name\n\nItem description\n' });
   });
 });
 
 describe('Item ID', () => {
   // Invalid item IDs
-  it.each(invalidGroupIds)('Rejects invalid item IDs ($case)', async ({ id }) => {
+  it.each(invalidIds)('Rejects invalid item IDs ($case)', async ({ id }) => {
     await expect(api.group.withId(groupId).item.withId(id).create(token, 'Item name', 'Item description'))
       .rejects.toMatchObject({ code: 400 });
   });
 
   // Valid item IDs
-  it.each(validGroupIds)('Allows valid item IDs ($case)', async ({ id }) => {
+  it.each(validIds)('Allows valid item IDs ($case)', async ({ id }) => {
     await expect(api.group.withId(groupId).item.withId(id).create(token, 'Item name', 'Item description'))
       .toResolve();
   });
@@ -69,13 +69,13 @@ describe('Item ID', () => {
 
 describe('Item name', () => {
   // Invalid item names
-  it.each(invalidGroupNames)('Rejects invalid item names ($case)', async ({ name }) => {
+  it.each(invalidNames)('Rejects invalid item names ($case)', async ({ name }) => {
     await expect(api.group.withId(groupId).item.withId('item-id').create(token, name, ''))
       .rejects.toMatchObject({ code: 400 });
   });
 
   // Valid item names
-  it.each(validGroupNames)('Allows valid item names ($case)', async ({ name }) => {
+  it.each(validNames)('Allows valid item names ($case)', async ({ name }) => {
     await expect(api.group.withId(groupId).item.withId('item-id').create(token, name, ''))
       .toResolve();
   });

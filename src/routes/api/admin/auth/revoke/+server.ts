@@ -20,11 +20,7 @@ export async function POST({ request, cookies }) {
     return error(403, 'Authentication was disabled');
   }
 
-  try {
-    await validateToken(token);
-  } catch (e) {
-    return error(401, `${e}`);
-  }
+  await validateToken(token).catch(e => error(401, `${e}`));
 
   local.auth.sessions.notBefore = unixTime();
 

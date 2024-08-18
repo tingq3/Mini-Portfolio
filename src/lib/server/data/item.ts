@@ -138,7 +138,7 @@ export async function setItemReadme(groupId: string, itemId: string, readme: str
 }
 
 /** Creates a new item with the given ID and name */
-export async function createGroup(groupId: string, itemId: string, name: string, description: string) {
+export async function createItem(groupId: string, itemId: string, name: string, description: string) {
   await mkdir(`${getDataDir()}/${groupId}/${itemId}`);
 
   // If there is a description, add it to the readme text
@@ -160,6 +160,6 @@ export async function createGroup(groupId: string, itemId: string, name: string,
 }
 
 /** Removes the item with the given ID */
-export async function deleteGroup(groupId: string, itemId: string) {
+export async function deleteItem(groupId: string, itemId: string) {
   await rimraf(`${getDataDir()}/${groupId}/${itemId}`);
 }

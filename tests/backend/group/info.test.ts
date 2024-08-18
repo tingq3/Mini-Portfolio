@@ -1,7 +1,7 @@
 import api from '$endpoints';
 import { beforeEach, expect, it, describe } from 'vitest';
 import { createCustomGroupProperties, makeGroup, setup } from '../helpers';
-import { invalidGroupNames, validGroupNames } from '../consts';
+import { invalidNames, validNames } from '../consts';
 
 let token: string;
 let groupId: string;
@@ -46,13 +46,13 @@ it('Successfully updates the group info', async () => {
 
 describe('Group name', () => {
   // Invalid group names
-  it.each(invalidGroupNames)('Rejects invalid group names ($case)', async ({ name }) => {
+  it.each(invalidNames)('Rejects invalid group names ($case)', async ({ name }) => {
     await expect(api.group.withId(groupId).info.set(token, createCustomGroupProperties({ name })))
       .rejects.toMatchObject({ code: 400 });
   });
 
   // Valid group names
-  it.each(validGroupNames)('Allows valid group names ($case)', async ({ name }) => {
+  it.each(validNames)('Allows valid group names ($case)', async ({ name }) => {
     await expect(api.group.withId(groupId).info.set(token, createCustomGroupProperties({ name })))
       .toResolve();
   });

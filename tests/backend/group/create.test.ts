@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, test } from 'vitest';
 import { setup } from '../helpers';
 import api from '$endpoints';
 import type { GroupInfoFull } from '$lib/server/data/group';
-import { invalidGroupIds, invalidGroupNames, validGroupIds, validGroupNames } from '../consts';
+import { invalidIds, invalidNames, validIds, validNames } from '../consts';
 
 let token: string;
 
@@ -39,13 +39,13 @@ describe('Sets up basic group properties', async () => {
 
 describe('Group ID', () => {
   // Invalid group IDs
-  it.each(invalidGroupIds)('Rejects invalid group IDs ($case)', async ({ id }) => {
+  it.each(invalidIds)('Rejects invalid group IDs ($case)', async ({ id }) => {
     await expect(api.group.withId(id).create(token, 'Example group', ''))
       .rejects.toMatchObject({ code: 400 });
   });
 
   // Valid group IDs
-  it.each(validGroupIds)('Allows valid group IDs ($case)', async ({ id }) => {
+  it.each(validIds)('Allows valid group IDs ($case)', async ({ id }) => {
     await expect(api.group.withId(id).create(token, 'My group', ''))
       .toResolve();
   });
@@ -60,13 +60,13 @@ describe('Group ID', () => {
 
 describe('Group name', () => {
   // Invalid group names
-  it.each(invalidGroupNames)('Rejects invalid group names ($case)', async ({ name }) => {
+  it.each(invalidNames)('Rejects invalid group names ($case)', async ({ name }) => {
     await expect(api.group.withId('my-group').create(token, name, ''))
       .rejects.toMatchObject({ code: 400 });
   });
 
   // Valid group names
-  it.each(validGroupNames)('Allows valid group names ($case)', async ({ name }) => {
+  it.each(validNames)('Allows valid group names ($case)', async ({ name }) => {
     await expect(api.group.withId('my-group').create(token, name, ''))
       .toResolve();
   });

@@ -22,11 +22,7 @@ export async function POST({ request, cookies }) {
     return error(400, 'Server is not initialized');
   }
 
-  try {
-    await validateToken(token);
-  } catch (e) {
-    return error(401, `${e}`);
-  }
+  await validateToken(token).catch(e => error(401, `${e}`));
 
   const local = await getLocalConfig();
 

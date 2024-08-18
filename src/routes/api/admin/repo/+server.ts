@@ -13,11 +13,7 @@ export async function GET({ request, cookies }) {
     return error(400, 'Server is not initialized');
   }
 
-  try {
-    await validateToken(token);
-  } catch (e) {
-    return error(401, `${e}`);
-  }
+  await validateToken(token).catch(e => error(401, `${e}`));
 
   if (!await dataDirUsesGit()) {
     return json({ repo: null }, { status: 200 });

@@ -1,25 +1,27 @@
 import { error, json } from '@sveltejs/kit';
 import { dataDirIsInit } from '$lib/server/data/dataDir';
-import { createGroup, deleteGroup, getGroupInfo, GroupInfoFullStruct, setGroupInfo } from '$lib/server/data/group';
+import { getGroupInfo } from '$lib/server/data/group';
 import { validateToken } from '$lib/server/auth';
 import { object, string, StructError, validate } from 'superstruct';
+import { getItemInfo, createItem, setItemInfo, ItemInfoFullStruct, deleteItem } from '$lib/server/data/item.js';
 
 export async function GET({ params, request, cookies }) {
   if (!await dataDirIsInit()) {
     return error(400, 'Server is not initialized');
   }
 
-  const groupId = params.groupId;
+  const { groupId, itemId } = params;
 
   try {
-    return json(await getGroupInfo(groupId), { status: 200 });
+    return json(await getItemInfo(groupId, itemId), { status: 200 });
   } catch (e) {
-    return error(404, `Group with ID ${groupId} doesn't exist\n${e}`);
+    return error(404, `Item at ID ${groupId}/item/${itemId} doesn't exist\n${e}`);
   }
 }
 
+// FIXME: Extract to constants to reduce duplication
 /** Regex for matching group IDs */
-const groupIdValidator = /^[a-z0-9-.]+$/;
+const itemIdValidator = /^[a-z0-9-.]+$/;
 
 const illegalNameChars = ['\t', '\n', '\f', '\r'];
 
@@ -36,25 +38,28 @@ export async function POST({ params, request, cookies }) {
   await validateToken(token).catch(e => error(401, `${e}`));
 
   // Validate group ID
-  const groupId = params.groupId;
+  const { groupId, itemId } = params;
 
-  if (!groupId.trim().length) {
-    return error(400, `Group ID '${groupId}' is empty`);
+  // Ensure group exists
+  await getGroupInfo(groupId).catch(e => error(404, e));
+
+  if (!itemId.trim().length) {
+    return error(400, `Item ID '${itemId}' is empty`);
   }
-  if (!groupIdValidator.test(groupId)) {
-    return error(400, `Group ID '${groupId}' is contains illegal characters`);
+  if (!itemIdValidator.test(itemId)) {
+    return error(400, `Item ID '${itemId}' is contains illegal characters`);
   }
-  if (groupId.startsWith('.')) {
-    return error(400, `Group ID '${groupId}' has a leading dot`);
+  if (itemId.startsWith('.')) {
+    return error(400, `Item ID '${itemId}' has a leading dot`);
   }
-  if (groupId.endsWith('.')) {
-    return error(400, `Group ID '${groupId}' has a trailing dot`);
+  if (itemId.endsWith('.')) {
+    return error(400, `Item ID '${itemId}' has a trailing dot`);
   }
-  if (groupId.startsWith('-')) {
-    return error(400, `Group ID '${groupId}' has a leading dash`);
+  if (itemId.startsWith('-')) {
+    return error(400, `Item ID '${itemId}' has a leading dash`);
   }
-  if (groupId.endsWith('-')) {
-    return error(400, `Group ID '${groupId}' has a trailing dash`);
+  if (itemId.endsWith('-')) {
+    return error(400, `Item ID '${itemId}' has a trailing dash`);
   }
 
   const [err, body] = validate(await request.json(), object({ name: string(), description: string() }));
@@ -79,21 +84,21 @@ export async function POST({ params, request, cookies }) {
     return error(400, 'Name contains illegal whitespace characters');
   }
 
-  let groupDataExists = false;
+  let itemDataExists = false;
   try {
-    await getGroupInfo(groupId);
-    groupDataExists = true;
+    await getItemInfo(groupId, itemId);
+    itemDataExists = true;
   } catch (e) {
     // If it's a validation error, we should say so
     if (e instanceof StructError) {
-      return error(400, `Group with ID ${groupId} already exists, but has invalid data`);
+      return error(400, `Item with ID ${itemId} already exists, but has invalid data`);
     }
   }
-  if (groupDataExists) {
+  if (itemDataExists) {
     return error(400, `Group with ID ${groupId} already exists`);
   }
 
-  await createGroup(groupId, name, description);
+  await createItem(groupId, itemId, name, description);
 
   return json({}, { status: 200 });
 }
@@ -110,21 +115,18 @@ export async function PUT({ params, request, cookies }) {
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
-  const groupId = params.groupId;
+  const { groupId, itemId } = params;
 
-  try {
-    await getGroupInfo(groupId);
-  } catch (e) {
-    return error(404, `Group with ID ${groupId} doesn't exist\n${e}`);
-  }
+  await getItemInfo(groupId, itemId)
+    .catch(e => error(404, `Group with ID ${groupId} doesn't exist\n${e}`));
 
-  const [err, info] = validate(await request.json(), GroupInfoFullStruct);
-
+  const [err, info] = validate(await request.json(), ItemInfoFullStruct);
   if (err) {
     return error(400, err);
   }
 
   // Validate name
+  // TODO: Helper function (create and edit, for both items and groups)
   const name = info.name;
   if (!name) {
     return error(400, 'Name cannot be empty');
@@ -143,7 +145,7 @@ export async function PUT({ params, request, cookies }) {
 
   // TODO: Other validation
 
-  await setGroupInfo(groupId, info);
+  await setItemInfo(groupId, itemId, info);
 
   return json({}, { status: 200 });
 }
@@ -160,15 +162,12 @@ export async function DELETE({ params, request, cookies }) {
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
-  const groupId = params.groupId;
+  const { groupId, itemId } = params;
 
-  try {
-    await getGroupInfo(groupId);
-  } catch (e) {
-    return error(404, `Group with ID ${groupId} doesn't exist\n${e}`);
-  }
+  await getItemInfo(groupId, itemId)
+    .catch(e => error(404, `Group with ID ${groupId} doesn't exist\n${e}`));
 
   // Now delete the group
-  await deleteGroup(groupId);
+  await deleteItem(groupId, itemId);
   return json({}, { status: 200 });
 }

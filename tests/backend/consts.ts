@@ -1,4 +1,4 @@
-export const invalidGroupIds = [
+export const invalidIds = [
   { id: ' /', case: 'Purely whitespace' },
   { id: 'hello=world', case: 'Non alphanumeric characters: "="' },
   { id: 'hello_world', case: 'Non alphanumeric characters: "_"' },
@@ -14,13 +14,13 @@ export const invalidGroupIds = [
   { id: 'Español', case: 'Foreign characters' },
 ];
 
-export const validGroupIds = [
+export const validIds = [
   { id: 'hello', case: 'Basic' },
   { id: 'hello-world', case: 'Dashes' },
   { id: 'node.js', case: 'Dots in middle of string' },
 ];
 
-export const invalidGroupNames = [
+export const invalidNames = [
   { name: '', case: 'Empty string' },
   { name: 'Hello\tWorld', case: 'Illegal whitespace characters' },
   { name: ' ', case: 'Purely whitespace' },
@@ -28,7 +28,7 @@ export const invalidGroupNames = [
   { name: 'Hello World ', case: 'Trailing whitespace characters' },
 ];
 
-export const validGroupNames = [
+export const validNames = [
   { name: 'Hello World', case: 'Basic' },
   { name: 'OS/161', case: 'Slash' },
   { name: 'Wow! This is cool', case: 'Other punctuation' },
