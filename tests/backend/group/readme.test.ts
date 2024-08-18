@@ -1,32 +1,41 @@
 import api from '$endpoints';
-import { beforeEach, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { makeGroup, setup } from '../helpers';
+import generateTestCases from './readmeCases';
+import { readFile } from 'fs/promises';
+import { getDataDir } from '$lib/server/data/dataDir';
 
-let token: string;
-let groupId: string;
+describe('Generated test cases', () => {
+  let token: string;
+  let groupId: string;
 
-beforeEach(async () => {
-  token = (await setup()).token;
-  groupId = 'group';
-  await makeGroup(token, groupId);
+  generateTestCases(
+    async () => {
+      token = (await setup()).token;
+      groupId = 'group-id';
+      await makeGroup(token, groupId);
+      return { token, data: groupId };
+    },
+    data => api.group.withId(data).readme.get(),
+    async (token, data, newReadme) => {
+      await api.group.withId(data).readme.set(token, newReadme);
+    },
+    data => readFile(`${getDataDir()}/${data}/README.md`, { encoding: 'utf-8' }),
+  );
 });
 
-it('Errors if the server is not set up', async () => {
-  await api.debug.clear();
-  await expect(api.group.withId(groupId).readme.get())
-    .rejects.toMatchObject({ code: 400 });
-  await expect(api.group.withId(groupId).readme.set(token, 'Foo'))
-    .rejects.toMatchObject({ code: 400 });
-});
+describe('Other test cases', () => {
+  let token: string;
+  let groupId: string;
 
-it('Rejects README updates for invalid tokens', async () => {
-  await expect(api.group.withId(groupId).readme.set('invalid', 'Foo'))
-    .rejects.toMatchObject({ code: 401 });
-});
+  beforeEach(async () => {
+    token = (await setup()).token;
+    groupId = 'group';
+    await makeGroup(token, groupId);
+  });
 
-it('Correctly updates the readme contents', async () => {
-  await expect(api.group.withId(groupId).readme.set(token, 'Foo'))
-    .resolves.toStrictEqual({});
-  await expect(api.group.withId(groupId).readme.get())
-    .resolves.toStrictEqual({ readme: 'Foo' });
+  it("Errors if the group doesn't exist", async () => {
+    await expect(api.group.withId('invalid-group').readme.set(token, 'New readme'))
+      .rejects.toMatchObject({ code: 404 });
+  });
 });

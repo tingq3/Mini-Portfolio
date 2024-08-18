@@ -1,5 +1,6 @@
 import api from '$endpoints';
 import type { GroupInfoFull } from '$lib/server/data/group';
+import type { ItemInfoFull } from '$lib/server/data/item';
 
 /** Set up the server */
 export async function setup() {
@@ -23,4 +24,23 @@ export function createCustomGroupProperties(options: Partial<GroupInfoFull> = {}
   };
 
   return { ...group, ...options };
+}
+
+/** Create an item with the given ID */
+export async function makeItem(token: string, groupId: string, id: string) {
+  await api.group.withId(groupId).item.withId(id).create(token, id, id);
+}
+
+/** Creates custom item properties object */
+export function createCustomItemProperties(options: Partial<ItemInfoFull> = {}): ItemInfoFull {
+  const item: ItemInfoFull = {
+    name: 'My item',
+    description: 'Item description',
+    color: '#aa00aa',
+    chipLinks: [],
+    cardLinks: [],
+    urls: {},
+  };
+
+  return { ...item, ...options };
 }

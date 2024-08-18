@@ -35,7 +35,7 @@ export async function PUT({ params, request, cookies }) {
   try {
     await getGroupInfo(groupId);
   } catch (e) {
-    return error(400, `Group with ID ${groupId} doesn't exist\n${e}`);
+    return error(404, `Group with ID ${groupId} doesn't exist\n${e}`);
   }
 
   let readme: string;
