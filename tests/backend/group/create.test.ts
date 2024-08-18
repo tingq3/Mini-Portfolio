@@ -3,18 +3,23 @@ import { beforeEach, describe, expect, it, test } from 'vitest';
 import { setup } from '../helpers';
 import api from '$endpoints';
 import type { GroupInfoFull } from '$lib/server/data/group';
-import { invalidIds, invalidNames, validIds, validNames } from '../consts';
+import generateTestCases from './creationCases';
 
-let token: string;
-
-beforeEach(async () => {
-  token = (await setup()).token;
-});
+// Generate repeated test cases between groups and items
+generateTestCases(
+  'group',
+  async () => (await setup()).token,
+  async (token: string, id: string, name: string, description: string) => {
+    await api.group.withId(id).create(token, name, description);
+  }
+);
 
 describe('Sets up basic group properties', async () => {
+  let token: string;
   const groupId = 'my-group';
   let info: GroupInfoFull;
   beforeEach(async () => {
+    token = (await setup()).token;
     await api.group.withId(groupId).create(token, 'Group name', 'Group description');
     info = await api.group.withId(groupId).info.get();
   });
@@ -35,50 +40,4 @@ describe('Sets up basic group properties', async () => {
     await expect(api.group.withId(groupId).readme.get())
       .resolves.toStrictEqual({ readme: '# Group name\n\nGroup description\n' });
   });
-});
-
-describe('Group ID', () => {
-  // Invalid group IDs
-  it.each(invalidIds)('Rejects invalid group IDs ($case)', async ({ id }) => {
-    await expect(api.group.withId(id).create(token, 'Example group', ''))
-      .rejects.toMatchObject({ code: 400 });
-  });
-
-  // Valid group IDs
-  it.each(validIds)('Allows valid group IDs ($case)', async ({ id }) => {
-    await expect(api.group.withId(id).create(token, 'My group', ''))
-      .toResolve();
-  });
-
-  it('Fails if a group with a matching ID already exists', async () => {
-    await api.group.withId('my-group').create(token, 'My group', '');
-    // ID of this group matches
-    await expect(api.group.withId('my-group').create(token, 'My other group', ''))
-      .rejects.toMatchObject({ code: 400 });
-  });
-});
-
-describe('Group name', () => {
-  // Invalid group names
-  it.each(invalidNames)('Rejects invalid group names ($case)', async ({ name }) => {
-    await expect(api.group.withId('my-group').create(token, name, ''))
-      .rejects.toMatchObject({ code: 400 });
-  });
-
-  // Valid group names
-  it.each(validNames)('Allows valid group names ($case)', async ({ name }) => {
-    await expect(api.group.withId('my-group').create(token, name, ''))
-      .toResolve();
-  });
-});
-
-it('Fails for invalid tokens', async () => {
-  await expect(api.group.withId('id').create('invalid token', 'My group', ''))
-    .rejects.toMatchObject({ code: 401 });
-});
-
-it('Fails if the data is not set up', async () => {
-  await api.debug.clear();
-  await expect(api.group.withId('id').create(token, 'My group', ''))
-    .rejects.toMatchObject({ code: 400 });
 });
