@@ -174,3 +174,20 @@ export async function createItem(groupId: string, itemId: string, name: string, 
 export async function deleteItem(groupId: string, itemId: string) {
   await rimraf(`${getDataDir()}/${groupId}/${itemId}`);
 }
+
+/**
+ * Overall data for an item, comprised of the item's `info.json`, `README.md`
+ * and potentially other data as required.
+ */
+export type ItemData = {
+  info: ItemInfoFull,
+  readme: string,
+};
+
+/** Return full data for the item */
+export async function getItemData(groupId: string, itemId: string) {
+  return {
+    info: await getItemInfo(groupId, itemId),
+    readme: await getItemReadme(groupId, itemId),
+  };
+}

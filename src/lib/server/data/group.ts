@@ -189,3 +189,20 @@ export async function createGroup(id: string, name: string, description: string)
 export async function deleteGroup(id: string) {
   await rimraf(`${getDataDir()}/${id}`);
 }
+
+/**
+ * Overall data for a group, comprised of the group's `info.json`, `README.md`
+ * and potentially other data as required.
+ */
+export type GroupData = {
+  info: GroupInfoFull,
+  readme: string,
+}
+
+/** Return full data for the group */
+export async function getGroupData(id: string): Promise<GroupData> {
+  return {
+    info: await getGroupInfo(id),
+    readme: await getGroupReadme(id),
+  };
+}
