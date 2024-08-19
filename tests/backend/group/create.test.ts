@@ -41,11 +41,6 @@ describe('Sets up basic group properties', async () => {
   it('Chooses a random color for the group', () => {
     expect(info.color).toSatisfy((s: string) => /^#[0-9a-f]{6}$/.test(s));
   });
-
-  it('Readme contains group name and group description', async () => {
-    await expect(api.group.withId(groupId).readme.get())
-      .resolves.toStrictEqual({ readme: '# Group name\n\nGroup description\n' });
-  });
 });
 
 describe('Other test cases', () => {

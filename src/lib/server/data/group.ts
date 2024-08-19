@@ -6,6 +6,17 @@ import { mkdir, readdir, readFile, writeFile } from 'fs/promises';
 import { array, enums, intersection, object, string, type, validate, type Infer } from 'superstruct';
 import { getDataDir } from './dataDir';
 import { rimraf } from 'rimraf';
+import formatTemplate from '../formatTemplate';
+
+const DEFAULT_README = `
+# {{group}}
+
+{{description}}
+
+This is the \`README.md\` file for the group {{group}}. Go ahead and modify it to
+tell everyone more about it. Is this for your projects? Your skills? Tools you
+know how to use?
+`;
 
 /** Brief info about a group */
 export const GroupInfoBriefStruct = type({
@@ -157,10 +168,10 @@ export async function createGroup(id: string, name: string, description: string)
   await mkdir(`${getDataDir()}/${id}`);
 
   // If there is a description, add it to the readme text
-  let readme = `# ${name}\n`;
-  if (description) {
-    readme += `\n${description}\n`;
-  }
+  const readme = formatTemplate(DEFAULT_README, [['group', name], ['description', description]])
+    // If the description was empty, we'll end up with extra newlines -- get
+    // rid of them.
+    .replace('\n\n\n', '');
 
   await setGroupInfo(id, {
     name,

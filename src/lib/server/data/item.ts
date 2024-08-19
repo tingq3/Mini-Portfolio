@@ -9,6 +9,17 @@ import { rimraf } from 'rimraf';
 import { setGroupInfo } from './group';
 import { RepoInfoStruct } from './itemRepo';
 import { PackageInfoStruct } from './itemPackage';
+import formatTemplate from '../formatTemplate';
+
+const DEFAULT_README = `
+# {{item}}
+
+{{description}}
+
+This is the \`README.md\` file for the item {{item}}. Go ahead and modify it to
+tell everyone more about it. Is it something you made, or something you use?
+How does it demonstrate your abilities?
+`;
 
 /** Brief info about an item */
 export const ItemInfoBriefStruct = type({
@@ -142,10 +153,10 @@ export async function createItem(groupId: string, itemId: string, name: string, 
   await mkdir(`${getDataDir()}/${groupId}/${itemId}`);
 
   // If there is a description, add it to the readme text
-  let readme = `# ${name}\n`;
-  if (description) {
-    readme += `\n${description}\n`;
-  }
+  const readme = formatTemplate(DEFAULT_README, [['item', name], ['description', description]])
+    // If the description was empty, we'll end up with extra newlines -- get
+    // rid of them.
+    .replace('\n\n\n', '');
 
   await setItemInfo(groupId, itemId, {
     name,

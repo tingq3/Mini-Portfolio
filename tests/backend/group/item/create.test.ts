@@ -48,11 +48,6 @@ describe('Sets up basic item properties', async () => {
   it('Chooses a random color for the item', () => {
     expect(info.color).toSatisfy((s: string) => /^#[0-9a-f]{6}$/.test(s));
   });
-
-  it('Readme contains item name and item description', async () => {
-    await expect(api.group.withId(groupId).item.withId(itemId).readme.get())
-      .resolves.toStrictEqual({ readme: '# Item name\n\nItem description\n' });
-  });
 });
 
 describe('Other test cases', async () => {

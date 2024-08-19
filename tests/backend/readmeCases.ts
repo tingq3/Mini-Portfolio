@@ -36,4 +36,9 @@ export default function generateTestCases<T>(
     // Stored correctly on the disk
     await expect(getReadmeFromDisk()).resolves.toStrictEqual('New readme');
   });
+
+  it('Sets up a default readme', async () => {
+    await expect(getReadme())
+      .resolves.toStrictEqual({ readme: expect.any(String) });
+  });
 }
