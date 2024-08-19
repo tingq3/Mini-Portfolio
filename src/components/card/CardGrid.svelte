@@ -3,9 +3,9 @@
   import { fade } from 'svelte/transition';
   import { ItemCard } from '.';
   import OrdRec from '$lib/OrderedRecord';
-  import type { GroupInfoFull } from '$lib/server/data/group';
+  import type { GroupInfo } from '$lib/server/data/group';
 
-  export let group: GroupInfoFull;
+  export let group: GroupInfo;
 </script>
 
 <div class="card-grid">

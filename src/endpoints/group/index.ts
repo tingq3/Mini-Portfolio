@@ -1,5 +1,5 @@
 /** Group management endpoints */
-import type { GroupInfoBrief, GroupInfoFull } from '$lib/server/data/group';
+import type { GroupInfo, GroupInfo } from '$lib/server/data/group';
 import { apiFetch } from '../fetch';
 import makeItemFunctions from './item';
 
@@ -13,7 +13,7 @@ export const all = async () => {
     'GET',
     '/api/group',
     undefined,
-  ) as Promise<Record<string, GroupInfoBrief>>;
+  ) as Promise<Record<string, GroupInfo>>;
 };
 
 /** Access a group with the given ID */
@@ -40,10 +40,10 @@ export const withId = (groupId: string) => {
       'GET',
       `/api/group/${groupId}`,
       undefined,
-    ) as Promise<GroupInfoFull>;
+    ) as Promise<GroupInfo>;
   };
 
-  const setInfo = async (token: string, newInfo: GroupInfoFull) => {
+  const setInfo = async (token: string, newInfo: GroupInfo) => {
     return apiFetch(
       'PUT',
       `/api/group/${groupId}`,

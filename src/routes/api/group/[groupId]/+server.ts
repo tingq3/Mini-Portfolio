@@ -1,22 +1,25 @@
 import { error, json } from '@sveltejs/kit';
 import { dataDirIsInit } from '$lib/server/data/dataDir';
-import { createGroup, deleteGroup, getGroupInfo, GroupInfoFullStruct, setGroupInfo } from '$lib/server/data/group';
+import { createGroup, deleteGroup, getGroupInfo, GroupInfoStruct, setGroupInfo } from '$lib/server/data/group';
 import { validateToken } from '$lib/server/auth';
 import { object, string, StructError, validate } from 'superstruct';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 
 export async function GET({ params, request, cookies }) {
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
-
   const groupId = params.groupId;
 
+  const data = await getPortfolioGlobals().catch(e => error(400, e));
+
   try {
-    return json(await getGroupInfo(groupId), { status: 200 });
+    return json(data.groups[groupId].info, { status: 200 });
   } catch (e) {
-    return error(404, `Group with ID ${groupId} doesn't exist\n${e}`);
+    // Catch "cannot read properties of undefined"
+    return error(404, `Group with ID ${groupId} doesn't exist`);
   }
 }
+
+// TODO: Probably way more opportunities for optimising these functions by
+// using the cache of data
 
 /** Regex for matching group IDs */
 const groupIdValidator = /^[a-z0-9-.]+$/;
@@ -29,9 +32,7 @@ export async function POST({ params, request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
@@ -94,6 +95,7 @@ export async function POST({ params, request, cookies }) {
   }
 
   await createGroup(groupId, name, description);
+  invalidatePortfolioGlobals();
 
   return json({}, { status: 200 });
 }
@@ -104,9 +106,7 @@ export async function PUT({ params, request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
@@ -118,7 +118,7 @@ export async function PUT({ params, request, cookies }) {
     return error(404, `Group with ID ${groupId} doesn't exist\n${e}`);
   }
 
-  const [err, info] = validate(await request.json(), GroupInfoFullStruct);
+  const [err, info] = validate(await request.json(), GroupInfoStruct);
 
   if (err) {
     return error(400, err);
@@ -144,6 +144,7 @@ export async function PUT({ params, request, cookies }) {
   // TODO: Other validation
 
   await setGroupInfo(groupId, info);
+  invalidatePortfolioGlobals();
 
   return json({}, { status: 200 });
 }
@@ -154,9 +155,7 @@ export async function DELETE({ params, request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
@@ -170,5 +169,6 @@ export async function DELETE({ params, request, cookies }) {
 
   // Now delete the group
   await deleteGroup(groupId);
+  invalidatePortfolioGlobals();
   return json({}, { status: 200 });
 }

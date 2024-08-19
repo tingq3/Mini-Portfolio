@@ -4,16 +4,15 @@ import { getGroupInfo } from '$lib/server/data/group';
 import { validateToken } from '$lib/server/auth';
 import { object, string, StructError, validate } from 'superstruct';
 import { getItemInfo, createItem, setItemInfo, ItemInfoFullStruct, deleteItem } from '$lib/server/data/item.js';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 
 export async function GET({ params, request, cookies }) {
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   const { groupId, itemId } = params;
 
   try {
-    return json(await getItemInfo(groupId, itemId), { status: 200 });
+    return json(data.items[groupId][itemId].info, { status: 200 });
   } catch (e) {
     return error(404, `Item at ID ${groupId}/item/${itemId} doesn't exist\n${e}`);
   }
@@ -31,9 +30,7 @@ export async function POST({ params, request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
@@ -99,6 +96,7 @@ export async function POST({ params, request, cookies }) {
   }
 
   await createItem(groupId, itemId, name, description);
+  invalidatePortfolioGlobals();
 
   return json({}, { status: 200 });
 }
@@ -109,9 +107,7 @@ export async function PUT({ params, request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
@@ -146,6 +142,7 @@ export async function PUT({ params, request, cookies }) {
   // TODO: Other validation
 
   await setItemInfo(groupId, itemId, info);
+  invalidatePortfolioGlobals();
 
   return json({}, { status: 200 });
 }
@@ -156,9 +153,7 @@ export async function DELETE({ params, request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
@@ -169,5 +164,6 @@ export async function DELETE({ params, request, cookies }) {
 
   // Now delete the group
   await deleteItem(groupId, itemId);
+  invalidatePortfolioGlobals();
   return json({}, { status: 200 });
 }

@@ -1,5 +1,5 @@
 import api from '$endpoints';
-import type { GroupInfoFull } from '$lib/server/data/group';
+import type { GroupInfo } from '$lib/server/data/group';
 import type { ItemInfoFull } from '$lib/server/data/item';
 
 /** Set up the server */
@@ -13,8 +13,8 @@ export async function makeGroup(token: string, id: string) {
 }
 
 /** Creates custom group properties object */
-export function createCustomGroupProperties(options: Partial<GroupInfoFull> = {}): GroupInfoFull {
-  const group: GroupInfoFull = {
+export function createCustomGroupProperties(options: Partial<GroupInfo> = {}): GroupInfo {
+  const group: GroupInfo = {
     name: 'My group',
     description: 'Group description',
     color: '#aa00aa',

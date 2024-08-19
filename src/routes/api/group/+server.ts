@@ -1,19 +1,12 @@
 import { error, json } from '@sveltejs/kit';
-import { dataDirIsInit } from '$lib/server/data/dataDir';
-import { getGroupInfoBrief, listGroups, type GroupInfoBrief } from '$lib/server/data/group';
+import { getGroupInfo, listGroups, type GroupInfo } from '$lib/server/data/group';
+import { getPortfolioGlobals } from '$lib/server/data/index.js';
 
 export async function GET({ request, cookies }) {
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   return json(
-    Object.fromEntries(
-      await Promise.all(
-        (await listGroups())
-          .map(async g => [g, await getGroupInfoBrief(g)] as [string, GroupInfoBrief])
-      )
-    ),
+    Object.fromEntries(Object.entries(data.groups).map(([id, groupData]) => [id, groupData.info])),
     { status: 200 },
   );
 }

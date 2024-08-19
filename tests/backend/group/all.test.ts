@@ -13,11 +13,10 @@ it('Lists existing groups', async () => {
   const { token } = await setup();
   await makeGroup(token, 'my-group');
   await expect(api.group.all()).resolves.toStrictEqual({
-    'my-group': {
-      color: expect.any(String),
-      description: 'my-group',
+    'my-group': expect.objectContaining({
       name: 'my-group',
-    },
+      description: 'my-group',
+    }),
   });
 });
 

@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, test } from 'vitest';
 import { setup } from '../helpers';
 import api from '$endpoints';
-import type { GroupInfoFull } from '$lib/server/data/group';
+import type { GroupInfo } from '$lib/server/data/group';
 import generateTestCases from './creationCases';
 
 // Generate repeated test cases between groups and items
@@ -23,7 +23,7 @@ describe('Generated test cases', () => {
 describe('Sets up basic group properties', async () => {
   let token: string;
   const groupId = 'my-group';
-  let info: GroupInfoFull;
+  let info: GroupInfo;
   beforeEach(async () => {
     token = (await setup()).token;
     await api.group.withId(groupId).create(token, 'Group name', 'Group description');
