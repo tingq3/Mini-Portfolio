@@ -3,7 +3,7 @@
   import { repoIsWithProvider, repoProviders } from '$lib/repoInfo';
   import { Card } from '.';
   import { onMount } from 'svelte';
-    import { tooltip } from '$lib/tooltip';
+  import { tooltip } from '$lib/tooltip';
 
   export let repo: RepoInfo;
   export let color: string;

@@ -2,7 +2,7 @@
   import type { PackageInfo } from '$types/packageInfo';
   import { packageIsWithProvider, packageProviders } from '$lib/packageInfo';
   import { Card } from '.';
-    import { tooltip } from '$lib/tooltip';
+  import { tooltip } from '$lib/tooltip';
 
   export let info: PackageInfo;
   export let color: string;
