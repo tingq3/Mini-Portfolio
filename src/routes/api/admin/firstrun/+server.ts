@@ -4,6 +4,7 @@ import { mkdir } from 'fs/promises';
 import { setupGitRepo } from '$lib/server/data/git.js';
 import { authSetup } from '$lib/server/auth.js';
 import { initConfig } from '$lib/server/data/config.js';
+import { initReadme } from '$lib/server/data/readme.js';
 
 export async function POST({ request, cookies }) {
   const { repoUrl, branch }: { repoUrl: string | null, branch: string | null }
@@ -30,6 +31,8 @@ export async function POST({ request, cookies }) {
   if (!await dataDirContainsData()) {
     firstTime = true;
     await initConfig();
+    // Also set up a default README
+    await initReadme();
   }
 
   return json({ credentials, firstTime }, { status: 200 });

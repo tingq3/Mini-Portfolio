@@ -1,7 +1,7 @@
 import api from '$endpoints';
 import { beforeEach, expect, it, describe } from 'vitest';
 import { makeGroup, makeItem, setup } from '../../helpers';
-import generateTestCases from '../readmeCases';
+import generateTestCases from '../../readmeCases';
 import { readFile } from 'fs/promises';
 import { getDataDir } from '$lib/server/data/dataDir';
 
