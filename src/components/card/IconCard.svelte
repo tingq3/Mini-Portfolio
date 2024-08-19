@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Card } from '.';
+  import { Card } from '.';
 
   export let title: string;
   export let link: string;

@@ -210,7 +210,7 @@
   <!-- List all entry cards -->
   <div id="project-list">
     <CardGrid
-      {classifier}
+      group={classifier}
       entries={selectedEntries}
       globals={data.globals}
     />

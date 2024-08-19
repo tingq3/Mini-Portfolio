@@ -3,11 +3,9 @@
   import { fade } from 'svelte/transition';
   import { ItemCard } from '.';
   import OrdRec from '$lib/OrderedRecord';
-  import { type LabelSlug, type Classifier, type PortfolioGlobals } from '$types';
+  import type { GroupInfoFull } from '$lib/server/data/group';
 
-  export let classifier: Classifier;
-  export let entries: LabelSlug[];
-  export let globals: PortfolioGlobals;
+  export let group: GroupInfoFull;
 </script>
 
 <div class="card-grid">
@@ -17,7 +15,7 @@
       animate:flip={{ duration: 300 }}
     >
       <ItemCard
-        label={OrdRec.fromItems(classifier.labels).get(entrySlug)}
+        label={OrdRec.fromItems(group.listedItems).get(entrySlug)}
         {globals}
       />
     </div>

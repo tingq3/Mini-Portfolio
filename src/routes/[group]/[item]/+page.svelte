@@ -103,7 +103,7 @@
         <div class="association-cards-row">
           <h2>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h2>
           <CardGrid
-            classifier={getClassifier(data.globals, assClass)}
+            group={getClassifier(data.globals, assClass)}
             entries={assLabels.keys()}
             globals={data.globals}
           />
