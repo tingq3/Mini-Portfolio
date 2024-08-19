@@ -71,7 +71,7 @@ export async function PUT({ params, request, cookies }) {
   }
 
   // Validate name
-  const name = validateName(info.name);
+  validateName(info.name);
 
   // TODO: Other validation
 
@@ -93,7 +93,7 @@ export async function DELETE({ params, request, cookies }) {
 
   const groupId = params.groupId;
 
-  if (data.groups[groupId]) {
+  if (!data.groups[groupId]) {
     return error(404, `Group with ID ${groupId} doesn't exist`);
   }
 

@@ -72,7 +72,7 @@ export async function getPortfolioGlobals(): Promise<PortfolioGlobals> {
     return portfolioGlobals;
   }
 
-  console.log('Cache miss, reloading data');
+  // console.log('Cache miss, reloading data');
 
   portfolioGlobals = await loadPortfolioGlobals();
   return portfolioGlobals;
@@ -85,5 +85,5 @@ export async function getPortfolioGlobals(): Promise<PortfolioGlobals> {
 export function invalidatePortfolioGlobals() {
   portfolioGlobals = undefined;
   invalidateLocalConfigCache();
-  console.log('Data invalidated');
+  // console.log('Data invalidated');
 }
