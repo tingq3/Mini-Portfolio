@@ -12,6 +12,7 @@
 import { getConfig, type ConfigJson } from './config';
 import { getGroupData, listGroups, type GroupData } from './group';
 import { getItemData, listItems, type ItemData } from './item';
+import { invalidateLocalConfigCache } from './localConfig';
 import { getReadme } from './readme';
 
 /** Public global data for the portfolio */
@@ -28,7 +29,7 @@ export type PortfolioGlobals = {
  * Note that this does not perform deep data validation (eg ensuring all name
  * references are valid).
  */
-export async function loadPortfolioGlobals(): Promise<PortfolioGlobals> {
+async function loadPortfolioGlobals(): Promise<PortfolioGlobals> {
   const config = await getConfig();
   const readme = await getReadme();
 
@@ -81,4 +82,5 @@ export async function getPortfolioGlobals(): Promise<PortfolioGlobals> {
  */
 export function invalidatePortfolioGlobals() {
   portfolioGlobals = undefined;
+  invalidateLocalConfigCache();
 }
