@@ -2,7 +2,7 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { Separator } from '$components';
   import { type ClassifierSlug, type Label, type LabelSlug } from '$types';
-  import { LabelChip } from '.';
+  import { ItemChip } from '.';
   import type { OrderedRecord } from '$lib/OrderedRecord';
 
   /** Labels to use as chips, grouped by classifier */
@@ -116,7 +116,7 @@
   >
     {#each labels.values().slice(0, -1) as labelGroup}
       {#each labelGroup.values() as { label, selected }}
-        <LabelChip
+        <ItemChip
           {label}
           {selected}
           {link}
@@ -127,7 +127,7 @@
     {/each}
     <!-- Last classifier doesn't have a separator -->
     {#each labels.values().slice(-1)[0].values() as { label, selected }}
-      <LabelChip
+      <ItemChip
         {label}
         {selected}
         {link}
