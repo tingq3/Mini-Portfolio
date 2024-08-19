@@ -1,5 +1,5 @@
-import { revokeSession, validateToken } from '$lib/server/auth';
-import { dataDirIsInit } from '$lib/server/data/dataDir';
+import { validateToken } from '$lib/server/auth';
+import { getPortfolioGlobals } from '$lib/server/data/index.js';
 import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig.js';
 import { unixTime } from '$lib/util.js';
 import { error, json } from '@sveltejs/kit';
@@ -10,9 +10,7 @@ export async function POST({ request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  await getPortfolioGlobals().catch(e => error(400, e));
 
   const local = await getLocalConfig();
 

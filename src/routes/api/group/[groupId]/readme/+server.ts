@@ -22,16 +22,14 @@ export async function PUT({ params, request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  await getPortfolioGlobals().catch(e => error(400, e));
+  const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
   const groupId = params.groupId;
 
-  try {
-    await getGroupInfo(groupId);
-  } catch (e) {
-    return error(404, `Group with ID ${groupId} doesn't exist\n${e}`);
+  if (!data.groups[groupId]) {
+    return error(404, `Group with ID ${groupId} doesn't exist`);
   }
 
   let readme: string;

@@ -2,6 +2,7 @@ import { error, json } from '@sveltejs/kit';
 import { dataDirIsInit, dataDirUsesGit, getDataDir } from '$lib/server/data/dataDir';
 import { validateToken } from '$lib/server/auth.js';
 import simpleGit from 'simple-git';
+import { getPortfolioGlobals } from '$lib/server/data/index.js';
 
 export async function GET({ request, cookies }) {
   const token = request.headers.get('Authorization');
@@ -9,9 +10,7 @@ export async function GET({ request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 

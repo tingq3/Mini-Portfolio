@@ -1,5 +1,5 @@
 import { revokeSession } from '$lib/server/auth';
-import { dataDirIsInit } from '$lib/server/data/dataDir';
+import { getPortfolioGlobals } from '$lib/server/data/index.js';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ request, cookies }) {
@@ -8,9 +8,7 @@ export async function POST({ request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  await getPortfolioGlobals().catch(e => error(400, e));
 
   try {
     await revokeSession(token);

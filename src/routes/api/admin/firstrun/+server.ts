@@ -5,6 +5,7 @@ import { setupGitRepo } from '$lib/server/data/git.js';
 import { authSetup } from '$lib/server/auth.js';
 import { initConfig } from '$lib/server/data/config.js';
 import { initReadme } from '$lib/server/data/readme.js';
+import { invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 
 export async function POST({ request, cookies }) {
   const { repoUrl, branch }: { repoUrl: string | null, branch: string | null }
@@ -34,6 +35,8 @@ export async function POST({ request, cookies }) {
     // Also set up a default README
     await initReadme();
   }
+
+  invalidatePortfolioGlobals();
 
   return json({ credentials, firstTime }, { status: 200 });
 }

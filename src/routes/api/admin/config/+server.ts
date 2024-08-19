@@ -1,9 +1,9 @@
 import { error, json } from '@sveltejs/kit';
-import { dataDirIsInit } from '$lib/server/data/dataDir';
 import { validateToken } from '$lib/server/auth.js';
-import { ConfigJsonStruct, getConfig, setConfig } from '$lib/server/data/config.js';
+import { ConfigJsonStruct, setConfig } from '$lib/server/data/config.js';
 import { validate } from 'superstruct';
 import consts from '$lib/consts.js';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 
 export async function GET({ request, cookies }) {
   const token = request.headers.get('Authorization');
@@ -11,15 +11,11 @@ export async function GET({ request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
-  return json(
-    await getConfig(),
-    { status: 200 });
+  return json(data.config, { status: 200 });
 }
 
 export async function PUT({ request, cookies }) {
@@ -28,9 +24,7 @@ export async function PUT({ request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  if (!await dataDirIsInit()) {
-    return error(400, 'Server is not initialized');
-  }
+  await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
@@ -50,6 +44,7 @@ export async function PUT({ request, cookies }) {
   // TODO: Check for invalid mainPageGroups
 
   await setConfig(newConfig);
+  invalidatePortfolioGlobals();
 
   return json({}, { status: 200 });
 }

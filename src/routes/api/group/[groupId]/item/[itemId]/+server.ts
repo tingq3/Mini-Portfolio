@@ -5,6 +5,7 @@ import { validateToken } from '$lib/server/auth';
 import { object, string, StructError, validate } from 'superstruct';
 import { getItemInfo, createItem, setItemInfo, ItemInfoFullStruct, deleteItem } from '$lib/server/data/item.js';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
+import { validateId, validateName } from '$lib/validators.js';
 
 export async function GET({ params, request, cookies }) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
@@ -18,19 +19,13 @@ export async function GET({ params, request, cookies }) {
   }
 }
 
-// FIXME: Extract to constants to reduce duplication
-/** Regex for matching group IDs */
-const itemIdValidator = /^[a-z0-9-.]+$/;
-
-const illegalNameChars = ['\t', '\n', '\f', '\r'];
-
 export async function POST({ params, request, cookies }) {
   const token = request.headers.get('Authorization');
   if (!token) {
     return error(401, 'Authorization token is required');
   }
 
-  await getPortfolioGlobals().catch(e => error(400, e));
+  const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
@@ -40,24 +35,7 @@ export async function POST({ params, request, cookies }) {
   // Ensure group exists
   await getGroupInfo(groupId).catch(e => error(404, e));
 
-  if (!itemId.trim().length) {
-    return error(400, `Item ID '${itemId}' is empty`);
-  }
-  if (!itemIdValidator.test(itemId)) {
-    return error(400, `Item ID '${itemId}' is contains illegal characters`);
-  }
-  if (itemId.startsWith('.')) {
-    return error(400, `Item ID '${itemId}' has a leading dot`);
-  }
-  if (itemId.endsWith('.')) {
-    return error(400, `Item ID '${itemId}' has a trailing dot`);
-  }
-  if (itemId.startsWith('-')) {
-    return error(400, `Item ID '${itemId}' has a leading dash`);
-  }
-  if (itemId.endsWith('-')) {
-    return error(400, `Item ID '${itemId}' has a trailing dash`);
-  }
+  validateId(itemId);
 
   const [err, body] = validate(await request.json(), object({ name: string(), description: string() }));
   if (err) {
@@ -66,32 +44,9 @@ export async function POST({ params, request, cookies }) {
   const { name, description } = body;
 
   // Validate name
-  if (!name) {
-    return error(400, 'Name cannot be empty');
-  }
-  if (name.trim().length !== name.length) {
-    return error(400, 'Name cannot contain leading or trailing whitespace');
-  }
-  if (
-    illegalNameChars
-      .reduce((n, c) => n.replace(c, ''), name)
-      .length
-    !== name.length
-  ) {
-    return error(400, 'Name contains illegal whitespace characters');
-  }
+  validateName(name);
 
-  let itemDataExists = false;
-  try {
-    await getItemInfo(groupId, itemId);
-    itemDataExists = true;
-  } catch (e) {
-    // If it's a validation error, we should say so
-    if (e instanceof StructError) {
-      return error(400, `Item with ID ${itemId} already exists, but has invalid data`);
-    }
-  }
-  if (itemDataExists) {
+  if (data.items[groupId] && data.items[groupId][itemId]) {
     return error(400, `Group with ID ${groupId} already exists`);
   }
 
@@ -107,14 +62,18 @@ export async function PUT({ params, request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  await getPortfolioGlobals().catch(e => error(400, e));
+  const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
   const { groupId, itemId } = params;
 
-  await getItemInfo(groupId, itemId)
-    .catch(e => error(404, `Item with ID ${itemId} in group ${groupId} doesn't exist\n${e}`));
+  if (!data.groups[groupId]) {
+    error(404, `Group ${groupId} does not exist`);
+  }
+  if (!data.items[groupId][itemId]) {
+    error(404, `Item ${itemId} does not exist in group ${groupId}`);
+  }
 
   const [err, info] = validate(await request.json(), ItemInfoFullStruct);
   if (err) {
@@ -122,22 +81,7 @@ export async function PUT({ params, request, cookies }) {
   }
 
   // Validate name
-  // TODO: Helper function (create and edit, for both items and groups)
-  const name = info.name;
-  if (!name) {
-    return error(400, 'Name cannot be empty');
-  }
-  if (name.trim().length !== name.length) {
-    return error(400, 'Name cannot contain leading or trailing whitespace');
-  }
-  if (
-    illegalNameChars
-      .reduce((n, c) => n.replace(c, ''), name)
-      .length
-    !== name.length
-  ) {
-    return error(400, 'Name contains illegal whitespace characters');
-  }
+  const name = validateName(info.name);
 
   // TODO: Other validation
 
@@ -153,14 +97,18 @@ export async function DELETE({ params, request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  await getPortfolioGlobals().catch(e => error(400, e));
+  const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
   const { groupId, itemId } = params;
 
-  await getItemInfo(groupId, itemId)
-    .catch(e => error(404, `Item with ID ${itemId} in group ${groupId} doesn't exist\n${e}`));
+  if (!data.groups[groupId]) {
+    error(404, `Group ${groupId} does not exist`);
+  }
+  if (!data.items[groupId][itemId]) {
+    error(404, `Item ${itemId} does not exist in group ${groupId}`);
+  }
 
   // Now delete the group
   await deleteItem(groupId, itemId);
