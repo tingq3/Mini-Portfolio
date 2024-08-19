@@ -1,6 +1,6 @@
 <script lang="ts">
   import { dev } from '$app/environment';
-  import type { PortfolioGlobals } from '$types';
+  import type { PortfolioGlobals } from '$lib';
 
   export let path: { url: string, txt: string }[];
   export let globals: PortfolioGlobals;
@@ -20,10 +20,10 @@
 <nav>
   <span style:grid-area="navigator">
     {#if path.length === 0}
-      <h1>{globals.config.name} / Portfolio</h1>
+      <h1>{globals.config.siteName} / Portfolio</h1>
     {:else}
       <h1>
-        <a href="/">{globals.config.name}</a> /
+        <a href="/">{globals.config.siteName}</a> /
         {#each path.slice(0, -1) as p, i}
           <a href="/{pathTo(path, i)}">{p.txt}</a>
           {'/ '}

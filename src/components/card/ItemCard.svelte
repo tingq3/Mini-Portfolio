@@ -1,37 +1,36 @@
 <script lang="ts">
-  import { type PortfolioGlobals, type Label, type ClassifierSlug, type LabelSlug } from '$types';
+  import { type PortfolioGlobals } from '$lib';
   import Card from './Card.svelte';
   import { ChipList } from '$components/chip';
-  import { getAssociatedLabels } from '$lib/util';
 
-  export let label: Label;
   export let globals: PortfolioGlobals;
+  export let groupId: string;
+  export let itemId: string;
 
-  // List of associated labels, grouped by classifier
-  $: associatedLabels = getAssociatedLabels(globals, label);
+  $: item = globals.items[groupId][itemId];
 </script>
 
 <Card
-  link="/{label.classifier}/{label.slug}"
-  color={label.info.color}
+  link="/{groupId}/{itemId}"
+  color={item.info.color}
 >
 
-  {#if label.info.icon}
+  {#if item.info.icon}
     <div class="card-grid">
       <img
-        src="/{label.classifier}/{label.slug}/{label.info.icon}"
-        alt="Icon for {label.info.name}"
+        src="/{groupId}/{itemId}/{item.info.icon}"
+        alt="Icon for {item.info.name}"
         class="label-icon"
       />
       <div>
-        <h3>{label.info.name}</h3>
-        <p>{label.info.description}</p>
+        <h3>{item.info.name}</h3>
+        <p>{item.info.description}</p>
       </div>
     </div>
   {:else}
     <div class="card-no-icon">
-      <h3>{label.info.name}</h3>
-      <p>{label.info.description}</p>
+      <h3>{item.info.name}</h3>
+      <p>{item.info.description}</p>
     </div>
   {/if}
   <ChipList slot="bottom" labels={associatedLabels} link={true} />

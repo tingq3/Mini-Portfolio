@@ -1,18 +1,14 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
-  import { Separator } from '$components';
-  import { type ClassifierSlug, type Label, type LabelSlug } from '$types';
   import { ItemChip } from '.';
-  import type { OrderedRecord } from '$lib/OrderedRecord';
+  import type { PortfolioGlobals } from '$lib';
 
-  /** Labels to use as chips, grouped by classifier */
-  export let labels: OrderedRecord<
-    ClassifierSlug,
-    OrderedRecord<
-    LabelSlug,
-    { label: Label, selected?: boolean }
-    >
-  >;
+  /** Global data */
+  export let globals: PortfolioGlobals;
+  /** Group ID to which all items belong */
+  export let groupId: string;
+  /** Array of items to display, including whether they are selected */
+  export let items: { id: string, selected: boolean }[];
   /** Whether to link each chip to its respective page */
   export let link: boolean = false;
 
@@ -20,16 +16,16 @@
   // and label
   const dispatch = createEventDispatcher<{
     click: {
-      classifier: ClassifierSlug,
-      label: LabelSlug,
+      groupId: string,
+      itemId: string,
       e: MouseEvent,
     },
   }>();
 
-  const bubbleClick = (classifier: ClassifierSlug, label: LabelSlug, e: MouseEvent) => {
+  const bubbleClick = (groupId: string, itemId: string, e: MouseEvent) => {
     dispatch('click', {
-      classifier,
-      label,
+      groupId,
+      itemId,
       e,
     });
   };

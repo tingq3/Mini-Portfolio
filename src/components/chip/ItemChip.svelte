@@ -1,17 +1,21 @@
 <script lang="ts">
-  import type { Label } from '$types';
+  import type { PortfolioGlobals } from '$lib';
   import Chip from './Chip.svelte';
 
-  export let label: Label;
+  export let globals: PortfolioGlobals;
+  export let groupId: string;
+  export let itemId: string;
   export let link: boolean = false;
   export let selected: boolean = false;
+
+  $: item = globals.items[groupId][itemId];
 </script>
 
 <Chip
   on:click
-  name={label.info.name}
-  description={label.info.description}
-  color={label.info.color}
+  name={item.info.name}
+  description={item.info.description}
+  color={item.info.color}
   {selected}
-  link={link ? `/${label.classifier}/${label.slug}` : undefined}
+  link={link ? `/${groupId}/${itemId}` : undefined}
 />
