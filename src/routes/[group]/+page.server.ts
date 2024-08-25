@@ -1,16 +1,14 @@
 import { error } from '@sveltejs/kit';
-import OrdRec from '$lib/OrderedRecord';
-import { getData } from '$lib/server';
-import type { ClassifierSlug } from '$types';
+import { getPortfolioGlobals } from '$lib/server';
 
-export function load({ params }: { params: { classifier: ClassifierSlug }}) {
-  const globals = getData();
-  // Give a 404 if the classifier doesn't exist
-  if (!OrdRec.fromItems(globals.classifiers).keys().includes(params.classifier)) {
-    throw error(404, `Classifier '${params.classifier}' does not exist`);
+export async function load({ params }) {
+  const globals = await getPortfolioGlobals();
+  // Give a 404 if the group doesn't exist
+  if (!(params.group in globals.groups)) {
+    throw error(404, `Group '${params.group}' does not exist`);
   }
   return {
-    classifier: params.classifier,
+    groupId: params.group,
     globals,
   };
 }

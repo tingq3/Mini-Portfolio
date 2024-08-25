@@ -1,22 +1,19 @@
 import { error } from '@sveltejs/kit';
-import OrdRec from '$lib/OrderedRecord';
-import { getData } from '$lib/server';
-import type { ClassifierSlug, LabelSlug } from '$types';
+import { getPortfolioGlobals } from '$lib/server';
 
-export function load({ params: { classifier, label } }: { params: { classifier: ClassifierSlug, label: LabelSlug }}) {
-  const globals = getData();
-  const theClassifier = OrdRec.fromItems(globals.classifiers).get(classifier);
+export async function load({ params }) {
+  const globals = await getPortfolioGlobals();
   // Give a 404 if the classifier doesn't exist
-  if (!theClassifier) {
-    throw error(404, `Classifier '${classifier}' does not exist`);
+  if (!(params.group in globals.groups)) {
+    throw error(404, `Group '${params.group}' does not exist`);
   }
   // And also if the label doesn't exist
-  if (!OrdRec.fromItems(theClassifier.labels).keys().includes(label)) {
-    throw error(404, `Label '${label}' does not exist within classifier '${classifier}`);
+  if (!(params.item in globals.items[params.group])) {
+    throw error(404, `Item '${params.item}' does not exist within group '${params.group}`);
   }
   return {
-    classifier,
-    label,
-    globals: getData()
+    groupId: params.group,
+    itemId: params.item,
+    globals,
   };
 }

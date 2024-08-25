@@ -1,88 +1,71 @@
 <script lang="ts">
-  import OrdRec from '$lib/OrderedRecord';
-  import { getAssociatedLabels, getClassifier } from '$lib/util';
-    import { Navbar, Markdown } from '$components';
-    import { ItemChipList } from '$components/chip';
-    import { CardGrid, IconCard, RepoCard, PackageCard, CardList } from '$components/card';
-    import { filterAssociatedLabelsByDisplayType, getAssociationDisplayInfo } from './associations';
-    import Background from '$components/Background.svelte';
-    // import AsciinemaPlayer from "$components";
+  import { Navbar, Markdown } from '$components';
+  import { IconCard, RepoCard, PackageCard, CardList } from '$components/card';
+  import Background from '$components/Background.svelte';
+  // import AsciinemaPlayer from "$components";
 
-    export let data: import('./$types').PageData;
+  export let data: import('./$types').PageData;
 
-    $: classifier = OrdRec.fromItems(data.globals.classifiers).get(data.classifier);
-    $: label = OrdRec.fromItems(classifier.labels).get(data.label);
-
-    // List of associated labels, grouped by classifier
-    $: associatedLabels = getAssociatedLabels(data.globals, label);
+  $: groupData = data.globals.groups[data.groupId];
+  $: itemData = data.globals.items[data.groupId][data.itemId];
 </script>
 
-<Background color={label.info.color}></Background>
+<Background color={itemData.info.color}></Background>
 
 <Navbar
   path={[
-    { url: classifier.slug, txt: classifier.info.name },
-    { url: label.slug, txt: label.info.name },
+    { url: data.groupId, txt: groupData.info.name },
+    { url: data.itemId, txt: itemData.info.name },
   ]}
   globals={data.globals}
 />
 
 <main>
   <div class="paper">
-    {#if label.info.banner}
+    {#if itemData.info.banner}
       <img
-        src="/{label.classifier}/{label.slug}/{label.info.banner}"
-        alt="Banner for {label.info.name}"
+        src="/{data.itemId}/{data.groupId}/{itemData.info.banner}"
+        alt="Banner for {itemData.info.name}"
         class="banner-image"
       />
     {/if}
     <div id="info-container">
-      <Markdown source={label.readme} />
-      <!-- Show chips for the associations that want them -->
-      <div>
-        {#each filterAssociatedLabelsByDisplayType(data.globals, associatedLabels, classifier, 'chip').items() as [assClass, assLabels] }
-          {#if assLabels.keys().length}
-            <div class="association-chip-row">
-              <h3>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h3>
-              <ItemChipList labels={OrdRec.fromItems([[assClass, assLabels]])} link={true} />
-            </div>
-          {/if}
-        {/each}
-      </div>
+      <Markdown source={itemData.readme} />
+      <!-- TODO: Display linked items as chips -->
     </div>
   </div>
 
-  <!-- Display links if needed -->
+  <!-- Display URLs if needed -->
   <div id="links-list">
     <CardList>
-      {#if label.info.links.site}
+      {#if itemData.info.urls.site}
         <IconCard
           title="Visit the website"
-          link={label.info.links.site}
-          color={label.info.color}
+          link={itemData.info.urls.site}
+          color={itemData.info.color}
         >
         <i slot="icon" class="las la-globe"></i>
         </IconCard>
       {/if}
-      {#if label.info.links.docs}
+      {#if itemData.info.urls.docs}
         <IconCard
           title="View the documentation"
-          link={label.info.links.docs}
-          color={label.info.color}
+          link={itemData.info.urls.docs}
+          color={itemData.info.color}
         >
           <i slot="icon" class="lab la-readme"></i>
         </IconCard>
       {/if}
-      {#if label.info.links.repo}
+      {#if itemData.info.urls.repo}
         <RepoCard
-          repo={label.info.links.repo}
-          color={label.info.color}
+          repo={itemData.info.urls.repo}
+          color={itemData.info.color}
         />
       {/if}
-      {#if label.info.package}
+      {#if itemData.info.package}
         <PackageCard
-          info={label.info.package}
-          color={label.info.color}
+          info={itemData.info.package}
+          color={itemData.info.color}
         />
       {/if}
     </CardList>
@@ -96,21 +79,7 @@
     <AsciinemaPlayer castUrl="/projects/{label.slug}/demo.asciinema" />
   {/if} -->
 
-  <!-- Show cards for the associations that want them -->
-  <div id="association-cards">
-    {#each filterAssociatedLabelsByDisplayType(data.globals, associatedLabels, classifier, 'card').items() as [assClass, assLabels] }
-      {#if assLabels.keys().length}
-        <div class="association-cards-row">
-          <h2>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h2>
-          <CardGrid
-            group={getClassifier(data.globals, assClass)}
-            entries={assLabels.keys()}
-            globals={data.globals}
-          />
-        </div>
-      {/if}
-    {/each}
-  </div>
+  <!-- TODO: Display linked items as cards -->
 </main>
 
 <style>
@@ -141,7 +110,7 @@
     border-radius: 10px 10px 0 0;
   }
 
-  .association-chip-row {
+  /* .association-chip-row {
     display: flex;
     align-items: baseline;
     gap: 5px;
@@ -150,13 +119,13 @@
   .association-chip-row > h3 {
     margin: 0;
     height: min-content;
-  }
+  } */
 
   #links-list {
     width: 80%;
   }
 
-  #association-cards {
+  /* #association-cards {
     width: 80%;
-  }
+  } */
 </style>
