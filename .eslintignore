@@ -14,3 +14,4 @@ yarn.lock
 
 # Ignore config files
 svelte.config.js
+vitest.config.ts
