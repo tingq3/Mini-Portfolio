@@ -69,7 +69,7 @@ export default function makeItemFunctions(groupId: string) {
       ) as Promise<Record<string, never>>;
     };
 
-    const link = async (token: string, otherGroupId: string, otherItemId: string) => {
+    const createLink = async (token: string, otherGroupId: string, otherItemId: string) => {
       return apiFetch(
         'POST',
         `/api/group/${groupId}/item/${itemId}/link`,
@@ -78,10 +78,19 @@ export default function makeItemFunctions(groupId: string) {
       ) as Promise<Record<string, never>>;
     };
 
-    const unlink = async (token: string, otherGroupId: string, otherItemId: string) => {
+    const updateLinkStyle = async (token: string, otherGroupId: string, style: 'chip' | 'card') => {
       return apiFetch(
-        'POST',
-        `/api/group/${groupId}/item/${itemId}/unlink`,
+        'PUT',
+        `/api/group/${groupId}/item/${itemId}/link`,
+        token,
+        { otherGroupId, style },
+      ) as Promise<Record<string, never>>;
+    };
+
+    const removeLink = async (token: string, otherGroupId: string, otherItemId: string) => {
+      return apiFetch(
+        'DELETE',
+        `/api/group/${groupId}/item/${itemId}/link`,
         token,
         { otherGroupId, otherItemId },
       ) as Promise<Record<string, never>>;
@@ -131,10 +140,15 @@ export default function makeItemFunctions(groupId: string) {
          */
         set: setReadme,
       },
-      /** Create a link between this item and another item */
-      link,
-      /** Remove a link between this item and another item */
-      unlink,
+      /** Manage links to other items */
+      links: {
+        /** Create a link between this item and another item */
+        create: createLink,
+        /** Remove a link between this item and another item */
+        remove: removeLink,
+        /** Change the style for links to items in a group */
+        style: updateLinkStyle,
+      }
     };
   };
 

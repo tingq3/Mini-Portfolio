@@ -3,7 +3,7 @@
  */
 
 import { mkdir, readdir, readFile, writeFile } from 'fs/promises';
-import { array, intersection, object, optional, nullable, string, tuple, type, validate, type Infer } from 'superstruct';
+import { array, intersection, object, optional, nullable, string, tuple, type, validate, type Infer, enums } from 'superstruct';
 import { getDataDir } from './dataDir';
 import { rimraf } from 'rimraf';
 import { RepoInfoStruct } from './itemRepo';
@@ -41,6 +41,8 @@ export const ItemInfoBriefStruct = type({
 /** Brief info about an item */
 export type ItemInfoBrief = Infer<typeof ItemInfoBriefStruct>;
 
+const LinkStyles = enums(['chip', 'card']);
+
 /**
  * Links (associations) with other items.
  *
@@ -51,7 +53,11 @@ export type ItemInfoBrief = Infer<typeof ItemInfoBriefStruct>;
  */
 export const LinksArray = array(
   tuple([
-    string(), array(string()),
+    object({
+      groupId: string(),
+      style: LinkStyles,
+    }),
+    array(string()),
   ])
 );
 
@@ -59,10 +65,8 @@ export const LinksArray = array(
 export const ItemInfoFullStruct = intersection([
   ItemInfoBriefStruct,
   type({
-    /** Links to display as chips */
-    chipLinks: LinksArray,
-    /** Links to display as cards */
-    cardLinks: LinksArray,
+    /** Links to other items */
+    links: LinksArray,
 
     /** URLs associated with the label */
     urls: object({
@@ -168,8 +172,7 @@ export async function createItem(groupId: string, itemId: string, name: string, 
     description,
     // TODO: Generate a random color for the new item
     color: '#aa00aa',
-    chipLinks: [],
-    cardLinks: [],
+    links: [],
     urls: {},
     icon: null,
     banner: null,

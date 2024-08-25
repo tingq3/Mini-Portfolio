@@ -19,63 +19,63 @@ beforeEach(async () => {
 
 describe('Create link', () => {
   it('Creates links between items', async () => {
-    await expect(api.group.withId(groupId).item.withId(itemId).link(token, groupId, otherItemId))
+    await expect(api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, otherItemId))
       .resolves.toStrictEqual({});
     // Check side effect
     await expect(api.group.withId(groupId).item.withId(itemId).info.get())
       .resolves.toMatchObject({
         // By default link style is chips
-        chipLinks: [
-          [groupId, [otherItemId]],
+        links: [
+          [{ groupId, style: 'chip' }, [otherItemId]],
         ],
       });
   });
 
   it('Creates the reverse link', async () => {
-    await api.group.withId(groupId).item.withId(itemId).link(token, groupId, otherItemId);
+    await api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, otherItemId);
     await expect(api.group.withId(groupId).item.withId(otherItemId).info.get())
       .resolves.toMatchObject({
-        chipLinks: [
-          [groupId, [itemId]],
+        links: [
+          [{ groupId, style: 'chip' }, [itemId]],
         ],
       });
   });
 
   it('Does nothing if the link already exists', async () => {
-    await api.group.withId(groupId).item.withId(itemId).link(token, groupId, otherItemId);
-    await expect(api.group.withId(groupId).item.withId(itemId).link(token, groupId, otherItemId))
+    await api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, otherItemId);
+    await expect(api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, otherItemId))
       .resolves.toStrictEqual({});
     // Other item should only appear once
     await expect(api.group.withId(groupId).item.withId(itemId).info.get())
       .resolves.toMatchObject({
-        chipLinks: [
-          [groupId, [otherItemId]],
+        links: [
+          [{ groupId, style: 'chip' }, [otherItemId]],
         ],
       });
   });
 
   it("Errors if the target group doesn't exist", async () => {
-    await expect(api.group.withId(groupId).item.withId(itemId).link(token, 'invalid-group', otherItemId))
+    await expect(api.group.withId(groupId).item.withId(itemId).links.create(token, 'invalid-group', otherItemId))
       .rejects.toMatchObject({ code: 400 });
   });
 
   it("Errors if the target item doesn't exist", async () => {
-    await expect(api.group.withId(groupId).item.withId(itemId).link(token, groupId, 'invalid-item'))
+    await expect(api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, 'invalid-item'))
       .rejects.toMatchObject({ code: 400 });
   });
 
   it("Errors if the source group doesn't exist", async () => {
-    await expect(api.group.withId('invalid-group').item.withId(itemId).link(token, groupId, otherItemId))
+    await expect(api.group.withId('invalid-group').item.withId(itemId).links.create(token, groupId, otherItemId))
       .rejects.toMatchObject({ code: 404 });
   });
 
   it("Errors if the source item doesn't exist", async () => {
-    await expect(api.group.withId(groupId).item.withId('invalid-item').link(token, groupId, otherItemId))
+    await expect(api.group.withId(groupId).item.withId('invalid-item').links.create(token, groupId, otherItemId))
       .rejects.toMatchObject({ code: 404 });
   });
 
   it('Rejects invalid tokens', async () => {
-    await expect(api.group.withId(groupId).item.withId(itemId).link('invalid-token', groupId, otherItemId))
+    await expect(api.group.withId(groupId).item.withId(itemId).links.create('invalid-token', groupId, otherItemId))
       .rejects.toMatchObject({ code: 401 });
   });
 
@@ -85,72 +85,70 @@ describe('Create link', () => {
 describe('Remove link', () => {
   beforeEach(async () => {
     // Create the link
-    await api.group.withId(groupId).item.withId(itemId).link(token, groupId, otherItemId);
+    await api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, otherItemId);
   });
 
   it('Removes links between items', async () => {
-    await expect(api.group.withId(groupId).item.withId(itemId).unlink(token, groupId, otherItemId))
+    await expect(api.group.withId(groupId).item.withId(itemId).links.remove(token, groupId, otherItemId))
       .resolves.toStrictEqual({});
     // Check side effect
     await expect(api.group.withId(groupId).item.withId(itemId).info.get())
       .resolves.toMatchObject({
-        chipLinks: [],
+        links: [],
       });
   });
 
   it('Removes the reverse link', async () => {
-    await expect(api.group.withId(groupId).item.withId(itemId).unlink(token, groupId, otherItemId))
+    await expect(api.group.withId(groupId).item.withId(itemId).links.remove(token, groupId, otherItemId))
       .resolves.toStrictEqual({});
     await expect(api.group.withId(groupId).item.withId(otherItemId).info.get())
       .resolves.toMatchObject({
-        chipLinks: [],
+        links: [],
       });
   });
 
   it('Leaves the group entry if there are multiple links present', async () => {
     const yetAnotherItemId = 'yet-another-item';
     await makeItem(token, groupId, yetAnotherItemId);
-    await api.group.withId(groupId).item.withId(itemId).link(token, groupId, yetAnotherItemId);
-    await expect(api.group.withId(groupId).item.withId(itemId).unlink(token, groupId, otherItemId))
+    await api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, yetAnotherItemId);
+    await expect(api.group.withId(groupId).item.withId(itemId).links.remove(token, groupId, otherItemId))
       .resolves.toStrictEqual({});
     await expect(api.group.withId(groupId).item.withId(itemId).info.get())
       .resolves.toMatchObject({
-        chipLinks: [
-          [groupId, [yetAnotherItemId]],
+        links: [
+          [{ groupId, style: 'chip' }, [yetAnotherItemId]],
         ],
       });
   });
 
   it("Does nothing if the link doesn't exist", async () => {
-    await api.group.withId(groupId).item.withId(itemId).unlink(token, groupId, otherItemId);
-    await expect(api.group.withId(groupId).item.withId(itemId).unlink(token, groupId, otherItemId))
+    await api.group.withId(groupId).item.withId(itemId).links.remove(token, groupId, otherItemId);
+    await expect(api.group.withId(groupId).item.withId(itemId).links.remove(token, groupId, otherItemId))
       .resolves.toStrictEqual({});
   });
 
   it("Errors if the target group doesn't exist", async () => {
-    await expect(api.group.withId(groupId).item.withId(itemId).unlink(token, 'invalid-group', otherItemId))
+    await expect(api.group.withId(groupId).item.withId(itemId).links.remove(token, 'invalid-group', otherItemId))
       .rejects.toMatchObject({ code: 400 });
   });
 
   it("Errors if the target item doesn't exist", async () => {
-    await expect(api.group.withId(groupId).item.withId(itemId).unlink(token, groupId, 'invalid-item'))
+    await expect(api.group.withId(groupId).item.withId(itemId).links.remove(token, groupId, 'invalid-item'))
       .rejects.toMatchObject({ code: 400 });
   });
 
   it("Errors if the source group doesn't exist", async () => {
-    await expect(api.group.withId('invalid-group').item.withId(itemId).unlink(token, groupId, otherItemId))
+    await expect(api.group.withId('invalid-group').item.withId(itemId).links.remove(token, groupId, otherItemId))
       .rejects.toMatchObject({ code: 404 });
   });
 
   it("Errors if the source item doesn't exist", async () => {
-    await expect(api.group.withId(groupId).item.withId('invalid-item').unlink(token, groupId, otherItemId))
+    await expect(api.group.withId(groupId).item.withId('invalid-item').links.remove(token, groupId, otherItemId))
       .rejects.toMatchObject({ code: 404 });
   });
 
   it('Rejects invalid tokens', async () => {
-    await expect(api.group.withId(groupId).item.withId(itemId).unlink('invalid-token', groupId, otherItemId))
+    await expect(api.group.withId(groupId).item.withId(itemId).links.remove('invalid-token', groupId, otherItemId))
       .rejects.toMatchObject({ code: 401 });
   });
-
-  // TODO: Test cases for when the link is uses a card instead of a chip
 });
