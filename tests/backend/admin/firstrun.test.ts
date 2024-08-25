@@ -100,9 +100,7 @@ describe('POST /api/admin/repo', () => {
       });
     });
 
-    test('config.json', async () => {
-
-    });
+    test.todo('config.json', async () => {});
   });
 
   it.todo('Leaves the .gitignore as-is if config.local.json is already there');
