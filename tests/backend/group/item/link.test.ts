@@ -142,7 +142,7 @@ describe('Update link style', () => {
       // invalid request despite TypeScript's best efforts
       'invalid-style' as string as 'card',
     ))
-      .resolves.toStrictEqual({});
+      .rejects.toMatchObject({ code: 400 });
   });
 
   it("Errors if the target group doesn't exist", async () => {

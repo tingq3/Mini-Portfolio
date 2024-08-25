@@ -96,10 +96,26 @@ export async function PUT({ params, request, cookies }) {
   if (err) {
     return error(400, `${err}`);
   }
-  const { otherGroupId } = body;
+  const { otherGroupId, style: newStyle } = body;
   if (!data.groups[otherGroupId]) {
     error(400, `Group ${otherGroupId} does not exist`);
   }
+
+  const item = data.items[groupId][itemId].info;
+  // Find linked group and update style
+  let foundMatch = false;
+  for (const [linkInfo, items] of item.links) {
+    if (linkInfo.groupId === otherGroupId) {
+      linkInfo.style = newStyle;
+      foundMatch = true;
+      break;
+    }
+  }
+  if (!foundMatch) {
+    error(400, `Group ${otherGroupId} has not been linked to in this item`);
+  }
+
+  await setItemInfo(groupId, itemId, item);
 
   invalidatePortfolioGlobals();
   return json({}, { status: 200 });
