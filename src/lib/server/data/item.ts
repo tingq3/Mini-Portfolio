@@ -41,7 +41,7 @@ export const ItemInfoBriefStruct = type({
 /** Brief info about an item */
 export type ItemInfoBrief = Infer<typeof ItemInfoBriefStruct>;
 
-const LinkStyles = enums(['chip', 'card']);
+export const LinkStyleStruct = enums(['chip', 'card']);
 
 /**
  * Links (associations) with other items.
@@ -55,7 +55,7 @@ export const LinksArray = array(
   tuple([
     object({
       groupId: string(),
-      style: LinkStyles,
+      style: LinkStyleStruct,
     }),
     array(string()),
   ])

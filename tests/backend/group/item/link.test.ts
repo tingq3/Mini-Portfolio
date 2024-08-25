@@ -55,6 +55,7 @@ describe('Create link', () => {
   });
 
   it('Keeps links to items in the same group in the same section', async () => {
+    await expect(api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, otherItemId));
     const yetAnotherItemId = 'yet-another-item';
     await makeItem(token, groupId, yetAnotherItemId);
     await expect(api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, yetAnotherItemId))
