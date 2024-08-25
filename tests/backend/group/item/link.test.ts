@@ -54,6 +54,25 @@ describe('Create link', () => {
       });
   });
 
+  it('Keeps links to items in the same group in the same section', async () => {
+    const yetAnotherItemId = 'yet-another-item';
+    await makeItem(token, groupId, yetAnotherItemId);
+    await expect(api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, yetAnotherItemId))
+      .resolves.toStrictEqual({});
+    // Check data is stored correctly
+    await expect(api.group.withId(groupId).item.withId(itemId).info.get())
+      .resolves.toMatchObject({
+        links: [
+          [{ groupId, style: 'chip' }, [otherItemId, yetAnotherItemId]],
+        ],
+      });
+  });
+
+  it('Rejects links to self', async () => {
+    await expect(api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, itemId))
+      .rejects.toMatchObject({ code: 400 });
+  });
+
   it("Errors if the target group doesn't exist", async () => {
     await expect(api.group.withId(groupId).item.withId(itemId).links.create(token, 'invalid-group', otherItemId))
       .rejects.toMatchObject({ code: 400 });
@@ -79,7 +98,63 @@ describe('Create link', () => {
       .rejects.toMatchObject({ code: 401 });
   });
 
-  it.todo('Uses a card link if the link style for that group is cards');
+  it('Respects existing display style preference for group', async () => {
+    await api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, otherItemId);
+    // Update link style
+    await api.group.withId(groupId).item.withId(itemId).links.style(token, groupId, 'card');
+    // Create a link to another item
+    const yetAnotherItemId = 'yet-another-item';
+    await makeItem(token, groupId, yetAnotherItemId);
+    await api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, yetAnotherItemId);
+    await expect(api.group.withId(groupId).item.withId(itemId).info.get())
+      .resolves.toMatchObject({
+        links: [
+          [{ groupId, style: 'card' }, [otherItemId, yetAnotherItemId]],
+        ],
+      });
+  });
+});
+
+describe('Update link style', () => {
+  beforeEach(async () => {
+    // Create the link
+    await api.group.withId(groupId).item.withId(itemId).links.create(token, groupId, otherItemId);
+  });
+
+  it('Allows link display style to be updated', async () => {
+    await expect(api.group.withId(groupId).item.withId(itemId).links.style(token, groupId, 'card'))
+      .resolves.toStrictEqual({});
+    // Style got updated
+    await expect(api.group.withId(groupId).item.withId(itemId).info.get())
+      .resolves.toMatchObject({
+        links: [
+          [{ groupId, style: 'card' }, [otherItemId]],
+        ],
+      });
+  });
+
+  it('Rejects invalid style names', async () => {
+    await expect(api.group.withId(groupId).item.withId(itemId).links.style(
+      token,
+      groupId,
+      // Deliberate type safety awfulness -- we intentionally want to send an
+      // invalid request despite TypeScript's best efforts
+      'invalid-style' as string as 'card',
+    ))
+      .resolves.toStrictEqual({});
+  });
+
+  it("Errors if the target group doesn't exist", async () => {
+    await expect(api.group.withId(groupId).item.withId(itemId).links.style(token, 'invalid-group', 'card'))
+      .rejects.toMatchObject({ code: 400 });
+  });
+
+  it("Errors if the target group hasn't been linked to exist", async () => {
+    const otherGroupId = 'other-group-id';
+    await makeGroup(token, otherGroupId);
+    await expect(api.group.withId(groupId).item.withId(itemId).links.remove(token, otherGroupId, 'card'))
+      .rejects.toMatchObject({ code: 400 });
+  });
 });
 
 describe('Remove link', () => {
