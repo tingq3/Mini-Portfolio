@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { marked } from 'marked';
-  import hljs from 'highlight.js';
+  // import { marked } from 'marked';
+  // import hljs from 'highlight.js';
   import 'highlight.js/styles/stackoverflow-light.css';
-  import { onMount } from 'svelte';
+  // import { onMount } from 'svelte';
   import Markdown from './Markdown.svelte';
 
   export let source: string;

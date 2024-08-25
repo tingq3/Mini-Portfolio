@@ -2,20 +2,21 @@
   import { flip } from 'svelte/animate';
   import { fade } from 'svelte/transition';
   import { ItemCard } from '.';
-  import OrdRec from '$lib/OrderedRecord';
-  import type { GroupInfo } from '$lib/server/data/group';
+  import type { PortfolioGlobals } from '$lib';
 
-  export let group: GroupInfo;
+  export let globals: PortfolioGlobals;
+  export let groupId: string;
 </script>
 
 <div class="card-grid">
-  {#each entries as entrySlug (entrySlug)}
+  {#each globals.groups[groupId].info.listedItems as itemId (itemId)}
     <div
       transition:fade={{ duration: 300 }}
       animate:flip={{ duration: 300 }}
     >
       <ItemCard
-        label={OrdRec.fromItems(group.listedItems).get(entrySlug)}
+        {groupId}
+        {itemId}
         {globals}
       />
     </div>

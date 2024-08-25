@@ -3,10 +3,9 @@
  */
 
 import { mkdir, readdir, readFile, writeFile } from 'fs/promises';
-import { array, enums, intersection, object, optional, record, string, tuple, type, validate, type Infer } from 'superstruct';
+import { array, intersection, object, optional, nullable, string, tuple, type, validate, type Infer } from 'superstruct';
 import { getDataDir } from './dataDir';
 import { rimraf } from 'rimraf';
-import { setGroupInfo } from './group';
 import { RepoInfoStruct } from './itemRepo';
 import { PackageInfoStruct } from './itemPackage';
 import formatTemplate from '../formatTemplate';
@@ -32,7 +31,11 @@ export const ItemInfoBriefStruct = type({
   /** Color */
   color: string(),
 
-  // TODO: Support icons for item here
+  /** Icon to display in lists */
+  icon: nullable(string()),
+
+  /** Banner image to display on item page */
+  banner: nullable(string()),
 });
 
 /** Brief info about an item */
@@ -120,6 +123,8 @@ export async function getItemInfoBrief(groupId: string, itemId: string): Promise
     name: info.name,
     description: info.description,
     color: info.color,
+    icon: info.icon,
+    banner: info.banner,
   };
 }
 
@@ -166,6 +171,8 @@ export async function createItem(groupId: string, itemId: string, name: string, 
     chipLinks: [],
     cardLinks: [],
     urls: {},
+    icon: null,
+    banner: null,
   });
   await setItemReadme(groupId, itemId, readme);
 }

@@ -2,7 +2,7 @@
   import OrdRec from '$lib/OrderedRecord';
   import { getAssociatedLabels, getClassifier } from '$lib/util';
     import { Navbar, Markdown } from '$components';
-    import { ChipList } from '$components/chip';
+    import { ItemChipList } from '$components/chip';
     import { CardGrid, IconCard, RepoCard, PackageCard, CardList } from '$components/card';
     import { filterAssociatedLabelsByDisplayType, getAssociationDisplayInfo } from './associations';
     import Background from '$components/Background.svelte';
@@ -44,7 +44,7 @@
           {#if assLabels.keys().length}
             <div class="association-chip-row">
               <h3>{getAssociationDisplayInfo(getClassifier(data.globals, assClass), classifier).title}:</h3>
-              <ChipList labels={OrdRec.fromItems([[assClass, assLabels]])} link={true} />
+              <ItemChipList labels={OrdRec.fromItems([[assClass, assLabels]])} link={true} />
             </div>
           {/if}
         {/each}

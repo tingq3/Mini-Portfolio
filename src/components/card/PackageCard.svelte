@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { PackageInfo } from '$types/packageInfo';
   import { packageIsWithProvider, packageProviders } from '$lib/packageInfo';
   import { Card } from '.';
   import { tooltip } from '$lib/tooltip';
+  import type { PackageInfo } from '$lib/server/data/itemPackage';
 
   export let info: PackageInfo;
   export let color: string;

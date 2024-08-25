@@ -1,13 +1,16 @@
 <script lang="ts">
   import { type PortfolioGlobals } from '$lib';
   import Card from './Card.svelte';
-  import { ChipList } from '$components/chip';
+  import { ItemChipList } from '$components/chip';
 
   export let globals: PortfolioGlobals;
   export let groupId: string;
   export let itemId: string;
 
   $: item = globals.items[groupId][itemId];
+  $: associatedChips = item.info.chipLinks.map(
+    ([groupId, items]) => items.map(itemId => ({ groupId, itemId, selected: false }))
+  );
 </script>
 
 <Card
@@ -33,7 +36,7 @@
       <p>{item.info.description}</p>
     </div>
   {/if}
-  <ChipList slot="bottom" labels={associatedLabels} link={true} />
+  <ItemChipList slot="bottom" items={associatedChips} {globals} link={true} />
 </Card>
 
 <style>

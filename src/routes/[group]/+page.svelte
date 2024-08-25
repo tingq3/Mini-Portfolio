@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Navbar, Markdown } from '$components';
     import { CardGrid } from '$components/card';
-    import { ChipList } from '$components/chip';
+    import { ItemChipList } from '$components/chip';
     import type { ClassifierSlug, Label, LabelSlug } from '$types';
     import OrdRec from '$lib/OrderedRecord';
     import { visibilityFilter } from '$lib/visibility';
@@ -182,7 +182,7 @@
 
   <div id="filters">
     <!-- List the labels which we can use to filter entries -->
-    <ChipList
+    <ItemChipList
       labels={
         // I can't figure out how to make the OrderedRecord type be covariant, so
         // I'm getting a super annoying error because it's not allowing `boolean`

@@ -2,13 +2,18 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { ItemChip } from '.';
   import type { PortfolioGlobals } from '$lib';
+  import { Separator } from '$components';
 
   /** Global data */
   export let globals: PortfolioGlobals;
-  /** Group ID to which all items belong */
-  export let groupId: string;
-  /** Array of items to display, including whether they are selected */
-  export let items: { id: string, selected: boolean }[];
+
+  /**
+   * 2D Array of items to display, including whether they are selected.
+   *
+   * Each array of items is displayed split by a separator.
+   */
+  export let items: { itemId: string, groupId: string, selected: boolean }[][];
+
   /** Whether to link each chip to its respective page */
   export let link: boolean = false;
 
@@ -104,30 +109,34 @@
   });
 </script>
 
-{#if labels.keys().length}
+{#if items.length}
   <div
     class="chip-list"
     bind:this={ele}
     on:wheel={onWheel}
   >
-    {#each labels.values().slice(0, -1) as labelGroup}
-      {#each labelGroup.values() as { label, selected }}
+    {#each items.slice(0, -1) as itemGroup}
+      {#each itemGroup as { itemId, groupId, selected }}
         <ItemChip
-          {label}
+          {globals}
+          {groupId}
+          {itemId}
           {selected}
           {link}
-          on:click={e => bubbleClick(label.classifier, label.slug, e)}
+          on:click={e => bubbleClick(groupId, itemId, e)}
         />
       {/each}
       <Separator />
     {/each}
     <!-- Last classifier doesn't have a separator -->
-    {#each labels.values().slice(-1)[0].values() as { label, selected }}
+    {#each items.slice(-1)[0] as { itemId, groupId, selected }}
       <ItemChip
-        {label}
+        {globals}
+        {groupId}
+        {itemId}
         {selected}
         {link}
-        on:click={e => bubbleClick(label.classifier, label.slug, e)}
+        on:click={e => bubbleClick(itemId, groupId, e)}
       />
     {/each}
   </div>
