@@ -81,7 +81,7 @@ export async function PUT({ params, request, cookies }) {
   }
 
   // Validate name
-  const name = validateName(info.name);
+  validateName(info.name);
 
   // TODO: Other validation
 

@@ -41,6 +41,11 @@ it.each([
     .rejects.toMatchObject({ code: 404 });
 });
 
+it('Gives an error if the "listedItems" field contains invalid item IDs', async () => {
+  await expect(api.group.withId(groupId).info.set(token, createCustomGroupProperties({ listedItems: ['invalid-item'] })))
+    .rejects.toMatchObject({ code: 400 });
+});
+
 it('Successfully updates the group info', async () => {
   const newInfo = createCustomGroupProperties({ name: 'New name' });
   await expect(api.group.withId(groupId).info.set(token, newInfo))

@@ -73,6 +73,13 @@ export async function PUT({ params, request, cookies }) {
   // Validate name
   validateName(info.name);
 
+  // Check for invalid listedItems
+  for (const itemId of info.listedItems) {
+    if (!(itemId in data.items[groupId])) {
+      error(400, `Item '${itemId}' does not exist in group '${groupId}'`);
+    }
+  }
+
   // TODO: Other validation
 
   await setGroupInfo(groupId, info);
