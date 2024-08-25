@@ -69,6 +69,24 @@ export default function makeItemFunctions(groupId: string) {
       ) as Promise<Record<string, never>>;
     };
 
+    const link = async (token: string, otherGroupId: string, otherItemId: string) => {
+      return apiFetch(
+        'POST',
+        `/api/group/${groupId}/item/${itemId}/link`,
+        token,
+        { otherGroupId, otherItemId },
+      ) as Promise<Record<string, never>>;
+    };
+
+    const unlink = async (token: string, otherGroupId: string, otherItemId: string) => {
+      return apiFetch(
+        'POST',
+        `/api/group/${groupId}/item/${itemId}/unlink`,
+        token,
+        { otherGroupId, otherItemId },
+      ) as Promise<Record<string, never>>;
+    };
+
     return {
       /**
        * Create a new item
@@ -113,6 +131,10 @@ export default function makeItemFunctions(groupId: string) {
          */
         set: setReadme,
       },
+      /** Create a link between this item and another item */
+      link,
+      /** Remove a link between this item and another item */
+      unlink,
     };
   };
 
