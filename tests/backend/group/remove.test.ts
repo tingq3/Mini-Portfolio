@@ -36,4 +36,6 @@ describe('Other test cases', () => {
     await expect(api.group.withId(group).remove('invalid'))
       .rejects.toMatchObject({ code: 401 });
   });
+
+  it.todo('Removes links to all items in the group');
 });

@@ -46,4 +46,6 @@ describe('Other test cases', () => {
     await expect(api.group.withId(group).item.withId('item-id').remove(token))
       .rejects.toMatchObject({ code: 404 });
   });
+
+  it.todo('Removes links to this item');
 });
