@@ -155,6 +155,11 @@ describe('Update link style', () => {
     await expect(api.group.withId(groupId).item.withId(itemId).links.remove(token, otherGroupId, 'card'))
       .rejects.toMatchObject({ code: 400 });
   });
+
+  it('Rejects invalid tokens', async () => {
+    await expect(api.group.withId(groupId).item.withId(itemId).links.style('invalid-token', groupId, 'card'))
+      .rejects.toMatchObject({ code: 401 });
+  });
 });
 
 describe('Remove link', () => {

@@ -18,43 +18,6 @@ tell everyone more about it. Is this for your projects? Your skills? Tools you
 know how to use?
 `;
 
-/**
- * How to display associations:
- *
- * * `"chip"`: use a chip
- * * `"card"`: use a card
- */
-export const AssociationOptionsDisplayStruct = enums(['chip', 'card']);
-
-/**
- * How to display associations:
- *
- * * `"chip"`: use a chip
- * * `"card"`: use a card
- */
-export type AssociationOptionsDisplay = Infer<typeof AssociationOptionsDisplayStruct>;
-
-/**
- * Information about how to display associations.
- *
- * By default, the name of the classifier will be used, and it will be shown as
- * a list of chips.
- *
- * If the classifier is the same as the current label, by default it will be
- * named "See also" and displayed as cards.
- */
-const AssociationOptionsStruct = object({
-  /** ID of the group to show associations for */
-  group: string(),
-  /** Title to use when displaying the associations under this group. */
-  title: string(),
-  /** Display options. Use `"chip"` or `"card"`. */
-  display: AssociationOptionsDisplayStruct,
-});
-
-/** Information about how to display associations */
-export type AssociationOptions = Infer<typeof AssociationOptionsStruct>;
-
 /** Brief info about a group */
 export const GroupInfoStruct = type({
   /** User-facing name of the group */
@@ -78,11 +41,6 @@ export const GroupInfoStruct = type({
    * Groups whose items should be used for filtering on this group
    */
   filterGroups: array(string()),
-
-  /**
-   * Information on how to display associations for each item in this group.
-   */
-  associations: array(AssociationOptionsStruct),
 
   /**
    * Array of item IDs to display for this page.
@@ -166,7 +124,6 @@ export async function createGroup(id: string, name: string, description: string)
     color: '#aa00aa',
     icon: null,
     banner: null,
-    associations: [],
     filterGroups: [],
     listedItems: [],
   });
