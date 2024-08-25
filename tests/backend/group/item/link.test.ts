@@ -153,7 +153,7 @@ describe('Update link style', () => {
   it("Errors if the target group hasn't been linked to exist", async () => {
     const otherGroupId = 'other-group-id';
     await makeGroup(token, otherGroupId);
-    await expect(api.group.withId(groupId).item.withId(itemId).links.remove(token, otherGroupId, 'card'))
+    await expect(api.group.withId(groupId).item.withId(itemId).links.style(token, otherGroupId, 'card'))
       .rejects.toMatchObject({ code: 400 });
   });
 

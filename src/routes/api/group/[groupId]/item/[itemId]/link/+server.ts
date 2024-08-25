@@ -121,6 +121,27 @@ export async function PUT({ params, request, cookies }) {
   return json({}, { status: 200 });
 }
 
+function removeLinkFromItem(item: ItemInfoFull, otherGroupId: string, otherItemId: string) {
+  for (const [{ groupId: linkedGroup }, items] of item.links) {
+    if (linkedGroup === otherGroupId) {
+      // Only remove it if it is present
+      if (items.includes(otherItemId)) {
+        items.splice(items.indexOf(otherItemId), 1);
+      }
+      // Now if the linked group is empty, remove it from the item links
+      if (!items.length) {
+        // This feels yucky but I can't think of a prettier way of doing it
+        // without making a copy
+        item.links.splice(
+          item.links.findIndex(l => l[0].groupId === otherGroupId),
+          1,
+        );
+      }
+      return;
+    }
+  }
+}
+
 export async function DELETE({ params, request, url }) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   const token = request.headers.get('Authorization');
@@ -138,7 +159,7 @@ export async function DELETE({ params, request, url }) {
   }
 
   const otherGroupId = url.searchParams.get('otherGroupId');
-  const otherItemId = url.searchParams.get('otherGroupId');
+  const otherItemId = url.searchParams.get('otherItemId');
 
   if (!otherGroupId || !otherItemId) {
     error(400, 'Requires query params otherGroupId and otherItemId');
@@ -150,6 +171,15 @@ export async function DELETE({ params, request, url }) {
   if (!data.items[otherGroupId][otherItemId]) {
     error(400, `Item ${otherItemId} does not exist in group ${otherGroupId}`);
   }
+
+  const item = data.items[groupId][itemId].info;
+  const otherItem = data.items[otherGroupId][otherItemId].info;
+
+  removeLinkFromItem(item, otherGroupId, otherItemId);
+  removeLinkFromItem(otherItem, groupId, itemId);
+
+  await setItemInfo(groupId, itemId, item);
+  await setItemInfo(otherGroupId, otherItemId, otherItem);
 
   invalidatePortfolioGlobals();
   return json({}, { status: 200 });
