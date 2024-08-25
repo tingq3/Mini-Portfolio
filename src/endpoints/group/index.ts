@@ -1,5 +1,5 @@
 /** Group management endpoints */
-import type { GroupInfo, GroupInfo } from '$lib/server/data/group';
+import type { GroupInfo } from '$lib/server/data/group';
 import { apiFetch } from '../fetch';
 import makeItemFunctions from './item';
 

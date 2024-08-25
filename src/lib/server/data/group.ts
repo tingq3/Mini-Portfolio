@@ -3,7 +3,7 @@
  */
 
 import { mkdir, readdir, readFile, writeFile } from 'fs/promises';
-import { array, enums, intersection, object, string, type, validate, type Infer } from 'superstruct';
+import { array, enums, intersection, nullable, object, string, type, validate, type Infer } from 'superstruct';
 import { getDataDir } from './dataDir';
 import { rimraf } from 'rimraf';
 import formatTemplate from '../formatTemplate';
@@ -65,6 +65,12 @@ export const GroupInfoStruct = type({
 
   /** Color */
   color: string(),
+
+  /** Icon to display in lists */
+  icon: nullable(string()),
+
+  /** Banner image to display on item page */
+  banner: nullable(string()),
 
   // TODO: Support icons for groups here
 
@@ -158,6 +164,8 @@ export async function createGroup(id: string, name: string, description: string)
     description,
     // TODO: Generate a random color for the new group
     color: '#aa00aa',
+    icon: null,
+    banner: null,
     associations: [],
     filterGroups: [],
     listedItems: [],

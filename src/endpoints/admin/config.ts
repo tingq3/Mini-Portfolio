@@ -1,6 +1,6 @@
 /** Configuration endpoints */
 import { apiFetch } from '../fetch';
-import type { PortfolioConfig } from '$types';
+import type { ConfigJson } from '$lib/server/data/config';
 
 /**
  * Retrieve the site configuration.
@@ -12,7 +12,7 @@ export const get = async (token: string) => {
     'GET',
     '/api/admin/config',
     token,
-  ) as Promise<PortfolioConfig>;
+  ) as Promise<ConfigJson>;
 };
 
 /**
@@ -21,7 +21,7 @@ export const get = async (token: string) => {
  * @param token The authentication token
  * @param config The updated configuration
  */
-export const put = async (token: string, config: PortfolioConfig) => {
+export const put = async (token: string, config: ConfigJson) => {
   return apiFetch(
     'PUT',
     '/api/admin/config',

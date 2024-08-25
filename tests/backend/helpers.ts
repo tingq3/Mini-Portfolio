@@ -21,6 +21,8 @@ export function createCustomGroupProperties(options: Partial<GroupInfo> = {}): G
     filterGroups: [],
     associations: [],
     listedItems: [],
+    banner: null,
+    icon: null,
   };
 
   return { ...group, ...options };
@@ -40,6 +42,8 @@ export function createCustomItemProperties(options: Partial<ItemInfoFull> = {}):
     chipLinks: [],
     cardLinks: [],
     urls: {},
+    banner: null,
+    icon: null,
   };
 
   return { ...item, ...options };

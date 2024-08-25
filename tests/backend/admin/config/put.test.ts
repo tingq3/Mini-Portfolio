@@ -31,7 +31,7 @@ it('Updates the current config contents', async () => {
 it('Errors if the new config has an incorrect version', async () => {
   await expect(api.admin.config.put(token, {
     siteName: 'Name changed',
-    mainPageGroups: [],
+    listedGroups: [],
     version: consts.VERSION + 'invalid',
   })).rejects.toMatchObject({ code: 400 });
 });
@@ -39,7 +39,7 @@ it('Errors if the new config has an incorrect version', async () => {
 it('Errors if the new config has references a non-existent page group', async () => {
   await expect(api.admin.config.put(token, {
     siteName: 'Name changed',
-    mainPageGroups: ['invalid'],
+    listedGroups: ['invalid'],
     version: consts.VERSION,
   })).rejects.toMatchObject({ code: 400 });
 });
@@ -59,7 +59,7 @@ it('Can set pages as a main page group', async () => {
 it('Rejects invalid tokens', async () => {
   await expect(api.admin.config.put('invalid token', {
     siteName: 'Name changed',
-    mainPageGroups: [],
+    listedGroups: [],
     version: consts.VERSION,
   })).rejects.toMatchObject({ code: 401 });
 });
@@ -68,7 +68,7 @@ it('Errors if site is not set up', async () => {
   await api.debug.clear();
   await expect(api.admin.config.put(token, {
     siteName: 'Name changed',
-    mainPageGroups: [],
+    listedGroups: [],
     version: consts.VERSION,
   })).rejects.toMatchObject({ code: 400 });
 });
