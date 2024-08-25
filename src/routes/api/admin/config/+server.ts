@@ -24,7 +24,7 @@ export async function PUT({ request, cookies }) {
     return error(401, 'Authorization token is required');
   }
 
-  await getPortfolioGlobals().catch(e => error(400, e));
+  const globals = await getPortfolioGlobals().catch(e => error(400, e));
 
   await validateToken(token).catch(e => error(401, `${e}`));
 
@@ -41,7 +41,12 @@ export async function PUT({ request, cookies }) {
     );
   }
 
-  // TODO: Check for invalid mainPageGroups
+  // Check for invalid listedGroups
+  for (const groupId of newConfig.listedGroups) {
+    if (!(groupId in globals.groups)) {
+      error(400, `Group '${groupId}' does not exist`);
+    }
+  }
 
   await setConfig(newConfig);
   invalidatePortfolioGlobals();
