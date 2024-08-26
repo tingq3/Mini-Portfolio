@@ -2,13 +2,14 @@
   import { dev } from '$app/environment';
     import { goto } from '$app/navigation';
     import api from '$endpoints';
-  import type { PortfolioGlobals } from '$lib';
+  import { token, type PortfolioGlobals } from '$lib';
 
   export let path: { url: string, txt: string }[];
   export let globals: PortfolioGlobals;
 
   async function clear() {
     await api.debug.clear();
+    token.set(undefined);
     await goto('/admin/firstrun');
   }
 

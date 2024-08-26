@@ -58,6 +58,13 @@
       "error",
       "before"
     ],
+    // Allow void when it is used to discard promises
+    "no-void": [
+      "error",
+      {
+        "allowAsStatement": true
+      }
+    ],
     // Everything below here is standard 1531
     "@typescript-eslint/no-var-requires": 0,
     "@typescript-eslint/no-unused-vars": 0,
@@ -421,7 +428,6 @@
     "no-useless-escape": "error",
     "no-useless-rename": "error",
     "no-useless-return": "error",
-    "no-void": "error",
     "no-whitespace-before-property": "error",
     "no-with": "error",
     "object-curly-newline": [
