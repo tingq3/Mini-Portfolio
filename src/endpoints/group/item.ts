@@ -1,6 +1,6 @@
 /** Item management endpoints */
 
-import { apiFetch } from '$endpoints/fetch';
+import { apiFetch, json } from '$endpoints/fetch';
 import type { ItemInfoBrief, ItemInfoFull } from '$lib/server/data/item';
 
 export default function makeItemFunctions(groupId: string) {
@@ -10,90 +10,90 @@ export default function makeItemFunctions(groupId: string) {
    * @returns mappings of items
    */
   const all = async () => {
-    return apiFetch(
+    return json(apiFetch(
       'GET',
       `/api/group/${groupId}/item`,
       undefined,
-    ) as Promise<Record<string, ItemInfoBrief>>;
+    )) as Promise<Record<string, ItemInfoBrief>>;
   };
 
   const withId = (itemId: string) => {
     const create = async (token: string, name: string, description: string) => {
-      return apiFetch(
+      return json(apiFetch(
         'POST',
         `/api/group/${groupId}/item/${itemId}`,
         token,
         { name, description },
-      ) as Promise<Record<string, never>>;
+      )) as Promise<Record<string, never>>;
     };
 
     const remove = async (token: string) => {
-      return apiFetch(
+      return json(apiFetch(
         'DELETE',
         `/api/group/${groupId}/item/${itemId}`,
         token,
-      ) as Promise<Record<string, never>>;
+      )) as Promise<Record<string, never>>;
     };
 
     const getInfo = async () => {
-      return apiFetch(
+      return json(apiFetch(
         'GET',
         `/api/group/${groupId}/item/${itemId}`,
         undefined,
-      ) as Promise<ItemInfoFull>;
+      )) as Promise<ItemInfoFull>;
     };
 
     const setInfo = async (token: string, newInfo: ItemInfoFull) => {
-      return apiFetch(
+      return json(apiFetch(
         'PUT',
         `/api/group/${groupId}/item/${itemId}`,
         token,
         newInfo,
-      ) as Promise<Record<string, never>>;
+      )) as Promise<Record<string, never>>;
     };
 
     const getReadme = async () => {
-      return apiFetch(
+      return json(apiFetch(
         'GET',
         `/api/group/${groupId}/item/${itemId}/readme`,
         undefined,
-      ) as Promise<{ readme: string }>;
+      )) as Promise<{ readme: string }>;
     };
 
     const setReadme = async (token: string, readme: string) => {
-      return apiFetch(
+      return json(apiFetch(
         'PUT',
         `/api/group/${groupId}/item/${itemId}/readme`,
         token,
         { readme },
-      ) as Promise<Record<string, never>>;
+      )) as Promise<Record<string, never>>;
     };
 
     const createLink = async (token: string, otherGroupId: string, otherItemId: string) => {
-      return apiFetch(
+      return json(apiFetch(
         'POST',
         `/api/group/${groupId}/item/${itemId}/link`,
         token,
         { otherGroupId, otherItemId },
-      ) as Promise<Record<string, never>>;
+      )) as Promise<Record<string, never>>;
     };
 
     const updateLinkStyle = async (token: string, otherGroupId: string, style: 'chip' | 'card') => {
-      return apiFetch(
+      return json(apiFetch(
         'PUT',
         `/api/group/${groupId}/item/${itemId}/link`,
         token,
         { otherGroupId, style },
-      ) as Promise<Record<string, never>>;
+      )) as Promise<Record<string, never>>;
     };
 
     const removeLink = async (token: string, otherGroupId: string, otherItemId: string) => {
-      return apiFetch(
+      return json(apiFetch(
         'DELETE',
         `/api/group/${groupId}/item/${itemId}/link`,
         token,
         { otherGroupId, otherItemId },
-      ) as Promise<Record<string, never>>;
+      )) as Promise<Record<string, never>>;
     };
 
     return {

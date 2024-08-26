@@ -1,6 +1,6 @@
 /** Git repository endpoints */
 import type { FirstRunCredentials } from '$lib/server/auth';
-import { apiFetch } from '../fetch';
+import { apiFetch, json } from '../fetch';
 
 /**
  * Set up the site's data repository.
@@ -12,10 +12,10 @@ export default async function (
   repoUrl: string | null,
   branch: string | null,
 ) {
-  return apiFetch(
+  return json(apiFetch(
     'POST',
     '/api/admin/firstrun',
     undefined,
     { repoUrl, branch },
-  ) as Promise<{ credentials: FirstRunCredentials, firstTime: boolean }>;
+  )) as Promise<{ credentials: FirstRunCredentials, firstTime: boolean }>;
 }

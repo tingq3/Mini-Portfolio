@@ -1,4 +1,4 @@
-import { apiFetch } from './fetch';
+import { apiFetch, json } from './fetch';
 
 /**
  * Get the readme.
@@ -6,11 +6,11 @@ import { apiFetch } from './fetch';
  * @returns the primary readme of the data repo
  */
 export const get = async () => {
-  return apiFetch(
+  return json(apiFetch(
     'GET',
     '/api/readme',
     undefined,
-  ) as Promise<{ readme: string }>;
+  )) as Promise<{ readme: string }>;
 };
 
 /**
@@ -20,12 +20,12 @@ export const get = async () => {
  * @param readme new README file
  */
 export const set = async (token: string, readme: string) => {
-  return apiFetch(
+  return json(apiFetch(
     'PUT',
     '/api/readme',
     token,
     { readme },
-  ) as Promise<Record<string, never>>;
+  )) as Promise<Record<string, never>>;
 };
 
 export default {

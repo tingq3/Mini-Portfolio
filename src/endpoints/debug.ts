@@ -1,27 +1,27 @@
 /** Debug endpoints */
-import { apiFetch } from './fetch';
+import { apiFetch, json } from './fetch';
 
 /**
  * Reset the app to its default state.
  */
 export const clear = async () => {
-  return apiFetch(
+  return json(apiFetch(
     'DELETE',
     '/api/debug/clear',
     undefined,
-  ) as Promise<Record<string, never>>;
+  )) as Promise<Record<string, never>>;
 };
 
 /**
  * Echo text to the server's console
  */
 export const echo = async (text: string) => {
-  return apiFetch(
+  return json(apiFetch(
     'POST',
     '/api/debug/echo',
     undefined,
     { text }
-  ) as Promise<Record<string, never>>;
+  )) as Promise<Record<string, never>>;
 };
 
 const debug = {

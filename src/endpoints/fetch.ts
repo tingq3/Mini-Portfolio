@@ -20,12 +20,12 @@ export const URL = `http://${HOST}:${PORT}`;
  *
  * @returns promise of the resolved data.
  */
-export async function apiFetch (
+export async function apiFetch(
   method: HttpVerb,
   route: string,
   token?: string,
   bodyParams?: object
-): Promise<object> {
+): Promise<Response> {
   if (bodyParams === undefined) {
     bodyParams = {};
   }
@@ -68,11 +68,19 @@ export async function apiFetch (
     }
   }
 
-  if ([404, 405].includes(res.status)) {
-    throw new ApiError(404, `Error ${res.status} at ${method} ${route}`);
-  }
+  return res;
+}
 
-  // Decode the error
+export async function json(response: Promise<Response>): Promise<object> {
+  const res = await response;
+  if ([404, 405].includes(res.status)) {
+    throw new ApiError(404, `Error ${res.status} at ${res.url}`);
+  }
+  if (![200, 304].includes(res.status)) {
+    // Unknown error
+    throw new ApiError(res.status, `Request got status code ${res.status}`);
+  }
+  // Decode the data
   let json: object;
   try {
     json = await res.json();
@@ -89,10 +97,6 @@ export async function apiFetch (
     // All 400 and 403 errors have an error message
     const message = (json as { message: string }).message;
     throw new ApiError(res.status, message);
-  }
-  if (![200, 304].includes(res.status)) {
-    // Unknown error
-    throw new ApiError(res.status, `Request got status code ${res.status}`);
   }
 
   // Got valid data

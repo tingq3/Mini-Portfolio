@@ -1,5 +1,5 @@
 /** Configuration endpoints */
-import { apiFetch } from '../fetch';
+import { apiFetch, json } from '../fetch';
 import type { ConfigJson } from '$lib/server/data/config';
 
 /**
@@ -8,11 +8,11 @@ import type { ConfigJson } from '$lib/server/data/config';
  * @param token The authentication token
  */
 export const get = async (token: string) => {
-  return apiFetch(
+  return json(apiFetch(
     'GET',
     '/api/admin/config',
     token,
-  ) as Promise<ConfigJson>;
+  )) as Promise<ConfigJson>;
 };
 
 /**
@@ -22,12 +22,12 @@ export const get = async (token: string) => {
  * @param config The updated configuration
  */
 export const put = async (token: string, config: ConfigJson) => {
-  return apiFetch(
+  return json(apiFetch(
     'PUT',
     '/api/admin/config',
     token,
     config,
-  ) as Promise<Record<string, never>>;
+  )) as Promise<Record<string, never>>;
 };
 
 const config = {

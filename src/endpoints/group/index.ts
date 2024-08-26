@@ -1,6 +1,6 @@
 /** Group management endpoints */
 import type { GroupInfo } from '$lib/server/data/group';
-import { apiFetch } from '../fetch';
+import { apiFetch, json } from '../fetch';
 import makeItemFunctions from './item';
 
 /**
@@ -9,64 +9,64 @@ import makeItemFunctions from './item';
  * @returns mappings of groups
  */
 export const all = async () => {
-  return apiFetch(
+  return json(apiFetch(
     'GET',
     '/api/group',
     undefined,
-  ) as Promise<Record<string, GroupInfo>>;
+  )) as Promise<Record<string, GroupInfo>>;
 };
 
 /** Access a group with the given ID */
 export const withId = (groupId: string) => {
   const create = async (token: string, name: string, description: string) => {
-    return apiFetch(
+    return json(apiFetch(
       'POST',
       `/api/group/${groupId}`,
       token,
       { name, description },
-    ) as Promise<Record<string, never>>;
+    )) as Promise<Record<string, never>>;
   };
 
   const remove = async (token: string) => {
-    return apiFetch(
+    return json(apiFetch(
       'DELETE',
       `/api/group/${groupId}`,
       token,
-    ) as Promise<Record<string, never>>;
+    )) as Promise<Record<string, never>>;
   };
 
   const getInfo = async () => {
-    return apiFetch(
+    return json(apiFetch(
       'GET',
       `/api/group/${groupId}`,
       undefined,
-    ) as Promise<GroupInfo>;
+    )) as Promise<GroupInfo>;
   };
 
   const setInfo = async (token: string, newInfo: GroupInfo) => {
-    return apiFetch(
+    return json(apiFetch(
       'PUT',
       `/api/group/${groupId}`,
       token,
       newInfo,
-    ) as Promise<Record<string, never>>;
+    )) as Promise<Record<string, never>>;
   };
 
   const getReadme = async () => {
-    return apiFetch(
+    return json(apiFetch(
       'GET',
       `/api/group/${groupId}/readme`,
       undefined,
-    ) as Promise<{ readme: string }>;
+    )) as Promise<{ readme: string }>;
   };
 
   const setReadme = async (token: string, readme: string) => {
-    return apiFetch(
+    return json(apiFetch(
       'PUT',
       `/api/group/${groupId}/readme`,
       token,
       { readme },
-    ) as Promise<Record<string, never>>;
+    )) as Promise<Record<string, never>>;
   };
 
   return {

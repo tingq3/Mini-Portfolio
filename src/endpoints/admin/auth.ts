@@ -1,5 +1,5 @@
 /** Authentication endpoints */
-import { apiFetch } from '../fetch';
+import { apiFetch, json } from '../fetch';
 
 /**
  * Log in as an administrator for the site
@@ -8,12 +8,12 @@ import { apiFetch } from '../fetch';
  * @param password The password of the admin account
  */
 export const login = async (username: string, password: string) => {
-  return apiFetch(
+  return json(apiFetch(
     'POST',
     '/api/admin/auth/login',
     undefined,
     { username, password }
-  ) as Promise<{ token: string }>;
+  )) as Promise<{ token: string }>;
 };
 
 /**
@@ -22,11 +22,11 @@ export const login = async (username: string, password: string) => {
  * @param token The token to invalidate
  */
 export const logout = async (token: string) => {
-  return apiFetch(
+  return json(apiFetch(
     'POST',
     '/api/admin/auth/logout',
     token,
-  ) as Promise<{ token: string }>;
+  )) as Promise<{ token: string }>;
 };
 
 /**
@@ -37,12 +37,12 @@ export const logout = async (token: string) => {
  * @param newPassword The new replacement password
  */
 export const change = async (token: string, newUsername: string, oldPassword: string, newPassword: string) => {
-  return apiFetch(
+  return json(apiFetch(
     'POST',
     '/api/admin/auth/change',
     token,
     { newUsername, oldPassword, newPassword }
-  ) as Promise<Record<string, never>>;
+  )) as Promise<Record<string, never>>;
 };
 
 /**
@@ -51,11 +51,11 @@ export const change = async (token: string, newUsername: string, oldPassword: st
  * @param token The auth token
  */
 export const revoke = async (token: string) => {
-  return apiFetch(
+  return json(apiFetch(
     'POST',
     '/api/admin/auth/revoke',
     token
-  ) as Promise<Record<string, never>>;
+  )) as Promise<Record<string, never>>;
 };
 
 /**
@@ -66,12 +66,12 @@ export const revoke = async (token: string) => {
  * @param password The password to the admin account
  */
 export const disable = async (token: string, password: string) => {
-  return apiFetch(
+  return json(apiFetch(
     'POST',
     '/api/admin/auth/disable',
     token,
     { password }
-  ) as Promise<Record<string, never>>;
+  )) as Promise<Record<string, never>>;
 };
 
 const auth = {

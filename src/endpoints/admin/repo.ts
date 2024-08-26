@@ -1,5 +1,5 @@
 /** Git repository endpoints */
-import { apiFetch } from '../fetch';
+import { apiFetch, json } from '../fetch';
 
 /** Information about the repo */
 export type RepoInfo = {
@@ -22,11 +22,11 @@ export type RepoInfo = {
  * @param token The authentication token
  */
 export const get = async (token: string) => {
-  return apiFetch(
+  return json(apiFetch(
     'GET',
     '/api/admin/repo',
     token,
-  ) as Promise<RepoInfo>;
+  )) as Promise<RepoInfo>;
 };
 
 const repo = {
