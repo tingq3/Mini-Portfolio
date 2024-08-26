@@ -71,6 +71,27 @@ export async function apiFetch(
   return res;
 }
 
+/** Process a text response, returning the text as a string */
+export async function text(response: Promise<Response>): Promise<string> {
+  const res = await response;
+  if ([404, 405].includes(res.status)) {
+    throw new ApiError(404, `Error ${res.status} at ${res.url}`);
+  }
+  if (![200, 304].includes(res.status)) {
+    // Unknown error
+    throw new ApiError(res.status, `Request got status code ${res.status}`);
+  }
+
+  const text = await res.text();
+
+  if ([400, 401, 403].includes(res.status)) {
+    throw new ApiError(res.status, text);
+  }
+
+  return text;
+}
+
+/** Process a JSON response, returning the data as a JS object */
 export async function json(response: Promise<Response>): Promise<object> {
   const res = await response;
   if ([404, 405].includes(res.status)) {
