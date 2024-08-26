@@ -8,9 +8,9 @@
   export let itemId: string;
 
   $: item = globals.items[groupId][itemId];
-  $: associatedChips = item.info.chipLinks.map(
-    ([groupId, items]) => items.map(itemId => ({ groupId, itemId, selected: false }))
-  );
+  $: associatedChips = item.info.links
+    .filter(([{ style }]) => style === 'chip')
+    .map(([{ groupId }, items]) => items.map(itemId => ({ groupId, itemId, selected: false })));
 </script>
 
 <Card
