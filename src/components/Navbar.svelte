@@ -1,14 +1,15 @@
 <script lang="ts">
   import { dev } from '$app/environment';
+    import { goto } from '$app/navigation';
+    import api from '$endpoints';
   import type { PortfolioGlobals } from '$lib';
 
   export let path: { url: string, txt: string }[];
   export let globals: PortfolioGlobals;
 
-  function reload() {
-    fetch('/reload', { method: 'POST' })
-      .then(() => location.reload())
-      .catch(e => console.error('Error reloading data', e));
+  async function clear() {
+    await api.debug.clear();
+    await goto('/admin/firstrun');
   }
 
   // This function needs to accept `path` as an input, otherwise the links
@@ -34,8 +35,8 @@
   </span>
   {#if dev}
   <span id="dev-tools">
-    <button on:click={reload}>
-      Reload data
+    <button on:click={clear}>
+      Clear data
     </button>
   </span>
   {/if}

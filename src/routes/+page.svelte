@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Navbar, Markdown } from '$components';
   import { GroupCardGrid } from '$components/card';
-  import Background from '$components/Background.svelte';
 
   export let data: import('./$types').PageData;
 </script>

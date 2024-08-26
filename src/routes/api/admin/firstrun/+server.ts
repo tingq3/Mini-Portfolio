@@ -1,5 +1,5 @@
-import { json } from '@sveltejs/kit';
-import { dataDirContainsData, getDataDir } from '$lib/server/data/dataDir.js';
+import { error, json } from '@sveltejs/kit';
+import { dataDirContainsData, dataDirIsInit, getDataDir } from '$lib/server/data/dataDir.js';
 import { mkdir } from 'fs/promises';
 import { setupGitRepo } from '$lib/server/data/git.js';
 import { authSetup } from '$lib/server/auth.js';
@@ -10,6 +10,10 @@ import { invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 export async function POST({ request, cookies }) {
   const { repoUrl, branch }: { repoUrl: string | null, branch: string | null }
     = await request.json();
+
+  if (await dataDirIsInit()) {
+    error(400);
+  }
 
   // If we were given a repoUrl, set it up
   if (repoUrl) {

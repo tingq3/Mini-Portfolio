@@ -4,11 +4,19 @@ import fetch from 'cross-fetch';
 
 export type HttpVerb = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-dotenv.config();
+function getUrl() {
+  if (location) {
+    // Running in browser
+    return location.origin;
+  } else {
+    // Running in node
+    dotenv.config();
 
-export const PORT = process.env.PORT as string;
-export const HOST = process.env.HOST as string;
-export const URL = `http://${HOST}:${PORT}`;
+    const PORT = process.env.PORT as string;
+    const HOST = process.env.HOST as string;
+    return `http://${HOST}:${PORT}`;
+  }
+}
 
 /**
  * Fetch some data from the backend
@@ -26,6 +34,7 @@ export async function apiFetch(
   token?: string,
   bodyParams?: object
 ): Promise<Response> {
+  const URL = getUrl();
   if (bodyParams === undefined) {
     bodyParams = {};
   }
