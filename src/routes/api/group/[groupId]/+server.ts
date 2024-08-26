@@ -4,6 +4,7 @@ import { validateToken } from '$lib/server/auth';
 import { object, string, StructError, validate } from 'superstruct';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 import { validateId, validateName } from '$lib/validators';
+import { removeAllLinksToItem } from '$lib/server/links.js';
 
 export async function GET({ params, request, cookies }) {
   const groupId = params.groupId;
@@ -103,6 +104,10 @@ export async function DELETE({ params, request, cookies }) {
   if (!data.groups[groupId]) {
     return error(404, `Group with ID ${groupId} doesn't exist`);
   }
+
+  // Remove all links to each item in the group
+  await Promise.all(Object.keys(data.items[groupId]).map(
+    itemId => removeAllLinksToItem(data, groupId, itemId)));
 
   // Now delete the group
   await deleteGroup(groupId);

@@ -6,6 +6,7 @@ import { object, string, StructError, validate } from 'superstruct';
 import { getItemInfo, createItem, setItemInfo, ItemInfoFullStruct, deleteItem } from '$lib/server/data/item.js';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 import { validateId, validateName } from '$lib/validators.js';
+import { removeAllLinksToItem, removeLinkFromItem } from '$lib/server/links.js';
 
 export async function GET({ params, request, cookies }) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
@@ -110,7 +111,10 @@ export async function DELETE({ params, request, cookies }) {
     error(404, `Item ${itemId} does not exist in group ${groupId}`);
   }
 
-  // Now delete the group
+  // Remove all links to this item
+  await removeAllLinksToItem(data, groupId, itemId);
+
+  // Now delete the item
   await deleteItem(groupId, itemId);
   invalidatePortfolioGlobals();
   return json({}, { status: 200 });

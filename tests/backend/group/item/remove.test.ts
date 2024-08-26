@@ -1,6 +1,6 @@
 
 import { describe, it, beforeEach, expect } from 'vitest';
-import { makeGroup, makeItem, setup } from '../../helpers';
+import { createCustomItemProperties, makeGroup, makeItem, setup } from '../../helpers';
 import api from '$endpoints';
 import generateTestCases from '../removeCases';
 
@@ -39,7 +39,7 @@ describe('Other test cases', () => {
       .rejects.toMatchObject({ code: 401 });
   });
 
-  it("Rejects if the group doesn't exist", async () => {
+  it("Rejects if the item's group doesn't exist", async () => {
     await makeItem(token, group, 'item-id');
     await api.group.withId(group).remove(token);
     // Item was deleted too
@@ -47,5 +47,38 @@ describe('Other test cases', () => {
       .rejects.toMatchObject({ code: 404 });
   });
 
-  it.todo('Removes links to this item');
+  it('Removes links to this item', async () => {
+    await makeItem(token, group, 'item-1');
+    await makeGroup(token, 'group-2');
+    await makeItem(token, 'group-2', 'item-2');
+    // Create the link
+    await api.group.withId('group-2').item.withId('item-2').links.create(token, group, 'item-1');
+    // Removing item removes link from group-2/item-2
+    await api.group.withId(group).item.withId('item-1').remove(token);
+    await expect(api.group.withId('group-2').item.withId('item-2').info.get())
+      .resolves.toMatchObject({
+        // Links were removed
+        links: [],
+      });
+  });
+
+  /** Edge case: one-way links can be created by setting group info manually */
+  it('Removes one-way links to this item', async () => {
+    await makeItem(token, group, 'item-1');
+    await makeGroup(token, 'group-2');
+    await makeItem(token, 'group-2', 'item-2');
+    // Create the link
+    await api.group.withId('group-2').item.withId('item-2').info.set(
+      token,
+      createCustomItemProperties({
+        links: [[{ groupId: group, style: 'chip' }, ['item-1']]],
+      }),
+    );
+    await api.group.withId(group).item.withId('item-1').remove(token);
+    await expect(api.group.withId('group-2').item.withId('item-2').info.get())
+      .resolves.toMatchObject({
+        // Links were removed
+        links: [],
+      });
+  });
 });
