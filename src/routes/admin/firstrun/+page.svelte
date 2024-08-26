@@ -6,7 +6,8 @@
   import Error from '$components/modals/Error.svelte';
   import Modal from '$components/modals/Modal.svelte';
   import type { FirstRunCredentials } from '$lib/server/auth';
-    import { goto } from '$app/navigation';
+  import { token } from '$lib';
+  import { goto } from '$app/navigation';
 
   let repoUrl = '';
   let repoBranch = '';
@@ -17,6 +18,7 @@
     try {
       const res = await api.admin.firstrun(repoUrl, repoBranch || null);
       credentials = res.credentials;
+      token.set(credentials.token);
     } catch (e) {
       errorText = `${e}`;
       showLoading = false;
@@ -27,6 +29,7 @@
     try {
       const res = await api.admin.firstrun(null, null);
       credentials = res.credentials;
+      token.set(credentials.token);
     } catch (e) {
       errorText = `${e}`;
       showLoading = false;
