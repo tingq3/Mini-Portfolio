@@ -80,6 +80,9 @@ function formatCompletedRequest(startTime: number, method: string, path: string,
  * Adapted from: https://www.reddit.com/r/sveltejs/comments/xtbkpb
  */
 export const logger: Handle = async ({ event, resolve }) => {
+  // Only use spinners if connected to a tty to avoid creating a needlessly
+  // long log file
+  const isTty = process.stdout.isTTY;
   if (!spinners) {
     spinners = new Spinnies();
   }
@@ -87,18 +90,24 @@ export const logger: Handle = async ({ event, resolve }) => {
   const requestId = `${requestCount++}`;
   const requestStartTime = Date.now();
 
-  spinners.add(requestId, {
-    text: formatPartialRequest(requestStartTime, event.request.method, event.url.pathname),
-  });
+  if (isTty) {
+    spinners.add(requestId, {
+      text: formatPartialRequest(requestStartTime, event.request.method, event.url.pathname),
+    });
+  }
 
   const response = await resolve(event);
 
   const responseString = formatCompletedRequest(requestStartTime, event.request.method, event.url.pathname, response.status);
 
-  if (response.status < 500) {
-    spinners.succeed(requestId, { text: responseString });
+  if (isTty) {
+    if (response.status < 500) {
+      spinners.succeed(requestId, { text: responseString });
+    } else {
+      spinners.fail(requestId, { text: responseString });
+    }
   } else {
-    spinners.fail(requestId, { text: responseString });
+    console.log(responseString);
   }
   return response;
 };
