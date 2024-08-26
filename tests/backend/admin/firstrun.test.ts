@@ -7,13 +7,12 @@ import { it, test, describe, expect, vi, beforeEach } from 'vitest';
 import simpleGit, { CheckRepoActions } from 'simple-git';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { DATA_REPO_PATH as DATA_PATH } from '$env/static/private';
 import consts from '$lib/consts';
 
 // Git clone takes a while, increase the test timeout
 vi.setConfig({ testTimeout: 15_000 });
 
-const REPO_PATH = process.env.DATA_REPO_PATH;
+const REPO_PATH = process.env.DATA_REPO_PATH as string;
 
 const repo = () => simpleGit(REPO_PATH);
 
@@ -81,7 +80,7 @@ describe('POST /api/admin/repo', () => {
 
     test('config.local.json', async () => {
       const now = Math.floor(Date.now() / 1000);
-      const config = await readFile(path.join(DATA_PATH, 'config.local.json'), { encoding: 'utf-8' });
+      const config = await readFile(path.join(REPO_PATH, 'config.local.json'), { encoding: 'utf-8' });
 
       expect(JSON.parse(config)).toStrictEqual({
         auth: {
