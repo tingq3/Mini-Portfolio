@@ -12,7 +12,7 @@ export async function POST({ request, cookies }) {
     = await request.json();
 
   if (await dataDirIsInit()) {
-    error(400);
+    error(403);
   }
 
   // If we were given a repoUrl, set it up

@@ -1,11 +1,12 @@
 import dotenv from 'dotenv';
 import ApiError from './ApiError';
 import fetch from 'cross-fetch';
+import { browser } from '$app/environment';
 
 export type HttpVerb = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 function getUrl() {
-  if (location) {
+  if (browser) {
     // Running in browser
     return location.origin;
   } else {

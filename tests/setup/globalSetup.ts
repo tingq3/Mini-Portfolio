@@ -44,7 +44,9 @@ export async function setup() {
     try {
       await api.debug.echo('Wait for server startup');
       return;
-    } catch {}
+    } catch (e) {
+      // console.error(e);
+    }
   }
   // If we reach this point, the server failed to start in-time
   server.kill('SIGTERM');
