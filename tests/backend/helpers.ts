@@ -43,7 +43,12 @@ export function createCustomItemProperties(options: Partial<ItemInfoFull> = {}):
     description: 'Item description',
     color: '#aa00aa',
     links: [],
-    urls: {},
+    urls: {
+      docs: null,
+      repo: null,
+      site: null,
+    },
+    package: null,
     banner: null,
     icon: null,
   };

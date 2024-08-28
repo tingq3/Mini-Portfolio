@@ -30,7 +30,11 @@ export async function createLink(
   // If we reach this point, no links to that group have been made yet, create
   // one in the default style (chip)
   item.links.push([
-    { groupId: otherGroupId, style: 'chip' },
+    {
+      groupId: otherGroupId,
+      style: 'chip',
+      title: globals.groups[otherGroupId].info.name
+    },
     [otherItemId],
   ]);
 

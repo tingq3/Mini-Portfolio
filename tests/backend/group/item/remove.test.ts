@@ -70,7 +70,7 @@ describe('Other test cases', () => {
     // Create the link
     await api.group.withId('group-2').item.withId('item-2').info.set(
       createCustomItemProperties({
-        links: [[{ groupId: group, style: 'chip' }, [item]]],
+        links: [[{ groupId: group, style: 'chip', title: group }, [item]]],
       }),
     );
     await api.group.withId(group).item.withId(item).remove();
