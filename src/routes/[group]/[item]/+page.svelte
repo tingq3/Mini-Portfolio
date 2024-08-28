@@ -2,7 +2,7 @@
   import { Navbar, Markdown } from '$components';
   import { IconCard, RepoCard, PackageCard, CardList } from '$components/card';
   import Background from '$components/Background.svelte';
-    import Paper from '$components/Paper.svelte';
+  import Paper from '$components/Paper.svelte';
   // import AsciinemaPlayer from "$components";
 
   export let data: import('./$types').PageData;
@@ -18,7 +18,8 @@
     { url: data.groupId, txt: groupData.info.name },
     { url: data.itemId, txt: itemData.info.name },
   ]}
-  globals={data.globals}
+  config={data.globals.config}
+  loggedIn={data.loggedIn}
 />
 
 <main>

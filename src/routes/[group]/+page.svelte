@@ -12,7 +12,8 @@
 
 <Navbar
   path={[{ url: data.groupId, txt: groupData.info.name }]}
-  globals={data.globals}
+  config={data.globals.config}
+  loggedIn={data.loggedIn}
 />
 
 <main>
