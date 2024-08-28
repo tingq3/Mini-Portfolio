@@ -2,7 +2,6 @@
   import { marked } from 'marked';
   import hljs from 'highlight.js';
   import 'highlight.js/styles/stackoverflow-light.css';
-  // import { onMount } from 'svelte';
 
   export let source: string;
 

@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { Navbar, Markdown } from '$components';
+  import { Navbar } from '$components';
   import Background from '$components/Background.svelte';
   import { GroupCardGrid } from '$components/card';
+  import EditableMarkdown from '$components/markdown';
   import Paper from '$components/Paper.svelte';
+  import api from '$endpoints';
 
   export let data: import('./$types').PageData;
 </script>
@@ -20,7 +22,11 @@
   <div id="readme">
     <Paper>
       <div id="info-container">
-        <Markdown source={data.globals.readme} />
+        <EditableMarkdown
+          source={data.globals.readme}
+          editable={data.loggedIn}
+          onSave={text => api().readme.set(text)}
+        />
       </div>
     </Paper>
   </div>
