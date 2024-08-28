@@ -7,7 +7,8 @@ const DEFAULT_README = `
 Welcome to your brand new data-driven portfolio website! You're reading the
 site's \`README.md\`, which is shown as the site's landing page.
 
-Go ahead and edit this file to give your users a nice landing page.
+Go ahead and edit this file to give your users a nice landing page. You may
+want to [learn Markdown](https://www.markdownguide.org/basic-syntax/).
 `;
 
 /** Path to README.md */
