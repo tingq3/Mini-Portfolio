@@ -6,7 +6,6 @@
   import Error from '$components/modals/Error.svelte';
   import Modal from '$components/modals/Modal.svelte';
   import type { FirstRunCredentials } from '$lib/server/auth';
-  import { token } from '$lib';
   import { goto } from '$app/navigation';
 
   let repoUrl = '';
@@ -18,7 +17,6 @@
     try {
       const res = await api().admin.firstrun(repoUrl, repoBranch || null);
       credentials = res.credentials;
-      token.set(credentials.token);
     } catch (e) {
       errorText = `${e}`;
       showLoading = false;
@@ -29,10 +27,22 @@
     try {
       const res = await api().admin.firstrun(null, null);
       credentials = res.credentials;
-      token.set(credentials.token);
     } catch (e) {
       errorText = `${e}`;
-      showLoading = false;
+    }
+  }
+
+  async function onSubmit(e: SubmitEvent) {
+    const submitter = e.submitter?.id;
+    switch (submitter) {
+      case 'submit-main':
+        await submitMain();
+        break;
+      case 'submit-no-git':
+        await submitNoGit();
+        break;
+      default:
+        console.error('Submitter not recognised!');
     }
   }
 
@@ -53,7 +63,7 @@
         <h2>Let's get set up!</h2>
       </div>
 
-      <form>
+      <form on:submit={onSubmit}>
         <h3>Data repository URL</h3>
         <input type="text" id="repo-url" bind:value={repoUrl} placeholder="git@github.com:MaddyGuthridge/portfolio.git" />
         <p>
@@ -71,7 +81,7 @@
         <p>If you want to use a specific branch, you can enter it above.</p>
 
         <h3>Ready to get started?</h3>
-        <input type="submit" id="submit-main" value="Let's go!" on:click={submitMain} />
+        <input type="submit" id="submit-main" value="Let's go!" />
 
         <h3>Don't want to use a git repo?</h3>
         <p>
@@ -79,7 +89,7 @@
           backed up. But if you're just testing Maddyfolio, it's much quicker
           to get started without a git repo.
         </p>
-        <input type="submit" id="submit-no-git" value="I don't want to use git" on:click={submitNoGit} />
+        <input type="submit" id="submit-no-git" value="I don't want to use git" />
       </form>
     </main>
   </Paper>
