@@ -5,7 +5,7 @@ import { setupGitRepo } from '$lib/server/data/git.js';
 import { authSetup } from '$lib/server/auth.js';
 import { initConfig } from '$lib/server/data/config.js';
 import { initReadme } from '$lib/server/data/readme.js';
-import { invalidatePortfolioGlobals } from '$lib/server/data/index.js';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 
 export async function POST({ request, cookies }) {
   const { repoUrl, branch }: { repoUrl: string | null, branch: string | null }
@@ -13,6 +13,13 @@ export async function POST({ request, cookies }) {
 
   if (await dataDirIsInit()) {
     error(403);
+  }
+
+  if (repoUrl === '') {
+    error(400, 'Repo URL must be a non-empty string or `null`');
+  }
+  if (branch === '') {
+    error(400, 'Branch must be a non-empty string or `null`');
   }
 
   // If we were given a repoUrl, set it up
@@ -40,7 +47,14 @@ export async function POST({ request, cookies }) {
     await initReadme();
   }
 
+  // Attempt to forcefully load global data
   invalidatePortfolioGlobals();
+  try {
+    await getPortfolioGlobals();
+  } catch (e) {
+    console.log(e);
+    error(400, `Error loading data: ${e}`);
+  }
 
   return json({ credentials, firstTime }, { status: 200 });
 }

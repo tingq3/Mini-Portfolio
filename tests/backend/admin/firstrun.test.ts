@@ -48,6 +48,18 @@ describe('POST /api/admin/repo', () => {
         api().admin.firstrun(gitRepos.INVALID, null)
       ).rejects.toMatchObject({ code: 400 });
     });
+
+    it('Gives an error if repo URL is an empty string', async () => {
+      await expect(
+        api().admin.firstrun('', null)
+      ).rejects.toMatchObject({ code: 400 });
+    });
+
+    it('Gives an error if branch is an empty string', async () => {
+      await expect(
+        api().admin.firstrun(gitRepos.EMPTY, '')
+      ).rejects.toMatchObject({ code: 400 });
+    });
   });
 
   it('Gives auth credentials on success', async () => {
