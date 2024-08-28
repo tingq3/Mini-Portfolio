@@ -3,13 +3,20 @@
   import { goto } from '$app/navigation';
   import api from '$endpoints';
   import type { ConfigJson } from '$lib/server/data/config';
-    import LoginButton from './LoginButton.svelte';
+  import Separator from '$components/Separator.svelte';
 
   export let path: { url: string, txt: string }[];
   export let config: ConfigJson;
   /** Whether the user is logged in. Set to undefined if auth is disabled */
   export let loggedIn: boolean | undefined;
 
+  /** Log out, then reload the page */
+  async function logOut() {
+    await api().admin.auth.logout();
+    location.reload();
+  }
+
+  /** Clear all data, and take the user to the firstrun page */
   async function clear() {
     await api().debug.clear();
     await goto('/admin/firstrun');
@@ -21,6 +28,7 @@
     return path.slice(0, i + 1).map(p => p.url).join('/');
   }
 </script>
+
 <nav>
   <span style:grid-area="navigator">
     {#if path.length === 0}
@@ -36,23 +44,30 @@
       </h1>
     {/if}
   </span>
-  {#if dev}
-  <span id="dev-tools">
-    {#if loggedIn !== undefined}
-      <LoginButton {loggedIn} />
+
+  <!-- Control buttons -->
+  <span id="control-buttons">
+    {#if loggedIn}
+      <button> New group </button>
+      <button on:click={() => goto('/admin')}> Admin </button>
+      <button on:click={logOut}> Log out </button>
+    {:else if loggedIn !== undefined}
+      <!-- Only include a login button if logging in is enabled -->
+      <button on:click={() => goto('/admin/login')}> Log in </button>
     {/if}
-    <button on:click={clear}>
-      Clear data
-    </button>
+    <!-- In dev mode, add a quick shortcut to delete everything -->
+    {#if dev}
+      <Separator />
+      <button on:click={clear}> Clear data </button>
+    {/if}
   </span>
-  {/if}
 </nav>
 
 <style>
   nav {
     display: grid;
-    grid-template-columns: 1fr auto 100px;
-    grid-template-areas: "navigator empty dev-tools";
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: "navigator empty control-buttons";
   }
 
   a {
@@ -67,21 +82,22 @@
     font-size: 3em;
   }
 
-  #dev-tools {
+  #control-buttons {
     display: flex;
     align-items: center;
     justify-content: center;
-    grid-area: dev-tools;
+    grid-area: control-buttons;
+    margin-right: 20px;
   }
-  #dev-tools > button {
-    background-color: rgb(255, 157, 255);
-    border-radius: 10px;
-    border-color: rgb(214, 79, 255);
-    border-style: solid;
+  #control-buttons > button {
+    /* margin: 10px; */
     padding: 10px;
+    background-color: transparent;
+    border-radius: 5px;
+    border: none;
   }
-  #dev-tools > button:hover {
+  #control-buttons > button:hover {
     cursor: pointer;
-    background-color: rgb(255, 109, 255);
+    background-color: rgba(124, 124, 124, 0.253);
   }
 </style>

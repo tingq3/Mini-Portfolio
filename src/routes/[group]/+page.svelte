@@ -2,6 +2,7 @@
   import { Navbar, Markdown } from '$components';
   import { ItemCardGrid } from '$components/card';
   import Background from '$components/Background.svelte';
+    import Paper from '$components/Paper.svelte';
 
   export let data: import('./$types').PageData;
 
@@ -18,9 +19,11 @@
 
 <main>
   <div id="readme">
-    <div>
-      <Markdown source={groupData.readme} />
-    </div>
+    <Paper>
+      <div id="info-container">
+        <Markdown source={groupData.readme} />
+      </div>
+    </Paper>
   </div>
 
   <!-- TODO: Implement filtering -->
@@ -43,9 +46,12 @@
   }
   #readme {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  #readme > div {
-    margin: 5px;
+  #info-container {
+    padding: 20px;
   }
   /* #filters {
     width: 100%;

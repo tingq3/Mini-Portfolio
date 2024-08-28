@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Navbar, Markdown } from '$components';
   import { GroupCardGrid } from '$components/card';
+    import Paper from '$components/Paper.svelte';
 
   export let data: import('./$types').PageData;
 </script>
@@ -13,9 +14,11 @@
 
 <main>
   <div id="readme">
-    <div>
-      <Markdown source={data.globals.readme} />
-    </div>
+    <Paper>
+      <div id="info-container">
+        <Markdown source={data.globals.readme} />
+      </div>
+    </Paper>
   </div>
 
   <!-- List all entry cards -->
@@ -33,9 +36,12 @@
   }
   #readme {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  #readme > div {
-    margin: 5px;
+  #info-container {
+    padding: 20px;
   }
   /* #filters {
     width: 100%;
