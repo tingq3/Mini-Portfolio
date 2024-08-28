@@ -3,6 +3,8 @@
   import { ItemCardGrid } from '$components/card';
   import Background from '$components/Background.svelte';
   import Paper from '$components/Paper.svelte';
+    import EditableMarkdown from '$components/markdown';
+    import api from '$endpoints';
 
   export let data: import('./$types').PageData;
 
@@ -23,7 +25,11 @@
   <div id="readme">
     <Paper>
       <div id="info-container">
-        <Markdown source={groupData.readme} />
+        <EditableMarkdown
+          source={groupData.readme}
+          editable={data.loggedIn}
+          onSave={text => api().group.withId(data.groupId).readme.set(text)}
+        />
       </div>
     </Paper>
   </div>
