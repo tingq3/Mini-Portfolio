@@ -7,6 +7,8 @@
   /** Whether the editing mode should be visible */
   export let editable: boolean;
 
+  const originalSource = source;
+
   /** Callback to save the markdown contents */
   export let onSave: (newSource: string) => Promise<any>;
 
@@ -17,6 +19,11 @@
     await onSave(source);
     // TODO: Error handling
   }
+
+  function cancelEditing() {
+    source = originalSource;
+    isEditing = false;
+  }
 </script>
 
 {#if !editable}
@@ -25,6 +32,7 @@
   {#if isEditing}
     <div class="edit-container">
       <button on:click={finishEditing}>Done</button>
+      <button on:click={cancelEditing}>Cancel</button>
     </div>
     <MarkdownEditor bind:source={source} on:submit={finishEditing} />
   {:else}
@@ -39,6 +47,7 @@
   .edit-container {
     display: flex;
     flex-direction: row-reverse;
+    gap: 10px;
   }
   button {
     height: 2rem;
