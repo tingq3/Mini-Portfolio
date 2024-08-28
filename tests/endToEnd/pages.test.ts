@@ -2,14 +2,13 @@
 
 import { beforeEach, expect, test } from 'vitest';
 import endpoints from './endpoints';
-import api from '$endpoints';
+import type { ApiClient } from '$endpoints';
 import { setup } from '../backend/helpers';
 
-let token: string;
+let api: ApiClient;
 
 beforeEach(async () => {
-  const res = await setup();
-  token = res.token;
+  api = (await setup()).api;
 });
 
 test('Homepage loads', async () => {
@@ -17,12 +16,12 @@ test('Homepage loads', async () => {
 });
 
 test('Group page loads', async () => {
-  await api.group.withId('my-group').create(token, 'My group', 'My group');
+  await api.group.withId('my-group').create('My group', 'My group');
   await expect(endpoints.group('my-group')).resolves.toStrictEqual(expect.any(String));
 });
 
 test('Item page loads', async () => {
-  await api.group.withId('my-group').create(token, 'My group', 'My group');
-  await api.group.withId('my-group').item.withId('my-item').create(token, 'My item', 'My item');
+  await api.group.withId('my-group').create('My group', 'My group');
+  await api.group.withId('my-group').item.withId('my-item').create('My item', 'My item');
   await expect(endpoints.item('my-group', 'my-item')).resolves.toStrictEqual(expect.any(String));
 });

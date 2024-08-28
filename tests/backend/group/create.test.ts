@@ -1,32 +1,32 @@
 
 import { beforeEach, describe, expect, it, test } from 'vitest';
 import { setup } from '../helpers';
-import api from '$endpoints';
+import api, { type ApiClient } from '$endpoints';
 import type { GroupInfo } from '$lib/server/data/group';
 import generateTestCases from './creationCases';
 
 // Generate repeated test cases between groups and items
 describe('Generated test cases', () => {
-  let token: string;
+  let api: ApiClient;
 
   generateTestCases(
     'group',
     async () => {
-      token = (await setup()).token;
+      api = (await setup()).api;
     },
     async (id: string, name: string, description: string) => {
-      await api.group.withId(id).create(token, name, description);
+      await api.group.withId(id).create(name, description);
     }
   );
 });
 
 describe('Sets up basic group properties', async () => {
-  let token: string;
+  let api: ApiClient;
   const groupId = 'my-group';
   let info: GroupInfo;
   beforeEach(async () => {
-    token = (await setup()).token;
-    await api.group.withId(groupId).create(token, 'Group name', 'Group description');
+    api = (await setup()).api;
+    await api.group.withId(groupId).create('Group name', 'Group description');
     info = await api.group.withId(groupId).info.get();
   });
 
@@ -50,7 +50,7 @@ describe('Other test cases', () => {
   });
 
   it('Fails for invalid tokens', async () => {
-    await expect(api.group.withId('id').create('invalid token', 'My group', ''))
+    await expect(api('invalid').group.withId('id').create('My group', ''))
       .rejects.toMatchObject({ code: 401 });
   });
 });

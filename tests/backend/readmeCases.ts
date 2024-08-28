@@ -22,7 +22,7 @@ export default function generateTestCases<T>(
     { name: 'Get readme', fn: () => getReadme() },
     { name: 'Set readme', fn: () => setReadme('New readme') },
   ])('Errors if the server is not set up ($name)', async ({ fn }) => {
-    await api.debug.clear();
+    await api().debug.clear();
     await expect(fn())
       .rejects.toMatchObject({ code: 400 });
   });

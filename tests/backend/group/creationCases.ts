@@ -63,7 +63,7 @@ export default function generateTestCases(
   });
 
   it('Fails if the data is not set up', async () => {
-    await api.debug.clear();
+    await api().debug.clear();
     await expect(create('id', 'Example', ''))
       .rejects.toMatchObject({ code: 400 });
   });

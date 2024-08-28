@@ -37,7 +37,7 @@ export default function generateTestCases<T>(
 
   it("Gives an error if the server isn't initialized", async () => {
     await create('example');
-    await api.debug.clear();
+    await api().debug.clear();
     await expect(remove('example'))
       .rejects.toMatchObject({ code: 400 });
   });

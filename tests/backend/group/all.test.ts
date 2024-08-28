@@ -5,13 +5,13 @@ import api from '$endpoints';
 import gitRepos from '../gitRepos';
 
 test('No groups exist by default', async () => {
-  await setup();
+  const { api } = await setup();
   await expect(api.group.all()).resolves.toStrictEqual({});
 });
 
 it('Lists existing groups', async () => {
-  const { token } = await setup();
-  await makeGroup(token, 'my-group');
+  const { api } = await setup();
+  await makeGroup(api, 'my-group');
   await expect(api.group.all()).resolves.toStrictEqual({
     'my-group': expect.objectContaining({
       name: 'my-group',
@@ -21,10 +21,10 @@ it('Lists existing groups', async () => {
 });
 
 it('Ignores the .git directory', { timeout: 15_000 }, async () => {
-  await api.admin.firstrun(gitRepos.TEST_REPO_RW, null);
-  await expect(api.group.all()).resolves.toStrictEqual({});
+  await api().admin.firstrun(gitRepos.TEST_REPO_RW, null);
+  await expect(api().group.all()).resolves.toStrictEqual({});
 });
 
 it("Errors when the server hasn't been set up", async () => {
-  await expect(api.group.all()).rejects.toMatchObject({ code: 400 });
+  await expect(api().group.all()).rejects.toMatchObject({ code: 400 });
 });
