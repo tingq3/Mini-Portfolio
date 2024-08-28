@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Navbar, Markdown } from '$components';
+  import Background from '$components/Background.svelte';
   import { GroupCardGrid } from '$components/card';
   import Paper from '$components/Paper.svelte';
 
@@ -12,6 +13,8 @@
   loggedIn={data.loggedIn}
   createGroupButton
 />
+
+<Background color={data.globals.config.color} />
 
 <main>
   <div id="readme">

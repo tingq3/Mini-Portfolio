@@ -17,7 +17,7 @@
   }
 </script>
 
-<Background color="#aa00aa"></Background>
+<Background color={data.globals.config.color}></Background>
 
 <Navbar
   config={data.globals.config}
