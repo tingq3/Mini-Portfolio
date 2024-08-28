@@ -5,6 +5,7 @@ import { object, string, validate } from 'superstruct';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 import { validateId, validateName } from '$lib/validators';
 import { removeAllLinksToItem } from '$lib/server/links.js';
+import { setConfig } from '$lib/server/data/config.js';
 
 export async function GET({ params, request, cookies }) {
   const groupId = params.groupId;
@@ -38,6 +39,8 @@ export async function POST({ params, request, cookies }) {
   }
 
   await createGroup(groupId, name, description);
+  data.config.listedGroups.push(groupId);
+  await setConfig(data.config);
   invalidatePortfolioGlobals();
 
   return json({}, { status: 200 });

@@ -65,6 +65,14 @@ describe('Other test cases', async () => {
       .rejects.toMatchObject({ code: 404 });
   });
 
+  test('New items are listed in their group by default', async () => {
+    await api.group.withId(groupId).item.withId('item-id').create('Item name', 'Item description');
+    // Item should be listed
+    await expect(api.group.withId(groupId).info.get()).resolves.toMatchObject({
+      listedItems: ['item-id']
+    });
+  });
+
   genTokenTests(
     () => api,
     api => api.group.withId(groupId).item.withId('item-id').create('My item', ''),

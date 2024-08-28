@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import { getGroupInfo } from '$lib/server/data/group';
+import { getGroupInfo, setGroupInfo } from '$lib/server/data/group';
 import { validateTokenFromRequest } from '$lib/server/auth';
 import { object, string, validate } from 'superstruct';
 import { createItem, setItemInfo, ItemInfoFullStruct, deleteItem } from '$lib/server/data/item.js';
@@ -45,6 +45,10 @@ export async function POST({ params, request, cookies }) {
   }
 
   await createItem(groupId, itemId, name, description);
+
+  const groupInfo = data.groups[groupId].info;
+  groupInfo.listedItems.push(itemId);
+  await setGroupInfo(groupId, groupInfo);
   invalidatePortfolioGlobals();
 
   return json({}, { status: 200 });

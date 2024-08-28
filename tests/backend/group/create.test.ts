@@ -55,4 +55,12 @@ describe('Other test cases', () => {
     () => api,
     api => api.group.withId(groupId).create('Group name', 'Group description'),
   );
+
+  test('New groups are listed by default', async () => {
+    await api.group.withId(groupId).create('Group name', 'Group description');
+    // Group should be listed
+    await expect(api.admin.config.get()).resolves.toMatchObject({
+      listedGroups: [groupId]
+    });
+  });
 });
