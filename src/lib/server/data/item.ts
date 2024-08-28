@@ -56,6 +56,7 @@ export const LinksArray = array(
     object({
       groupId: string(),
       style: LinkStyleStruct,
+      title: string(),
     }),
     array(string()),
   ])
@@ -71,17 +72,17 @@ export const ItemInfoFullStruct = intersection([
     /** URLs associated with the label */
     urls: object({
       /** URL of the source repository of the label */
-      repo: optional(RepoInfoStruct),
+      repo: nullable(RepoInfoStruct),
 
       /** URL of the site demonstrating the label */
-      site: optional(string()),
+      site: nullable(string()),
 
       /** URL of the documentation site for the label */
-      docs: optional(string()),
+      docs: nullable(string()),
     }),
 
     /** Information about the package distribution of the label */
-    package: optional(PackageInfoStruct),
+    package: nullable(PackageInfoStruct),
   }),
 ]);
 
@@ -173,7 +174,12 @@ export async function createItem(groupId: string, itemId: string, name: string, 
     // TODO: Generate a random color for the new item
     color: '#aa00aa',
     links: [],
-    urls: {},
+    urls: {
+      repo: null,
+      site: null,
+      docs: null
+    },
+    package: null,
     icon: null,
     banner: null,
   });

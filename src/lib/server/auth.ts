@@ -184,7 +184,7 @@ export function hashAndSalt(salt: string, password: string): string {
  * This is responsible for generating and storing a secure password, thereby
  * creating the default "admin" account.
  */
-export async function authSetup(cookies: Cookies): Promise<FirstRunCredentials> {
+export async function authSetup(cookies?: Cookies): Promise<FirstRunCredentials> {
   const username = 'admin';
 
   // generate password using 4 random dictionary words

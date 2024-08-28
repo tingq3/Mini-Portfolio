@@ -27,6 +27,19 @@ export const ConfigJsonStruct = object({
 /** Main configuration for the portfolio, `config.json` */
 export type ConfigJson = Infer<typeof ConfigJsonStruct>;
 
+/**
+ * Return the version of the configuration. Used to determine if a migration is
+ * necessary.
+ *
+ * This does not validate any of the data.
+ */
+export async function getConfigVersion(): Promise<string> {
+  const data = JSON.parse(await readFile(CONFIG_JSON, { encoding: 'utf-8' }));
+
+  // Note: v0.1.0 did not have a version number in the file
+  return data.version ?? '0.1.0';
+}
+
 /** Return the configuration, stored in `/data/config.json` */
 export async function getConfig(): Promise<ConfigJson> {
   const data = await readFile(CONFIG_JSON, { encoding: 'utf-8' });
