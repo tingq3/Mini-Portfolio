@@ -10,6 +10,7 @@
   import Navbar from '$components/navbar';
   import blankConfig from '$lib/blankConfig';
     import CopyButton from '$components/CopyButton.svelte';
+    import consts from '$lib/consts';
 
   let repoUrl = '';
   let repoBranch = '';
@@ -89,8 +90,8 @@
         <h3>Don't want to use a git repo?</h3>
         <p>
           Using a git repo is a great idea if you want your data to be  safely
-          backed up. But if you're just testing Maddyfolio, it's much quicker
-          to get started without a git repo.
+          backed up. But if you're just testing ${consts.APP_NAME}, it's much
+          quicker to get started without a git repo.
         </p>
         <input type="submit" id="submit-no-git" value="I don't want to use git" />
       </form>

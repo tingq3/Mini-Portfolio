@@ -1,10 +1,10 @@
-# Portfolio
+# Minifolio
 # Example docker-compose.yml
 # Adjust as required
 services:
   portfolio:
-    image: maddyguthridge/portfolio
-    hostname: portfolio
+    image: maddyguthridge/minifolio
+    hostname: minifolio
     ports:
       - 127.0.0.1:3000:3000/tcp
     volumes:
