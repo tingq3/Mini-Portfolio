@@ -30,7 +30,7 @@
   <Paper>
     {#if itemData.info.banner}
       <img
-        src="/{data.itemId}/{data.groupId}/{itemData.info.banner}"
+        src="/{data.groupId}/{data.itemId}/{itemData.info.banner}"
         alt="Banner for {itemData.info.name}"
         class="banner-image"
       />
