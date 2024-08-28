@@ -32,6 +32,7 @@ import type { PackageInfo } from '../itemPackage';
 import { LinksArray, listItems, setItemInfo } from '../item';
 import type { Infer } from 'superstruct';
 import { version } from '$app/environment';
+import { setupGitignore } from '../git';
 
 export default async function migrate(dataDir: string) {
   console.log(`Begin data migration v0.1.0 -> ${version}`);
@@ -40,14 +41,17 @@ export default async function migrate(dataDir: string) {
 
   // For each group
   for (const groupId of await listGroups()) {
-    // Migrate each item
+    // Migrate the group info
+    await groupInfo(dataDir, groupId);
+    // Then migrate each item
     for (const itemId of await listItems(groupId)) {
       await itemInfo(dataDir, groupId, itemId);
     }
-    // Then migrate the group info
-    await groupInfo(dataDir, groupId);
   }
-  console.log('Data migration complete');
+  // Set up gitignore
+  console.log('  .gitignore');
+  await setupGitignore();
+  console.log('Data migration complete!');
 }
 
 /** Migrate config.json */
@@ -100,7 +104,7 @@ async function itemInfo(dataDir: string, groupId: string, itemId: string) {
 
   const links: Infer<typeof LinksArray> = [];
 
-  if (item.links) {
+  if (item.associations) {
     for (const linkedGroup of Object.keys(item.associations)) {
       links.push([{ groupId: linkedGroup, title: linkedGroup, style: 'chip' }, item.associations[linkedGroup]]);
     }

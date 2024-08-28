@@ -1,8 +1,12 @@
 import { error } from '@sveltejs/kit';
 import { dataDirContainsData, dataDirIsInit, getDataDir } from './dataDir';
 import simpleGit from 'simple-git';
-import { readdir } from 'fs/promises';
+import { appendFile, readdir } from 'fs/promises';
 import { rimraf } from 'rimraf';
+
+const DEFAULT_GITIGNORE = `
+config.local.json
+`.trimStart();
 
 /** Set up the data dir given a git repo URL and branch name */
 export async function setupGitRepo(repo: string, branch: string | null) {
@@ -34,5 +38,13 @@ export async function setupGitRepo(repo: string, branch: string | null) {
         'The repo directory is non-empty, but does not contain a config.json file'
       );
     }
+  } else {
+    // Empty repo, setup up gitignore
+    await setupGitignore();
   }
+}
+
+/** Set up a default gitignore */
+export async function setupGitignore() {
+  await appendFile(`${getDataDir()}/.gitignore`, DEFAULT_GITIGNORE, { encoding: 'utf-8' });
 }

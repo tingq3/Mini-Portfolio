@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { dataDirContainsData, dataDirIsInit, getDataDir } from '$lib/server/data/dataDir.js';
 import { mkdir } from 'fs/promises';
-import { setupGitRepo } from '$lib/server/data/git.js';
+import { setupGitignore, setupGitRepo } from '$lib/server/data/git.js';
 import { authSetup } from '$lib/server/auth.js';
 import { initConfig } from '$lib/server/data/config.js';
 import { initReadme } from '$lib/server/data/readme.js';
@@ -28,6 +28,8 @@ export async function POST({ request, cookies }) {
   } else {
     // Otherwise, just create the data dir empty
     await mkdir(getDataDir());
+    // Setup a gitignore just in case
+    await setupGitignore();
   }
 
   // Now set up auth
