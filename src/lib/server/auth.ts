@@ -136,6 +136,16 @@ export async function validateTokenFromRequest(req: { request: Request, cookies:
   return token;
 }
 
+/** Return whether the request is authorized (has a token) */
+export async function isRequestAuthorized(req: { request: Request, cookies: Cookies }): Promise<boolean> {
+  try {
+    await validateTokenFromRequest(req);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** If the given token is invalid, throw a redirect to the given page */
 export async function redirectOnInvalidToken(req: { request: Request, cookies: Cookies }, url: string) {
   await validateTokenFromRequest(req).catch(() => {}).catch(e => redirect(303, url));

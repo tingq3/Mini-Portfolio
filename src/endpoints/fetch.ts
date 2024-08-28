@@ -1,14 +1,14 @@
 import dotenv from 'dotenv';
 import ApiError from './ApiError';
-import fetch from 'cross-fetch';
+// import fetch from 'cross-fetch';
 import { browser } from '$app/environment';
 
 export type HttpVerb = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 function getUrl() {
   if (browser) {
-    // Running in browser
-    return location.origin;
+    // Running in browser (request to whatever origin we are running in)
+    return '';
   } else {
     // Running in node
     dotenv.config();
@@ -24,7 +24,8 @@ function getUrl() {
  *
  * @param method Type of request
  * @param route route to request to
- * @param token auth token
+ * @param token auth token (note this is only needed if the token wasn't set in
+ * the cookies)
  * @param bodyParams request body or params
  *
  * @returns promise of the resolved data.
@@ -40,11 +41,13 @@ export async function apiFetch(
     bodyParams = {};
   }
 
-  const headers = new Headers(
-    token !== undefined
-      ? { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
-      : { 'Content-Type': 'application/json' }
-  );
+  const tokenHeader = token ? { Authorization: `Bearer ${token}` } : {};
+  const contentType = ['POST', 'PUT'].includes(method) ? { 'Content-Type': 'application/json' } : {};
+
+  const headers = new Headers({
+    ...tokenHeader,
+    ...contentType,
+  } as Record<string, string>);
 
   let url: string;
   let body: string | null; // JSON string
@@ -68,6 +71,9 @@ export async function apiFetch(
       method,
       body,
       headers,
+      // Include credentials so that the token cookie is sent with the request
+      // https://stackoverflow.com/a/76562495/6335363
+      credentials: 'same-origin',
     });
   } catch (err) {
     // Likely a network issue

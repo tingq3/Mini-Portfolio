@@ -7,7 +7,8 @@
 
 <Navbar
   path={[]}
-  globals={data.globals}
+  config={data.globals.config}
+  loggedIn={data.loggedIn}
 />
 
 <main>

@@ -1,11 +1,12 @@
 <script lang="ts">
-  import Navbar from '$components/Navbar.svelte';
+  import Navbar from '$components/navbar/Navbar.svelte';
   export let data: import('./$types').PageData;
 </script>
 
 <Navbar
   path={[{ txt: 'Admin', url: 'admin' }]}
-  globals={data.globals}
+  config={data.globals.config}
+  loggedIn={true}
 />
 
 <h1>Admin panel (todo)</h1>

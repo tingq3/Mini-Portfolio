@@ -1,7 +1,7 @@
 <script lang="ts">
   import api from '$endpoints';
   import Background from '$components/Background.svelte';
-  import Navbar from '$components/Navbar.svelte';
+  import Navbar from '$components/navbar/Navbar.svelte';
   import Paper from '$components/Paper.svelte';
   import { goto } from '$app/navigation';
 
@@ -20,7 +20,8 @@
 <Background color="#aa00aa"></Background>
 
 <Navbar
-  globals={data.globals}
+  config={data.globals.config}
+  loggedIn={false}
   path={[
     { txt: 'Admin', url: 'admin' },
     { txt: 'Login', url: 'login' },

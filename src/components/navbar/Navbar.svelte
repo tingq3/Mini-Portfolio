@@ -1,15 +1,17 @@
 <script lang="ts">
   import { dev } from '$app/environment';
-    import { goto } from '$app/navigation';
-    import api from '$endpoints';
-  import { token, type PortfolioGlobals } from '$lib';
+  import { goto } from '$app/navigation';
+  import api from '$endpoints';
+  import type { ConfigJson } from '$lib/server/data/config';
+    import LoginButton from './LoginButton.svelte';
 
   export let path: { url: string, txt: string }[];
-  export let globals: PortfolioGlobals;
+  export let config: ConfigJson;
+  /** Whether the user is logged in. Set to undefined if auth is disabled */
+  export let loggedIn: boolean | undefined;
 
   async function clear() {
     await api().debug.clear();
-    token.set(undefined);
     await goto('/admin/firstrun');
   }
 
@@ -22,10 +24,10 @@
 <nav>
   <span style:grid-area="navigator">
     {#if path.length === 0}
-      <h1>{globals.config.siteName} / Portfolio</h1>
+      <h1>{config.siteName} / Portfolio</h1>
     {:else}
       <h1>
-        <a href="/">{globals.config.siteName}</a> /
+        <a href="/">{config.siteName}</a> /
         {#each path.slice(0, -1) as p, i}
           <a href="/{pathTo(path, i)}">{p.txt}</a>
           {'/ '}
@@ -36,6 +38,9 @@
   </span>
   {#if dev}
   <span id="dev-tools">
+    {#if loggedIn !== undefined}
+      <LoginButton {loggedIn} />
+    {/if}
     <button on:click={clear}>
       Clear data
     </button>
