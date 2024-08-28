@@ -8,6 +8,7 @@ import simpleGit, { CheckRepoActions } from 'simple-git';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import consts from '$lib/consts';
+import type { FirstRunCredentials } from '$lib/server/auth';
 
 // Git clone takes a while, increase the test timeout
 vi.setConfig({ testTimeout: 15_000 });
@@ -19,7 +20,7 @@ const repo = () => simpleGit(REPO_PATH);
 describe('POST /api/admin/repo', () => {
   describe('git', () => {
     it('Clones repo to the default branch when URL is provided', async () => {
-      await api.admin.firstrun(gitRepos.TEST_REPO_RW, null);
+      await api().admin.firstrun(gitRepos.TEST_REPO_RW, null);
       await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT)).resolves.toStrictEqual(true);
       // Default branch for this repo is 'main'
       await expect(repo().status()).resolves.toMatchObject({ current: 'main' });
@@ -27,30 +28,30 @@ describe('POST /api/admin/repo', () => {
 
     it("Gives an error if the repo doesn't contain a config.json, but isn't empty", async () => {
       await expect(
-        api.admin.firstrun(gitRepos.NON_PORTFOLIO, null)
+        api().admin.firstrun(gitRepos.NON_PORTFOLIO, null)
       ).rejects.toMatchObject({ code: 400 });
     }, 10000);
 
     it("Doesn't give an error if the repository is entirely empty", async () => {
-      await api.admin.firstrun(gitRepos.EMPTY, null);
+      await api().admin.firstrun(gitRepos.EMPTY, null);
       await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT)).resolves.toStrictEqual(true);
     });
 
     it('Checks out a branch when one is given', async () => {
-      await api.admin.firstrun(gitRepos.TEST_REPO_RW, 'example');
+      await api().admin.firstrun(gitRepos.TEST_REPO_RW, 'example');
       // Check branch name matches
       await expect(repo().status()).resolves.toMatchObject({ current: 'example' });
     });
 
     it('Gives an error if the repo URL cannot be cloned', async () => {
       await expect(
-        api.admin.firstrun(gitRepos.INVALID, null)
+        api().admin.firstrun(gitRepos.INVALID, null)
       ).rejects.toMatchObject({ code: 400 });
     });
   });
 
   it('Gives auth credentials on success', async () => {
-    await expect(api.admin.firstrun(null, null))
+    await expect(api().admin.firstrun(null, null))
       .resolves.toMatchObject({
         credentials: {
           username: 'admin',
@@ -61,21 +62,21 @@ describe('POST /api/admin/repo', () => {
   });
 
   it('Blocks access if data is already set up', async () => {
-    await api.admin.firstrun(null, null);
+    await api().admin.firstrun(null, null);
     await expect(
-      api.admin.firstrun(gitRepos.TEST_REPO_RW, null)
+      api().admin.firstrun(gitRepos.TEST_REPO_RW, null)
     ).rejects.toMatchObject({ code: 403 });
   });
 
   it("Doesn't clone repo when no URL provided", async () => {
-    await api.admin.firstrun(null, null);
+    await api().admin.firstrun(null, null);
     await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT)).resolves.toStrictEqual(false);
   });
 
   describe('Sets up required starting files', () => {
-    let firstRun: Awaited<ReturnType<typeof api.admin.firstrun>>;
+    let firstRun: FirstRunCredentials;
     beforeEach(async () => {
-      firstRun = await api.admin.firstrun(null, null);
+      firstRun = (await api().admin.firstrun(null, null)).credentials;
     });
 
     test('config.local.json', async () => {
@@ -84,7 +85,7 @@ describe('POST /api/admin/repo', () => {
 
       expect(JSON.parse(config)).toStrictEqual({
         auth: {
-          username: firstRun.credentials.username,
+          username: firstRun.username,
           password: {
             // Don't expect anything specific here
             hash: expect.any(String),

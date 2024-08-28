@@ -3,19 +3,19 @@
  *
  * Returns the current site configuration.
  */
-import api from '$endpoints';
+import { type ApiClient } from '$endpoints';
 import { beforeEach, expect, it } from 'vitest';
 import { setup } from '../../helpers';
 import consts from '$lib/consts';
 
-let token: string;
+let api: ApiClient;
 
 beforeEach(async () => {
-  token = (await setup()).token;
+  api = (await setup()).api;
 });
 
 it('Returns the current config contents', async () => {
-  await expect(api.admin.config.get(token)).resolves.toStrictEqual({
+  await expect(api.admin.config.get()).resolves.toStrictEqual({
     siteName: 'My portfolio',
     listedGroups: [],
     version: consts.VERSION,
@@ -23,12 +23,12 @@ it('Returns the current config contents', async () => {
 });
 
 it('Errors if given an invalid token', async () => {
-  await expect(api.admin.config.get('invalid token'))
+  await expect(api.withToken('invalid').admin.config.get())
     .rejects.toMatchObject({ code: 401 });
 });
 
 it("Errors if the data isn't set up", async () => {
   await api.debug.clear();
-  await expect(api.admin.config.get('invalid token'))
+  await expect(api.admin.config.get())
     .rejects.toMatchObject({ code: 400 });
 });

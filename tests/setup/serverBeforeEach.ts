@@ -10,8 +10,8 @@ beforeEach(async () => {
   const testPath = expect.getState().testPath || 'Unknown test file';
   // Relative to tests directory
   const testFile = path.relative(path.join(process.cwd(), 'tests'), testPath);
-  await api.debug.echo(
+  await api().debug.echo(
     `${chalk.yellow('[Test case]')} ${chalk.grey(testFile)} ${chalk.cyan(testName)}`
   );
-  await api.debug.clear();
+  await api().debug.clear();
 });

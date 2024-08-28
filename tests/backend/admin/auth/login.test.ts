@@ -6,31 +6,32 @@
 import { it, expect, beforeEach } from 'vitest';
 import { setup } from '../../helpers';
 import api from '$endpoints';
+import type { FirstRunCredentials } from '$lib/server/auth';
 
-let credentials: Awaited<ReturnType<typeof setup>>;
+let credentials: FirstRunCredentials;
 
 beforeEach(async () => {
-  credentials = await setup();
+  credentials = (await setup()).credentials;
 });
 
 it("Gives an error when the server isn't setup", async () => {
-  await api.debug.clear();
-  await expect(api.admin.auth.login(credentials.username, credentials.password))
+  await api(undefined).debug.clear();
+  await expect(api().admin.auth.login(credentials.username, credentials.password))
     .rejects.toMatchObject({ code: 400 });
 });
 
 it('Returns a token when correct credentials are provided', async () => {
-  await expect(api.admin.auth.login(credentials.username, credentials.password))
+  await expect(api().admin.auth.login(credentials.username, credentials.password))
     .resolves.toStrictEqual({ token: expect.any(String) });
 });
 
 it('Blocks logins with non-existent usernames', async () => {
-  await expect(api.admin.auth.login(credentials.username + 'hi', credentials.password))
+  await expect(api().admin.auth.login(credentials.username + 'hi', credentials.password))
     .rejects.toMatchObject({ code: 401 });
 });
 
 it('Blocks logins with incorrect passwords', async () => {
-  await expect(api.admin.auth.login(credentials.username, credentials.password + 'hi'))
+  await expect(api().admin.auth.login(credentials.username, credentials.password + 'hi'))
     .rejects.toMatchObject({ code: 401 });
 });
 
@@ -46,7 +47,7 @@ it('Has random variance in the timing for failed passwords', async () => {
   for (let i = 0; i < 25; i++) {
     const start = Date.now();
     try {
-      await api.admin.auth.login(credentials.username + 'hi', credentials.password);
+      await api().admin.auth.login(credentials.username + 'hi', credentials.password);
       expect.unreachable('Login should have failed');
     } catch { }
     const time = Date.now() - start;

@@ -17,7 +17,7 @@ export async function setup() {
 
   // Send a test request
   try {
-    await api.debug.echo('Check if server is running');
+    await api().debug.echo('Check if server is running');
     // If it succeeded, there is no need to start the server, it is already
     // running
     return;
@@ -42,7 +42,7 @@ export async function setup() {
 
   while (Date.now() - start < waitTime) {
     try {
-      await api.debug.echo('Wait for server startup');
+      await api().debug.echo('Wait for server startup');
       return;
     } catch (e) {
       // console.error(e);

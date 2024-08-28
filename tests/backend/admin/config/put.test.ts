@@ -5,23 +5,23 @@
  */
 import { beforeEach, expect, it } from 'vitest';
 import { setup } from '../../helpers';
-import api from '$endpoints';
 import consts from '$lib/consts';
+import type { ApiClient } from '$endpoints';
 
-let token: string;
+let api: ApiClient;
 
 beforeEach(async () => {
-  token = (await setup()).token;
+  api = (await setup()).api;
 });
 
 it('Updates the current config contents', async () => {
-  await expect(api.admin.config.put(token, {
+  await expect(api.admin.config.put({
     siteName: 'Name changed',
     listedGroups: [],
     version: consts.VERSION,
   })).resolves.toStrictEqual({});
   // Config should have updated
-  await expect(api.admin.config.get(token)).resolves.toStrictEqual({
+  await expect(api.admin.config.get()).resolves.toStrictEqual({
     siteName: 'Name changed',
     listedGroups: [],
     version: consts.VERSION,
@@ -29,7 +29,7 @@ it('Updates the current config contents', async () => {
 });
 
 it('Errors if the new config has an incorrect version', async () => {
-  await expect(api.admin.config.put(token, {
+  await expect(api.admin.config.put({
     siteName: 'Name changed',
     listedGroups: [],
     version: consts.VERSION + 'invalid',
@@ -37,7 +37,7 @@ it('Errors if the new config has an incorrect version', async () => {
 });
 
 it('Errors if the new config has references a non-existent page group', async () => {
-  await expect(api.admin.config.put(token, {
+  await expect(api.admin.config.put({
     siteName: 'Name changed',
     listedGroups: ['invalid'],
     version: consts.VERSION,
@@ -45,19 +45,19 @@ it('Errors if the new config has references a non-existent page group', async ()
 });
 
 it('Can set pages as a main page group', async () => {
-  await api.group.withId('my-group').create(token, 'my-group', '');
-  await expect(api.admin.config.put(token, {
+  await api.group.withId('my-group').create('my-group', '');
+  await expect(api.admin.config.put({
     siteName: 'Name changed',
     listedGroups: ['my-group'],
     version: consts.VERSION,
   })).resolves.toStrictEqual({});
   // Config should have updated
-  await expect(api.admin.config.get(token))
+  await expect(api.admin.config.get())
     .resolves.toMatchObject({ listedGroups: ['my-group'] });
 });
 
 it('Rejects invalid tokens', async () => {
-  await expect(api.admin.config.put('invalid token', {
+  await expect(api.withToken('invalid').admin.config.put({
     siteName: 'Name changed',
     listedGroups: [],
     version: consts.VERSION,
@@ -66,7 +66,7 @@ it('Rejects invalid tokens', async () => {
 
 it('Errors if site is not set up', async () => {
   await api.debug.clear();
-  await expect(api.admin.config.put(token, {
+  await expect(api.admin.config.put({
     siteName: 'Name changed',
     listedGroups: [],
     version: consts.VERSION,

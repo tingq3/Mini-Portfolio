@@ -9,20 +9,20 @@ import simpleGit from 'simple-git';
 import { getDataDir } from '$lib/server/data/dataDir';
 
 it('Blocks unauthorized users', async () => {
-  await setup();
-  await expect(api.admin.repo.get('')).rejects.toMatchObject({ code: 401 });
+  const { api } = await setup();
+  await expect(api.withToken(undefined).admin.repo.get()).rejects.toMatchObject({ code: 401 });
 });
 
 it('Gives a 400 when no data directory is set up', async () => {
-  const { token } = await setup();
+  const { api } = await setup();
   await api.debug.clear();
-  await expect(api.admin.repo.get(token)).rejects.toMatchObject({ code: 400 });
+  await expect(api.admin.repo.get()).rejects.toMatchObject({ code: 400 });
 });
 
 it('Correctly returns repo info when a repo is set up', { timeout: 15_000 }, async () => {
-  const { token } = (await api.admin.firstrun(gitRepos.TEST_REPO_RW, null)).credentials;
+  const { token } = (await api().admin.firstrun(gitRepos.TEST_REPO_RW, null)).credentials;
   const repo = simpleGit(getDataDir());
-  await expect(api.admin.repo.get(token)).resolves.toStrictEqual({
+  await expect(api(token).admin.repo.get()).resolves.toStrictEqual({
     repo: {
       url: gitRepos.TEST_REPO_RW,
       branch: 'main',
@@ -33,8 +33,8 @@ it('Correctly returns repo info when a repo is set up', { timeout: 15_000 }, asy
 });
 
 it('Correctly returns null info when a repo is not set up', async () => {
-  const { token } = await setup();
-  await expect(api.admin.repo.get(token)).resolves.toStrictEqual({
+  const { api } = await setup();
+  await expect(api.admin.repo.get()).resolves.toStrictEqual({
     repo: null,
   });
 });
