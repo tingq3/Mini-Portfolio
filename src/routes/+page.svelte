@@ -48,6 +48,6 @@
     width: 100%;
   } */
   #group-list {
-    width: 100%;
+    width: 80%;
   }
 </style>

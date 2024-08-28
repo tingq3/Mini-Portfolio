@@ -59,6 +59,6 @@
     width: 100%;
   } */
   #item-list {
-    width: 100%;
+    width: 80%;
   }
 </style>
