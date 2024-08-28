@@ -2,13 +2,14 @@
 import { describe, it, beforeEach, expect } from 'vitest';
 import { createCustomItemProperties, makeGroup, makeItem, setup } from '../../helpers';
 import type { ApiClient } from '$endpoints';
-import generateTestCases from '../removeCases';
+import genRemoveTests from '../removeCases';
+import genTokenTests from '../../tokenCase';
 
 describe('Generated test cases', () => {
   let api: ApiClient;
   const groupId = 'group-id';
 
-  generateTestCases(
+  genRemoveTests(
     // Setup
     async () => {
       api = (await setup()).api;
@@ -28,19 +29,20 @@ describe('Generated test cases', () => {
 describe('Other test cases', () => {
   let api: ApiClient;
   const group = 'my-group';
+  const item = 'item-1';
 
   beforeEach(async () => {
     api = (await setup()).api;
     await makeGroup(api, group);
+    await makeItem(api, group, item);
   });
 
-  it('Gives an error for invalid tokens', async () => {
-    await expect(api.withToken('invalid').group.withId(group).remove())
-      .rejects.toMatchObject({ code: 401 });
-  });
+  genTokenTests(
+    () => api,
+    api => api.group.withId(group).item.withId(item).remove(),
+  );
 
   it("Rejects if item's group was removed", async () => {
-    await makeItem(api, group, 'item-id');
     await api.group.withId(group).remove();
     // Item was deleted too
     await expect(api.group.withId(group).item.withId('item-id').remove())
@@ -48,11 +50,10 @@ describe('Other test cases', () => {
   });
 
   it('Removes links to this item', async () => {
-    await makeItem(api, group, 'item-1');
     await makeGroup(api, 'group-2');
     await makeItem(api, 'group-2', 'item-2');
     // Create the link
-    await api.group.withId('group-2').item.withId('item-2').links.create(group, 'item-1');
+    await api.group.withId('group-2').item.withId('item-2').links.create(group, item);
     // Removing item removes link from group-2/item-2
     await api.group.withId(group).item.withId('item-1').remove();
     await expect(api.group.withId('group-2').item.withId('item-2').info.get())
@@ -64,16 +65,15 @@ describe('Other test cases', () => {
 
   /** Edge case: one-way links can be created by setting group info manually */
   it('Removes one-way links to this item', async () => {
-    await makeItem(api, group, 'item-1');
     await makeGroup(api, 'group-2');
     await makeItem(api, 'group-2', 'item-2');
     // Create the link
     await api.group.withId('group-2').item.withId('item-2').info.set(
       createCustomItemProperties({
-        links: [[{ groupId: group, style: 'chip' }, ['item-1']]],
+        links: [[{ groupId: group, style: 'chip' }, [item]]],
       }),
     );
-    await api.group.withId(group).item.withId('item-1').remove();
+    await api.group.withId(group).item.withId(item).remove();
     await expect(api.group.withId('group-2').item.withId('item-2').info.get())
       .resolves.toMatchObject({
         // Links were removed

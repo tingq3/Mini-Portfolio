@@ -20,7 +20,7 @@ import { invalidIds, invalidNames, validIds, validNames } from '../consts';
  * @param create function to create the group or item. It should make use of
  * the setup data from the caller's scope.
  */
-export default function generateTestCases(
+export default function genCreationTests(
   typeName: string,
   setup: () => Promise<void>,
   create: (id: string, name: string, description: string) => Promise<void>,

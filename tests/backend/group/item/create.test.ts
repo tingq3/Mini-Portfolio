@@ -3,14 +3,15 @@ import { beforeEach, describe, expect, it, test } from 'vitest';
 import { makeGroup, setup } from '../../helpers';
 import type { ApiClient } from '$endpoints';
 import type { ItemInfoFull } from '$lib/server/data/item';
-import generateTestCases from '../creationCases';
+import genCreationTests from '../creationCases';
+import genTokenTests from '../../tokenCase';
 
 // Generate repeated test cases between groups and items
 describe('Generated test cases', () => {
   let api: ApiClient;
   const groupId = 'group-id';
 
-  generateTestCases(
+  genCreationTests(
     'item',
     async () => {
       api = (await setup()).api;
@@ -64,8 +65,8 @@ describe('Other test cases', async () => {
       .rejects.toMatchObject({ code: 404 });
   });
 
-  it('Fails for invalid tokens', async () => {
-    await expect(api.withToken('invalid').group.withId(groupId).item.withId('id').create('My item', ''))
-      .rejects.toMatchObject({ code: 401 });
-  });
+  genTokenTests(
+    () => api,
+    api => api.group.withId(groupId).item.withId('item-id').create('My item', ''),
+  );
 });

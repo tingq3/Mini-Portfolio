@@ -1,13 +1,14 @@
-import api, { type ApiClient } from '$endpoints';
+import type { ApiClient } from '$endpoints';
 import { beforeEach, describe, expect, it, test } from 'vitest';
-import { makeGroup, setup } from './helpers';
-import generateTestCases from './readmeCases';
+import { setup } from './helpers';
+import genReadmeTests from './readmeCases';
 import { readFile } from 'fs/promises';
 import { getDataDir } from '$lib/server/data/dataDir';
+import genTokenTests from './tokenCase';
 
 describe('Generated test cases', () => {
   let api: ApiClient;
-  generateTestCases(
+  genReadmeTests(
     // Setup
     async () => {
       api = (await setup()).api;
@@ -25,19 +26,18 @@ describe('Generated test cases', () => {
 
 describe('Other test cases', () => {
   let api: ApiClient;
-  const groupId = 'group-id';
 
   beforeEach(async () => {
-    api = (await setup()).api;
-    await makeGroup(api, groupId);
+    const res = await setup();
+    api = res.api;
   });
 
   test('The readme is set up by default', async () => {
     await expect(api.readme.get()).resolves.toMatchObject({ readme: expect.any(String) });
   });
 
-  it('Rejects README updates for invalid tokens', async () => {
-    await expect(api.withToken(undefined).readme.set('New readme'))
-      .rejects.toMatchObject({ code: 401 });
-  });
+  genTokenTests(
+    () => api,
+    api => api.readme.set('New readme'),
+  );
 });

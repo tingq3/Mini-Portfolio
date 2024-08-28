@@ -10,7 +10,7 @@ import { beforeEach, expect, it } from 'vitest';
  * Similar design to `generateTestCases` from `creationCases.ts`, see that
  * documentation for usage.
  */
-export default function generateTestCases<T>(
+export default function genReadmeTests(
   setup: () => Promise<void>,
   getReadme: () => Promise<{ readme: string }>,
   setReadme: (newReadme: string) => Promise<void>,

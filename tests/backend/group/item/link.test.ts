@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { makeGroup, makeItem, setup } from '../../helpers';
 import type { ApiClient } from '$endpoints';
+import genTokenTests from '../../tokenCase';
 
 let api: ApiClient;
 let groupId: string;
@@ -94,10 +95,10 @@ describe('Create link', () => {
       .rejects.toMatchObject({ code: 404 });
   });
 
-  it('Rejects invalid tokens', async () => {
-    await expect(api.withToken('invalid').group.withId(groupId).item.withId(itemId).links.create(groupId, otherItemId))
-      .rejects.toMatchObject({ code: 401 });
-  });
+  genTokenTests(
+    () => api,
+    api => api.group.withId(groupId).item.withId(itemId).links.create(groupId, otherItemId),
+  );
 
   it('Respects existing display style preference for group', async () => {
     await api.group.withId(groupId).item.withId(itemId).links.create(groupId, otherItemId);

@@ -2,6 +2,7 @@ import { beforeEach, expect, it, describe } from 'vitest';
 import { createCustomItemProperties, makeGroup, makeItem, setup } from '../../helpers';
 import { invalidNames, validNames } from '../../consts';
 import type { ApiClient } from '$endpoints';
+import genTokenTests from '../../tokenCase';
 
 let api: ApiClient;
 let groupId: string;
@@ -24,10 +25,10 @@ it.each([
     .rejects.toMatchObject({ code: 400 });
 });
 
-it('Gives an error for invalid tokens', async () => {
-  await expect(api.withToken('invalid').group.withId(groupId).item.withId(itemId).info.set(createCustomItemProperties()))
-    .rejects.toMatchObject({ code: 401 });
-});
+genTokenTests(
+  () => api,
+  api => api.group.withId(groupId).item.withId(itemId).info.set(createCustomItemProperties()),
+);
 
 it.each([
   { name: 'Get info', fn: (id: string) => api.group.withId(groupId).item.withId(id).info.get() },

@@ -1,15 +1,16 @@
 import type { ApiClient } from '$endpoints';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { makeGroup, setup } from '../helpers';
-import generateTestCases from '../readmeCases';
+import genReadmeTests from '../readmeCases';
 import { readFile } from 'fs/promises';
 import { getDataDir } from '$lib/server/data/dataDir';
+import genTokenTests from '../tokenCase';
 
 describe('Generated test cases', () => {
   let api: ApiClient;
   const groupId = 'group-id';
 
-  generateTestCases(
+  genReadmeTests(
     // Setup
     async () => {
       api = (await setup()).api;
@@ -40,8 +41,8 @@ describe('Other test cases', () => {
       .rejects.toMatchObject({ code: 404 });
   });
 
-  it('Rejects README updates for invalid tokens', async () => {
-    await expect(api.withToken('invalid').group.withId(groupId).readme.set('New readme'))
-      .rejects.toMatchObject({ code: 401 });
-  });
+  genTokenTests(
+    () => api,
+    api => api.group.withId(groupId).readme.set('New readme'),
+  );
 });

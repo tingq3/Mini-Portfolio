@@ -1,15 +1,16 @@
 
 import { beforeEach, describe, expect, it, test } from 'vitest';
 import { setup } from '../helpers';
-import api, { type ApiClient } from '$endpoints';
+import { type ApiClient } from '$endpoints';
 import type { GroupInfo } from '$lib/server/data/group';
-import generateTestCases from './creationCases';
+import genCreationTests from './creationCases';
+import genTokenTests from '../tokenCase';
 
 // Generate repeated test cases between groups and items
 describe('Generated test cases', () => {
   let api: ApiClient;
 
-  generateTestCases(
+  genCreationTests(
     'group',
     async () => {
       api = (await setup()).api;
@@ -44,13 +45,14 @@ describe('Sets up basic group properties', async () => {
 });
 
 describe('Other test cases', () => {
+  let api: ApiClient;
+  const groupId = 'my-group';
   beforeEach(async () => {
-    // Currently no need for tokens, but may add later
-    await setup();
+    api = (await setup()).api;
   });
 
-  it('Fails for invalid tokens', async () => {
-    await expect(api('invalid').group.withId('id').create('My group', ''))
-      .rejects.toMatchObject({ code: 401 });
-  });
+  genTokenTests(
+    () => api,
+    api => api.group.withId(groupId).create('Group name', 'Group description'),
+  );
 });

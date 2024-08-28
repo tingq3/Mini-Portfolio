@@ -1,13 +1,14 @@
 
 import { describe, it, beforeEach, expect } from 'vitest';
 import { createCustomItemProperties, makeGroup, makeItem, setup } from '../helpers';
-import generateTestCases from './removeCases';
+import genRemoveTests from './removeCases';
 import type { ApiClient } from '$endpoints';
+import genTokenTests from '../tokenCase';
 
 describe('Generated test cases', () => {
   let api: ApiClient;
 
-  generateTestCases(
+  genRemoveTests(
     // Setup
     async () => {
       api = (await setup()).api;
@@ -32,10 +33,10 @@ describe('Other test cases', () => {
     await makeGroup(api, group);
   });
 
-  it('Gives an error for invalid tokens', async () => {
-    await expect(api.withToken('invalid').group.withId(group).remove())
-      .rejects.toMatchObject({ code: 401 });
-  });
+  genTokenTests(
+    () => api,
+    api => api.group.withId(group).remove(),
+  );
 
   it('Removes links to items in the group', async () => {
     await makeItem(api, group, 'item-1');
