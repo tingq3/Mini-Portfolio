@@ -10,5 +10,8 @@ export async function DELETE({ request, cookies }) {
   await rimraf(getDataDir());
   invalidatePortfolioGlobals();
 
+  // Also remove token from their cookies
+  cookies.delete('token', { path: '/' });
+
   return json({}, { status: 200 });
 }
