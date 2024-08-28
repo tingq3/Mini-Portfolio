@@ -3,6 +3,7 @@
   import { Card } from '.';
   import { tooltip } from '$lib/tooltip';
   import type { PackageInfo } from '$lib/server/data/itemPackage';
+    import CopyButton from '$components/CopyButton.svelte';
 
   export let info: PackageInfo;
   export let color: string;
@@ -42,14 +43,13 @@
       <i class={providerIcon}></i>
       <b>{providerName}</b>
     </div>
-    <button
-      class="install-cmd"
-      on:click|preventDefault={copyInstallCommand}
-      use:tooltip={{ content: 'Copy installation command' }}
+    <CopyButton
+      text={installCommand}
+      hint='Copy install command'
     >
       <i class="las la-terminal"></i>
       <pre>{installCommand}</pre>
-  </button>
+    </CopyButton>
   </span>
 </Card>
 
@@ -67,35 +67,6 @@
   .provider-info {
     display: flex;
     align-items: center;
-  }
-  /*
-    Reset button properties
-    https://stackoverflow.com/a/54101412/6335363
-  */
-  button {
-    all: unset;
-  }
-  .install-cmd {
-    display: flex;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.5);
-    padding: 2px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    border-color: rgba(0, 0, 0, 0.178);
-    border-width: 1px;
-    border-style: solid;
-    transition: background-color .5s;
-  }
-  .install-cmd:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-  }
-  .install-cmd:focus {
-    border-color: rgba(0, 0, 0, 0.623);
-  }
-  .install-cmd:active {
-    background-color: rgba(255, 255, 255, 0.9);
-    transition: background-color 0s;
   }
   pre {
     font-size: 1.5em;

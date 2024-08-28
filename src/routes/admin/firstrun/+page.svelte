@@ -9,6 +9,7 @@
   import { goto } from '$app/navigation';
   import Navbar from '$components/navbar';
   import blankConfig from '$lib/blankConfig';
+    import CopyButton from '$components/CopyButton.svelte';
 
   let repoUrl = '';
   let repoBranch = '';
@@ -108,8 +109,13 @@
     <h1 slot="header">Your data is set up!</h1>
     <p>This is your login information. Please ensure you do not lose it.</p>
     <!-- TODO: Add copy buttons for convenience -->
-    <p>Username: {credentials.username}</p>
-    <p>Password: {credentials.password}</p>
+    <p>
+      Username: <b>{credentials.username}</b>
+    </p>
+    <div class="horizontal">
+      Password: <b>{credentials.password}</b>
+      <CopyButton text={credentials.password} hint='Copy password'>Copy</CopyButton>
+    </div>
   </Modal>
 {/if}
 
@@ -138,5 +144,11 @@
   form input[type="submit"] {
     font-size: 1rem;
     font-weight: bold;
+  }
+
+  .horizontal {
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
 </style>
