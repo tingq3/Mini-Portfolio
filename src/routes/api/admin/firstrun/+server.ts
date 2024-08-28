@@ -24,7 +24,7 @@ export async function POST({ request, cookies }) {
   }
 
   // Now set up auth
-  const credentials = await authSetup();
+  const credentials = await authSetup(cookies);
 
   /**
    * Whether the data repo is empty -- true if data dir was empty before

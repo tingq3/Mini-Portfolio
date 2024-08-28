@@ -1,20 +1,11 @@
-import { revokeSession } from '$lib/server/auth';
+import { revokeSession, validateTokenFromRequest } from '$lib/server/auth';
 import { getPortfolioGlobals } from '$lib/server/data/index.js';
 import { error, json } from '@sveltejs/kit';
 
-export async function POST({ request, cookies }) {
-  const token = request.headers.get('Authorization');
-  if (!token) {
-    return error(401, 'Authorization token is required');
-  }
-
+export async function POST(req) {
   await getPortfolioGlobals().catch(e => error(400, e));
 
-  try {
-    await revokeSession(token);
-  } catch (e) {
-    return error(401, `${e}`);
-  }
+  await revokeSession(await validateTokenFromRequest(req));
 
   return json({}, { status: 200 });
 }

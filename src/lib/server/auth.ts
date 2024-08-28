@@ -7,9 +7,10 @@ import { generate as generateWords } from 'random-words';
 import { getLocalConfig, setLocalConfig, type ConfigLocalJson } from './data/localConfig';
 import consts from '$lib/consts';
 import { dev } from '$app/environment';
+import { error, redirect, type Cookies } from '@sveltejs/kit';
 
-/** Maximum lifetime of a session */
-const sessionLifetime = '14d';
+/** Maximum lifetime of a session -- 14 days */
+const sessionLifetime = 60 * 60 * 24 * 14;
 
 /** Algorithm to sign and validate JWT */
 const algorithm: JwtAlgorithm = 'HS256';
@@ -41,16 +42,32 @@ function getTokenSecret(): string {
   return secret;
 }
 
-/** Generate a token */
-export function generateToken(): string {
+/**
+ * Generate a token.
+ *
+ * If cookies is provided, the token will also be stored to the cookies.
+ */
+export function generateToken(cookies?: Cookies): string {
   const sessionId = nanoid();
   const iat = unixTime();
 
-  return jwt.sign(
+  const token = jwt.sign(
     { sessionId, iat },
     getTokenSecret(),
-    { expiresIn: sessionLifetime, algorithm },
+    { expiresIn: sessionLifetime, algorithm }
   );
+  const expires = iat + sessionLifetime;
+  if (cookies) {
+    cookies.set(
+      'token',
+      token,
+      {
+        path: '/',
+        expires: new Date(expires * 1000)
+      }
+    );
+  }
+  return token;
 }
 
 /** Decode the given token, and return the session if it passes validation */
@@ -94,6 +111,36 @@ export async function validateToken(token: string): Promise<Infer<typeof JwtPayl
   return data;
 }
 
+/**
+ * Validates and returns the token from the given request.
+ *
+ * First attempts to get the token from the "Authorization" header, but if that
+ * isn't present, the "token" property is checked within the cookies.
+ *
+ * If the token is invalid, it is removed from the cookies.
+ */
+export async function validateTokenFromRequest(req: { request: Request, cookies: Cookies }): Promise<string> {
+  const tokenFromHeader = req.request.headers.get('Authorization');
+  const tokenFromCookie = req.cookies.get('token');
+
+  const token = tokenFromHeader || tokenFromCookie;
+
+  if (!token) {
+    throw error(401, 'A token is required to access this endpoint');
+  }
+  await validateToken(token).catch(e => {
+    // Remove token from cookies, as it is invalid
+    req.cookies.delete('token', { path: '/' });
+    error(401, `${e}`);
+  });
+  return token;
+}
+
+/** If the given token is invalid, throw a redirect to the given page */
+export async function redirectOnInvalidToken(req: { request: Request, cookies: Cookies }, url: string) {
+  await validateTokenFromRequest(req).catch(() => {}).catch(e => redirect(303, url));
+}
+
 /** Revoke the session of the given token */
 export async function revokeSession(token: string): Promise<void> {
   const config = await getLocalConfig();
@@ -128,7 +175,7 @@ export function hashAndSalt(salt: string, password: string): string {
  * This is responsible for generating and storing a secure password, thereby
  * creating the default "admin" account.
  */
-export async function authSetup(): Promise<FirstRunCredentials> {
+export async function authSetup(cookies: Cookies): Promise<FirstRunCredentials> {
   const username = 'admin';
 
   // generate password using 4 random dictionary words
@@ -164,6 +211,6 @@ export async function authSetup(): Promise<FirstRunCredentials> {
   return {
     username,
     password,
-    token: generateToken(),
+    token: generateToken(cookies),
   };
 }

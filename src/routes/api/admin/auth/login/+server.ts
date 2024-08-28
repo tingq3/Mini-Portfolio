@@ -41,5 +41,6 @@ export async function POST({ request, cookies }) {
     return fail(failTimer);
   }
 
-  return json({ token: generateToken() }, { status: 200 });
+  const token = generateToken(cookies);
+  return json({ token }, { status: 200 });
 }

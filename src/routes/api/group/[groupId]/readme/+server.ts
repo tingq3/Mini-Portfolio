@@ -1,8 +1,7 @@
 import { error, json } from '@sveltejs/kit';
-import { dataDirIsInit } from '$lib/server/data/dataDir';
-import { getGroupInfo, getGroupReadme, setGroupReadme } from '$lib/server/data/group';
-import { validateToken } from '$lib/server/auth';
-import { assert, object, string, StructError, validate } from 'superstruct';
+import { setGroupReadme } from '$lib/server/data/group';
+import { validateTokenFromRequest } from '$lib/server/auth';
+import { assert, string } from 'superstruct';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 
 export async function GET({ params, request, cookies }) {
@@ -17,14 +16,8 @@ export async function GET({ params, request, cookies }) {
 }
 
 export async function PUT({ params, request, cookies }) {
-  const token = request.headers.get('Authorization');
-  if (!token) {
-    return error(401, 'Authorization token is required');
-  }
-
   const data = await getPortfolioGlobals().catch(e => error(400, e));
-
-  await validateToken(token).catch(e => error(401, `${e}`));
+  await validateTokenFromRequest({ request, cookies });
 
   const groupId = params.groupId;
 

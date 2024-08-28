@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
-import { createGroup, deleteGroup, getGroupInfo, GroupInfoStruct, setGroupInfo } from '$lib/server/data/group';
-import { validateToken } from '$lib/server/auth';
-import { object, string, StructError, validate } from 'superstruct';
+import { createGroup, deleteGroup, GroupInfoStruct, setGroupInfo } from '$lib/server/data/group';
+import { validateTokenFromRequest } from '$lib/server/auth';
+import { object, string, validate } from 'superstruct';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 import { validateId, validateName } from '$lib/validators';
 import { removeAllLinksToItem } from '$lib/server/links.js';
@@ -20,14 +20,8 @@ export async function GET({ params, request, cookies }) {
 }
 
 export async function POST({ params, request, cookies }) {
-  const token = request.headers.get('Authorization');
-  if (!token) {
-    return error(401, 'Authorization token is required');
-  }
-
   const data = await getPortfolioGlobals().catch(e => error(400, e));
-
-  await validateToken(token).catch(e => error(401, `${e}`));
+  await validateTokenFromRequest({ request, cookies });
 
   // Validate group ID
   const groupId = validateId(params.groupId);
@@ -50,14 +44,8 @@ export async function POST({ params, request, cookies }) {
 }
 
 export async function PUT({ params, request, cookies }) {
-  const token = request.headers.get('Authorization');
-  if (!token) {
-    return error(401, 'Authorization token is required');
-  }
-
   const data = await getPortfolioGlobals().catch(e => error(400, e));
-
-  await validateToken(token).catch(e => error(401, `${e}`));
+  await validateTokenFromRequest({ request, cookies });
 
   const groupId = params.groupId;
 
@@ -90,14 +78,8 @@ export async function PUT({ params, request, cookies }) {
 }
 
 export async function DELETE({ params, request, cookies }) {
-  const token = request.headers.get('Authorization');
-  if (!token) {
-    return error(401, 'Authorization token is required');
-  }
-
   const data = await getPortfolioGlobals().catch(e => error(400, e));
-
-  await validateToken(token).catch(e => error(401, `${e}`));
+  await validateTokenFromRequest({ request, cookies });
 
   const groupId = params.groupId;
 

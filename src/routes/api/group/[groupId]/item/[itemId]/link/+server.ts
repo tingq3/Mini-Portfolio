@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import { validateToken } from '$lib/server/auth';
+import { validateTokenFromRequest } from '$lib/server/auth';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 import { object, string, validate } from 'superstruct';
 import { LinkStyleStruct } from '$lib/server/data/item.js';
@@ -7,11 +7,7 @@ import { changeLinkStyle, createLink, removeLinkFromItem } from '$lib/server/lin
 
 export async function POST({ params, request, cookies }) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
-  const token = request.headers.get('Authorization');
-  if (!token) {
-    return error(401, 'Authorization token is required');
-  }
-  await validateToken(token).catch(e => error(401, `${e}`));
+  await validateTokenFromRequest({ request, cookies });
 
   const { groupId, itemId } = params;
   if (!data.groups[groupId]) {
@@ -51,11 +47,7 @@ export async function POST({ params, request, cookies }) {
 
 export async function PUT({ params, request, cookies }) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
-  const token = request.headers.get('Authorization');
-  if (!token) {
-    return error(401, 'Authorization token is required');
-  }
-  await validateToken(token).catch(e => error(401, `${e}`));
+  await validateTokenFromRequest({ request, cookies });
 
   const { groupId, itemId } = params;
   if (!data.groups[groupId]) {
@@ -82,15 +74,11 @@ export async function PUT({ params, request, cookies }) {
   return json({}, { status: 200 });
 }
 
-export async function DELETE({ params, request, url }) {
+export async function DELETE(req) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
-  const token = request.headers.get('Authorization');
-  if (!token) {
-    return error(401, 'Authorization token is required');
-  }
-  await validateToken(token).catch(e => error(401, `${e}`));
+  await validateTokenFromRequest(req);
 
-  const { groupId, itemId } = params;
+  const { groupId, itemId } = req.params;
   if (!data.groups[groupId]) {
     error(404, `Group ${groupId} does not exist`);
   }
@@ -98,8 +86,8 @@ export async function DELETE({ params, request, url }) {
     error(404, `Item ${itemId} does not exist in group ${groupId}`);
   }
 
-  const otherGroupId = url.searchParams.get('otherGroupId');
-  const otherItemId = url.searchParams.get('otherItemId');
+  const otherGroupId = req.url.searchParams.get('otherGroupId');
+  const otherItemId = req.url.searchParams.get('otherItemId');
 
   if (!otherGroupId || !otherItemId) {
     error(400, 'Requires query params otherGroupId and otherItemId');
