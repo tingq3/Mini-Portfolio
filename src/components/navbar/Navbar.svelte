@@ -84,6 +84,8 @@
       <!-- Only include a login button if logging in is enabled -->
       <button on:click={() => goto('/admin/login')}> Log in </button>
     {/if}
+    <!-- About button navigates to about page -->
+    <button on:click={() => goto('/about')}> About </button>
     <!-- In dev mode, add a quick shortcut to delete everything -->
     {#if dev}
       <Separator />

@@ -6,7 +6,7 @@
 import { type ApiClient } from '$endpoints';
 import { beforeEach, expect, it } from 'vitest';
 import { setup } from '../../helpers';
-import consts from '$lib/consts';
+import { version } from '$app/environment';
 
 let api: ApiClient;
 
@@ -19,7 +19,7 @@ it('Returns the current config contents', async () => {
     siteName: 'My portfolio',
     listedGroups: [],
     color: expect.any(String),
-    version: consts.VERSION,
+    version,
   });
 });
 

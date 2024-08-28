@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'fs/promises';
 import { array, object, string, validate, type Infer } from 'superstruct';
 import { getDataDir } from './dataDir';
-import consts from '$lib/consts';
+import { version } from '$app/environment';
 
 /** Path to config.json */
 const CONFIG_JSON = `${getDataDir()}/config.json`;
@@ -53,6 +53,6 @@ export async function initConfig() {
     siteName: 'My portfolio',
     listedGroups: [],
     color: '#ffaaff',
-    version: consts.VERSION,
+    version,
   });
 }

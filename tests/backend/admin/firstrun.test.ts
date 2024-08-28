@@ -7,7 +7,7 @@ import { it, test, describe, expect, vi, beforeEach } from 'vitest';
 import simpleGit, { CheckRepoActions } from 'simple-git';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import consts from '$lib/consts';
+import { version } from '$app/environment';
 import type { FirstRunCredentials } from '$lib/server/auth';
 
 // Git clone takes a while, increase the test timeout
@@ -107,7 +107,7 @@ describe('Sets up required starting files', () => {
           revokedSessions: {},
         },
       },
-      version: consts.VERSION,
+      version,
     });
   });
 

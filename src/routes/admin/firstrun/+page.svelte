@@ -7,6 +7,8 @@
   import Modal from '$components/modals/Modal.svelte';
   import type { FirstRunCredentials } from '$lib/server/auth';
   import { goto } from '$app/navigation';
+  import Navbar from '$components/navbar';
+  import blankConfig from '$lib/blankConfig';
 
   let repoUrl = '';
   let repoBranch = '';
@@ -51,9 +53,9 @@
   let errorText = '';
 </script>
 
-<h1>Maddyfolio</h1>
-
 <Background color="#aa00aa"></Background>
+
+<Navbar config={blankConfig} loggedIn={undefined} path={[]} />
 
 <div class="center">
   <Paper>

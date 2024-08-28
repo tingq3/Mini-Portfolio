@@ -5,8 +5,7 @@ import { unixTime } from '$lib/util';
 import { hash } from 'crypto';
 import { generate as generateWords } from 'random-words';
 import { getLocalConfig, setLocalConfig, type ConfigLocalJson } from './data/localConfig';
-import consts from '$lib/consts';
-import { dev } from '$app/environment';
+import { dev, version } from '$app/environment';
 import { error, redirect, type Cookies } from '@sveltejs/kit';
 
 /** Maximum lifetime of a session -- 14 days */
@@ -213,7 +212,7 @@ export async function authSetup(cookies: Cookies): Promise<FirstRunCredentials> 
         revokedSessions: {},
       }
     },
-    version: consts.VERSION,
+    version,
   };
 
   await setLocalConfig(config);

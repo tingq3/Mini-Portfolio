@@ -5,7 +5,7 @@
  */
 import { beforeEach, expect, it } from 'vitest';
 import { setup } from '../../helpers';
-import consts from '$lib/consts';
+import { version } from '$app/environment';
 import type { ApiClient } from '$endpoints';
 
 let api: ApiClient;
@@ -19,14 +19,14 @@ it('Updates the current config contents', async () => {
     siteName: 'Name changed',
     listedGroups: [],
     color: '#ffaaff',
-    version: consts.VERSION,
+    version,
   })).resolves.toStrictEqual({});
   // Config should have updated
   await expect(api.admin.config.get()).resolves.toStrictEqual({
     siteName: 'Name changed',
     listedGroups: [],
     color: '#ffaaff',
-    version: consts.VERSION,
+    version,
   });
 });
 
@@ -35,7 +35,7 @@ it('Errors if the new config has an incorrect version', async () => {
     siteName: 'Name changed',
     listedGroups: [],
     color: '#ffaaff',
-    version: consts.VERSION + 'invalid',
+    version: version + 'invalid',
   })).rejects.toMatchObject({ code: 400 });
 });
 
@@ -44,7 +44,7 @@ it('Errors if the new config has references a non-existent page group', async ()
     siteName: 'Name changed',
     listedGroups: ['invalid'],
     color: '#ffaaff',
-    version: consts.VERSION,
+    version,
   })).rejects.toMatchObject({ code: 400 });
 });
 
@@ -54,7 +54,7 @@ it('Can set pages as a main page group', async () => {
     siteName: 'Name changed',
     listedGroups: ['my-group'],
     color: '#ffaaff',
-    version: consts.VERSION,
+    version,
   })).resolves.toStrictEqual({});
   // Config should have updated
   await expect(api.admin.config.get())
@@ -66,7 +66,7 @@ it('Rejects invalid tokens', async () => {
     siteName: 'Name changed',
     listedGroups: [],
     color: '#ffaaff',
-    version: consts.VERSION,
+    version,
   })).rejects.toMatchObject({ code: 401 });
 });
 
@@ -76,6 +76,6 @@ it('Errors if site is not set up', async () => {
     siteName: 'Name changed',
     listedGroups: [],
     color: '#ffaaff',
-    version: consts.VERSION,
+    version,
   })).rejects.toMatchObject({ code: 400 });
 });
