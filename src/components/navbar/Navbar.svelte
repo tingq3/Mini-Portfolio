@@ -4,11 +4,25 @@
   import api from '$endpoints';
   import type { ConfigJson } from '$lib/server/data/config';
   import Separator from '$components/Separator.svelte';
+  import NewGroupModal from '$components/modals/NewGroupModal.svelte';
+  import NewItemModal from '$components/modals/NewItemModal.svelte';
 
   export let path: { url: string, txt: string }[];
   export let config: ConfigJson;
   /** Whether the user is logged in. Set to undefined if auth is disabled */
   export let loggedIn: boolean | undefined;
+  export let createGroupButton: boolean = false;
+  export let createItemButtonGroup: string | null = null;
+
+  // Logic for new group modal
+  let createGroupModalShown = false;
+  function closeCreateGroupModal() {
+    createGroupModalShown = false;
+  }
+  let createItemModalShown = false;
+  function closeCreateItemModal() {
+    createItemModalShown = false;
+  }
 
   /** Log out, then reload the page */
   async function logOut() {
@@ -48,7 +62,22 @@
   <!-- Control buttons -->
   <span id="control-buttons">
     {#if loggedIn}
-      <button> New group </button>
+      {#if createGroupButton}
+        <div>
+          <button on:click={() => { createGroupModalShown = true; }}> New group </button>
+          <NewGroupModal show={createGroupModalShown} on:close={closeCreateGroupModal} />
+        </div>
+      {/if}
+      {#if createItemButtonGroup}
+        <div>
+          <button> New item </button>
+          <NewItemModal
+            show={createItemModalShown}
+            groupId={createItemButtonGroup}
+            on:close={closeCreateItemModal}
+          />
+        </div>
+      {/if}
       <button on:click={() => goto('/admin')}> Admin </button>
       <button on:click={logOut}> Log out </button>
     {:else if loggedIn !== undefined}
@@ -89,14 +118,14 @@
     grid-area: control-buttons;
     margin-right: 20px;
   }
-  #control-buttons > button {
+  #control-buttons button {
     /* margin: 10px; */
     padding: 10px;
     background-color: transparent;
     border-radius: 5px;
     border: none;
   }
-  #control-buttons > button:hover {
+  #control-buttons button:hover {
     cursor: pointer;
     background-color: rgba(124, 124, 124, 0.253);
   }

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Navbar, Markdown } from '$components';
   import { GroupCardGrid } from '$components/card';
-    import Paper from '$components/Paper.svelte';
+  import Paper from '$components/Paper.svelte';
 
   export let data: import('./$types').PageData;
 </script>
@@ -10,6 +10,7 @@
   path={[]}
   config={data.globals.config}
   loggedIn={data.loggedIn}
+  createGroupButton
 />
 
 <main>
