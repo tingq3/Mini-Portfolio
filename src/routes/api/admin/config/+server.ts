@@ -13,14 +13,8 @@ export async function GET({ request, cookies }) {
 }
 
 export async function PUT({ request, cookies }) {
-  const token = request.headers.get('Authorization');
-  if (!token) {
-    return error(401, 'Authorization token is required');
-  }
-
   const globals = await getPortfolioGlobals().catch(e => error(400, e));
-
-  await validateToken(token).catch(e => error(401, `${e}`));
+  await validateTokenFromRequest({ request, cookies });
 
   const [err, newConfig] = validate(await request.json(), ConfigJsonStruct);
 
