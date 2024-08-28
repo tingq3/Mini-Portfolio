@@ -1,8 +1,14 @@
 # Server logs
 *.log
 
+# Temporary files
+/temp*
+
 # Data directory
 /data/
+
+# Server logs
+*.log
 
 .DS_Store
 node_modules

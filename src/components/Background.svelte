@@ -1,6 +1,5 @@
 <script lang="ts">
   import Color from 'color';
-    import { fade } from 'svelte/transition';
 
   export let color: string;
 

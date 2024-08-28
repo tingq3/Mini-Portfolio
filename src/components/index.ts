@@ -1,5 +1,5 @@
-export { default as Markdown } from './Markdown.svelte';
-export { default as Navbar } from './Navbar.svelte';
+export { Markdown } from './markdown';
+export { default as Navbar } from './navbar/Navbar.svelte';
 export { default as Separator } from './Separator.svelte';
 // export { default as AsciinemaPlayer } from './AsciinemaPlayer.svelte';
 

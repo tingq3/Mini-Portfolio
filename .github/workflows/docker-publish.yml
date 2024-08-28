@@ -27,7 +27,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: maddyguthridge/portfolio
+          images: maddyguthridge/minifolio
 
       - name: Build and push Docker image
         id: push
@@ -42,6 +42,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: maddyguthridge/portfolio
+          subject-name: maddyguthridge/minifolio
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true

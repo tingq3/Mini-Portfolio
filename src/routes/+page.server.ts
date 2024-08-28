@@ -1,7 +1,12 @@
-import { getData } from '$lib/server';
 import { redirect } from '@sveltejs/kit';
+import { getPortfolioGlobals } from '$lib/server';
+import { dataDirIsInit } from '$lib/server/data/dataDir.js';
+import { isRequestAuthorized } from '$lib/server/auth.js';
 
-export function load() {
-  // When loading the main page, redirect them to the default classifier page
-  throw redirect(308, `/${getData().config.defaultClassifier}`);
+export async function load(req) {
+  if (!await dataDirIsInit()) {
+    redirect(303, '/admin/firstrun');
+  }
+  const globals = await getPortfolioGlobals();
+  return { globals, loggedIn: await isRequestAuthorized(req) };
 }
