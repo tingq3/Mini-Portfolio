@@ -1,13 +1,30 @@
-# Portfolio
+# Minifolio
 
-This is my data-driven portfolio website, built using SvelteKit and TypeScript.
+A data-driven portfolio to showcase your best work.
 
 ## Features
 
-* The site is entirely built from a `data/` directory, where all information
-  about projects, frameworks and languages is contained.
-* Validation of all source data, using [Superstruct](https://docs.superstructjs.org/).
-* Demos of projects using [Asciinema](https://asciinema.org/) (work in progress).
+* Your data is yours -- it's all just Markdown files and JSON configuration.
+* Data backups using Git.
+* A powerful linking system to show how your skills, projects and knowledge
+  relate.
+
+## Note
+
+This is a work-in-progress, with many features still partially-implemented.
+Expect frequent updates with breaking changes for the time being. I'll try to
+provide migration scripts whenever possible, but depending on the scale of the
+changes, they may result in small amounts of data not fully updating. Always
+ensure you have backups of your important data.
+
+## Demo
+
+Check out my portfolio at [portfolio.maddyguthridge.com](https://portfolio.maddyguthridge.com).
+
+## Deploying
+
+Deploying is easiest with Docker. Refer to the example `docker-compose.yml` for
+the configuration I use.
 
 ## Developing
 
@@ -28,9 +45,9 @@ npm run dev -- --open
 * Linting can be run with `npm run lint`. Automatic fixes can be applied using
   `npm run lint-fix`.
 
-## Building
+### Building
 
-To create a production version of your app:
+To create a production version of the app:
 
 ```bash
 npm run build
@@ -45,7 +62,3 @@ node -r dotenv/config build
 This requires a `.env` file, which you can create by running
 `cp .env.example .env`. Make sure to edit your `.env` file to set its variables
 as required.
-
-## Using Docker
-
-Refer to the example `docker-compose.yml`.
