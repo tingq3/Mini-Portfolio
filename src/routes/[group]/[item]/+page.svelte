@@ -20,6 +20,8 @@
   ]}
   config={data.globals.config}
   loggedIn={data.loggedIn}
+  createGroupButton
+  createItemButtonGroup={data.groupId}
 />
 
 <main>

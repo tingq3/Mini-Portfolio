@@ -2,7 +2,7 @@
   import { Navbar, Markdown } from '$components';
   import { ItemCardGrid } from '$components/card';
   import Background from '$components/Background.svelte';
-    import Paper from '$components/Paper.svelte';
+  import Paper from '$components/Paper.svelte';
 
   export let data: import('./$types').PageData;
 
@@ -15,6 +15,8 @@
   path={[{ url: data.groupId, txt: groupData.info.name }]}
   config={data.globals.config}
   loggedIn={data.loggedIn}
+  createGroupButton
+  createItemButtonGroup={data.groupId}
 />
 
 <main>

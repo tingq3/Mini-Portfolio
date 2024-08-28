@@ -62,20 +62,20 @@
   <!-- Control buttons -->
   <span id="control-buttons">
     {#if loggedIn}
-      {#if createGroupButton}
-        <div>
-          <button on:click={() => { createGroupModalShown = true; }}> New group </button>
-          <NewGroupModal show={createGroupModalShown} on:close={closeCreateGroupModal} />
-        </div>
-      {/if}
       {#if createItemButtonGroup}
         <div>
-          <button> New item </button>
+          <button on:click={() => { createItemModalShown = true; }}> New item </button>
           <NewItemModal
             show={createItemModalShown}
             groupId={createItemButtonGroup}
             on:close={closeCreateItemModal}
           />
+        </div>
+      {/if}
+      {#if createGroupButton}
+        <div>
+          <button on:click={() => { createGroupModalShown = true; }}> New group </button>
+          <NewGroupModal show={createGroupModalShown} on:close={closeCreateGroupModal} />
         </div>
       {/if}
       <button on:click={() => goto('/admin')}> Admin </button>
