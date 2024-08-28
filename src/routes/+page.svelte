@@ -20,15 +20,13 @@
 
 <main>
   <div id="readme">
-    <Paper>
-      <div id="info-container">
-        <EditableMarkdown
-          source={data.globals.readme}
-          editable={data.loggedIn}
-          onSave={text => api().readme.set(text)}
-        />
-      </div>
-    </Paper>
+    <div id="info-container">
+      <EditableMarkdown
+        source={data.globals.readme}
+        editable={data.loggedIn}
+        onSave={text => api().readme.set(text)}
+      />
+    </div>
   </div>
 
   <!-- List all entry cards -->
@@ -52,11 +50,12 @@
   }
   #info-container {
     padding: 20px;
+    width: 90%;
   }
   /* #filters {
     width: 100%;
   } */
   #group-list {
-    width: 80%;
+    width: 100%;
   }
 </style>

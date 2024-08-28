@@ -23,15 +23,13 @@
 
 <main>
   <div id="readme">
-    <Paper>
-      <div id="info-container">
-        <EditableMarkdown
-          source={groupData.readme}
-          editable={data.loggedIn}
-          onSave={text => api().group.withId(data.groupId).readme.set(text)}
-        />
-      </div>
-    </Paper>
+    <div id="info-container">
+      <EditableMarkdown
+        source={groupData.readme}
+        editable={data.loggedIn}
+        onSave={text => api().group.withId(data.groupId).readme.set(text)}
+      />
+    </div>
   </div>
 
   <!-- TODO: Implement filtering -->
@@ -60,11 +58,12 @@
   }
   #info-container {
     padding: 20px;
+    width: 90%;
   }
   /* #filters {
     width: 100%;
   } */
   #item-list {
-    width: 80%;
+    width: 100%;
   }
 </style>
