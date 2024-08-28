@@ -8,7 +8,7 @@
   export let globals: PortfolioGlobals;
 
   async function clear() {
-    await api.debug.clear();
+    await api().debug.clear();
     token.set(undefined);
     await goto('/admin/firstrun');
   }

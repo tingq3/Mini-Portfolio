@@ -4,21 +4,14 @@
   import Navbar from '$components/Navbar.svelte';
   import Paper from '$components/Paper.svelte';
   import { goto } from '$app/navigation';
-  import { token } from '$lib';
 
   export let data: import('./$types').PageData;
-
-  // If the user is already logged in, send them to the main admin panel
-  if ($token) {
-    // FIXME: Fails when using SSR
-    void goto('/admin');
-  }
 
   let username = '';
   let password = '';
 
   async function doLogin() {
-    await api.admin.auth.login(username, password);
+    await api().admin.auth.login(username, password);
     // TODO: Cleanly handle and display errors
     await goto('/admin');
   }

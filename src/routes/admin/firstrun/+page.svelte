@@ -16,7 +16,7 @@
   async function submitMain() {
     showLoading = true;
     try {
-      const res = await api.admin.firstrun(repoUrl, repoBranch || null);
+      const res = await api().admin.firstrun(repoUrl, repoBranch || null);
       credentials = res.credentials;
       token.set(credentials.token);
     } catch (e) {
@@ -27,7 +27,7 @@
 
   async function submitNoGit() {
     try {
-      const res = await api.admin.firstrun(null, null);
+      const res = await api().admin.firstrun(null, null);
       credentials = res.credentials;
       token.set(credentials.token);
     } catch (e) {
