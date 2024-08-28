@@ -1,6 +1,9 @@
 # Server logs
 *.log
 
+# Temporary files
+/temp*
+
 # Data directory
 /data/
 
