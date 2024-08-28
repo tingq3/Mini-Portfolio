@@ -2,19 +2,20 @@
 import Background from '$components/Background.svelte';
 import Markdown from '$components/markdown/Markdown.svelte';
 import Navbar from '$components/navbar';
+import consts from '$lib/consts';
 
 export let data: import('./$types').PageData;
 
 const mainInfo = `
-# Minifolio
+# ${consts.APP_NAME}
 
-This portfolio website is driven by Minifolio, a
+This portfolio website is driven by ${consts.APP_NAME}, a
 [free and open-source](https://en.wikipedia.org/wiki/Free_and_open-source_software)
 data-driven portfolio system made with <3 by [Maddy Guthridge](https://maddyguthridge.com).
 
-* [View the source code on GitHub](https://github.com/MaddyGuthridge/Minifolio).
-* [Learn how to deploy your own instance of Minifolio](https://github.com/MaddyGuthridge/Minifolio/blob/main/docs/Deploy.md).
-* [View the GPLv3 software license for Minifolio](https://github.com/MaddyGuthridge/Minifolio/blob/main/LICENSE.md).
+* [View the source code on GitHub](${consts.APP_GITHUB}).
+* [Learn how to deploy your own instance of ${consts.APP_NAME}](${consts.APP_GITHUB}/blob/main/docs/Deploy.md).
+* [View the GPLv3 software license for ${consts.APP_NAME}](${consts.APP_GITHUB}/blob/main/LICENSE.md).
 `;
 
 let technicalDetails = '';
@@ -25,7 +26,7 @@ if (data.versions) {
 
 For security reasons, these details are only shown if you are logged in.
 
-* Minifolio: v${data.versions.minifolio}
+* ${consts.APP_NAME}: v${data.versions.site}
 * Node: ${data.versions.node}
 * Svelte: v${data.versions.svelte}
 * Sveltekit: v${data.versions.sveltekit}

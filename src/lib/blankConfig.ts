@@ -1,8 +1,9 @@
 import { version } from '$app/environment';
+import consts from './consts';
 import type { ConfigJson } from './server/data/config';
 
 const blankConfig: ConfigJson = {
-  siteName: 'Minifolio',
+  siteName: consts.APP_NAME,
   listedGroups: [],
   color: '#ffaaff',
   version,

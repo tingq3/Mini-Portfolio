@@ -1,4 +1,3 @@
-import { redirect } from '@sveltejs/kit';
 import { getPortfolioGlobals } from '$lib/server';
 import { isRequestAuthorized } from '$lib/server/auth.js';
 import blankConfig from '$lib/blankConfig.js';
@@ -26,7 +25,7 @@ export async function load(req) {
   let versions = null;
   if (!isInit || loggedIn) {
     versions = {
-      minifolio: version,
+      site: version,
       node: process.version,
       svelte: SVELTE_VERSION,
       sveltekit: SVELTEKIT_VERSION,

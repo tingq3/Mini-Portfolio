@@ -11,5 +11,5 @@ export default function formatTemplate(
   for (const [matcher, replacement] of replacements) {
     input = input.replaceAll(`{{${matcher}}}`, replacement);
   }
-  return input;
+  return input.trimStart();
 }

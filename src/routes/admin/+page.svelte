@@ -1,6 +1,6 @@
 <script lang="ts">
   import Background from '$components/Background.svelte';
-  import Navbar from '$components/navbar/Navbar.svelte';
+  import Navbar from '$components/navbar';
   export let data: import('./$types').PageData;
 </script>
 
@@ -12,4 +12,4 @@
 
 <Background color={data.globals.config.color} />
 
-<h1>Admin panel (todo)</h1>
+<h1>Admin panel</h1>

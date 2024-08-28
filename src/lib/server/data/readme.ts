@@ -9,7 +9,7 @@ site's \`README.md\`, which is shown as the site's landing page.
 
 Go ahead and edit this file to give your users a nice landing page. You may
 want to [learn Markdown](https://www.markdownguide.org/basic-syntax/).
-`;
+`.trimStart();
 
 /** Path to README.md */
 const README_MD = `${getDataDir()}/README.md`;
