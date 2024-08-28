@@ -18,6 +18,7 @@ it('Returns the current config contents', async () => {
   await expect(api.admin.config.get()).resolves.toStrictEqual({
     siteName: 'My portfolio',
     listedGroups: [],
+    color: expect.any(String),
     version: consts.VERSION,
   });
 });

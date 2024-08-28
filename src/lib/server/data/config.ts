@@ -18,6 +18,8 @@ export const ConfigJsonStruct = object({
    * pages, but won't be shown on the main page.
    */
   listedGroups: array(string()),
+  /** The default color to use for the site */
+  color: string(),
   /** Version of server that last accessed the config.json */
   version: string(),
 });
@@ -50,6 +52,7 @@ export async function initConfig() {
   await setConfig({
     siteName: 'My portfolio',
     listedGroups: [],
+    color: '#ffaaff',
     version: consts.VERSION,
   });
 }
