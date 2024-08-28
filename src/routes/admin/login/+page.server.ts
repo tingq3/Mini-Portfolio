@@ -5,7 +5,15 @@ import { redirect } from '@sveltejs/kit';
 export async function load(req) {
   // Users that are already logged in should be redirected to the main admin
   // page
-  await validateTokenFromRequest(req).catch(() => {}).then(redirect(303, '/admin'));
+  let loggedIn = false;
+  try {
+    await validateTokenFromRequest(req);
+    // Success, redirect them
+    loggedIn = true;
+  } catch {}
+  if (loggedIn) {
+    redirect(303, '/admin');
+  }
   const globals = await getPortfolioGlobals();
   return { globals };
 }

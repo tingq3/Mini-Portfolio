@@ -148,7 +148,7 @@ export async function isRequestAuthorized(req: { request: Request, cookies: Cook
 
 /** If the given token is invalid, throw a redirect to the given page */
 export async function redirectOnInvalidToken(req: { request: Request, cookies: Cookies }, url: string) {
-  await validateTokenFromRequest(req).catch(() => {}).catch(e => redirect(303, url));
+  await validateTokenFromRequest(req).catch(() => redirect(303, url));
 }
 
 /** Revoke the session of the given token */
