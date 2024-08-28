@@ -16,21 +16,21 @@ export type RepoInfo = {
   } | null,
 };
 
-/**
- * Retrieve information about the data repository.
- *
- * @param token The authentication token
- */
-export const get = async (token: string) => {
-  return json(apiFetch(
-    'GET',
-    '/api/admin/repo',
-    token,
-  )) as Promise<RepoInfo>;
-};
+export default function repo(token: string | undefined) {
+  const get = async () => {
+    return json(apiFetch(
+      'GET',
+      '/api/admin/repo',
+      token,
+    )) as Promise<RepoInfo>;
+  };
 
-const repo = {
-  get,
-};
-
-export default repo;
+  return {
+    /**
+     * Retrieve information about the data repository.
+     *
+     * @param token The authentication token
+     */
+    get,
+  };
+}
