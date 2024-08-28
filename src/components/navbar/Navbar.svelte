@@ -46,7 +46,7 @@
 <nav>
   <span style:grid-area="navigator">
     {#if path.length === 0}
-      <h1>{config.siteName} / Portfolio</h1>
+      <h1>{config.siteName}</h1>
     {:else}
       <h1>
         <a href="/">{config.siteName}</a> /
