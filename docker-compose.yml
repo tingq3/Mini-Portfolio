@@ -6,6 +6,8 @@
 # * You should create a `.env` file to contain the `AUTH_SECRET` environment
 #   variable. Perhaps you could generate this using the command here:
 #   https://unix.stackexchange.com/a/476125/161355
+# * TODO: To forward SSH host, some modification may be required (I will investigate
+#   this soon)
 #
 # It is not necessary to set up other environment variables
 services:
