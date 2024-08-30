@@ -12,16 +12,16 @@ want to [learn Markdown](https://www.markdownguide.org/basic-syntax/).
 `.trimStart();
 
 /** Path to README.md */
-const README_MD = `${getDataDir()}/README.md`;
+const README_MD = () => `${getDataDir()}/README.md`;
 
 /** Return the readme file */
 export async function getReadme(): Promise<string> {
-  return readFile(README_MD, { encoding: 'utf-8' });
+  return readFile(README_MD(), { encoding: 'utf-8' });
 }
 
 /** Update the readme file */
 export async function setReadme(newReadme: string) {
-  await writeFile(README_MD, newReadme);
+  await writeFile(README_MD(), newReadme);
 }
 
 /** Set up the default server README */

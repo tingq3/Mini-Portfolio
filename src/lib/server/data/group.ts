@@ -3,7 +3,7 @@
  */
 
 import { mkdir, readdir, readFile, writeFile } from 'fs/promises';
-import { array, enums, intersection, nullable, object, string, type, validate, type Infer } from 'superstruct';
+import { array, nullable, string, type, validate, type Infer } from 'superstruct';
 import { getDataDir } from './dataDir';
 import { rimraf } from 'rimraf';
 import formatTemplate from '../formatTemplate';

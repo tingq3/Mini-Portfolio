@@ -3,7 +3,7 @@ import { nullable, number, object, record, string, validate, type Infer } from '
 import { getDataDir } from './dataDir';
 
 /** Path to config.local.json */
-const CONFIG_LOCAL_JSON = `${getDataDir()}/config.local.json`;
+const CONFIG_LOCAL_JSON = () => `${getDataDir()}/config.local.json`;
 
 /**
  * Validator for config.local.json file
@@ -63,7 +63,7 @@ export async function getLocalConfig(): Promise<ConfigLocalJson> {
   if (localConfigCache) {
     return localConfigCache;
   }
-  const data = await readFile(CONFIG_LOCAL_JSON, { encoding: 'utf-8' });
+  const data = await readFile(CONFIG_LOCAL_JSON(), { encoding: 'utf-8' });
 
   // Validate data
   const [err, parsed] = validate(JSON.parse(data), ConfigLocalJsonStruct);
@@ -81,7 +81,7 @@ export async function getLocalConfig(): Promise<ConfigLocalJson> {
 /** Update the local configuration, stored in `/data/config.local.json` */
 export async function setLocalConfig(newConfig: ConfigLocalJson) {
   localConfigCache = newConfig;
-  await writeFile(CONFIG_LOCAL_JSON, JSON.stringify(newConfig, undefined, 2));
+  await writeFile(CONFIG_LOCAL_JSON(), JSON.stringify(newConfig, undefined, 2));
 }
 
 /**

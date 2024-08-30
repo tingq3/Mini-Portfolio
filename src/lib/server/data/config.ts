@@ -4,7 +4,7 @@ import { getDataDir } from './dataDir';
 import { version } from '$app/environment';
 
 /** Path to config.json */
-const CONFIG_JSON = `${getDataDir()}/config.json`;
+const CONFIG_JSON = () => `${getDataDir()}/config.json`;
 
 /** Validator for config.json file */
 export const ConfigJsonStruct = object({
@@ -34,7 +34,7 @@ export type ConfigJson = Infer<typeof ConfigJsonStruct>;
  * This does not validate any of the data.
  */
 export async function getConfigVersion(): Promise<string> {
-  const data = JSON.parse(await readFile(CONFIG_JSON, { encoding: 'utf-8' }));
+  const data = JSON.parse(await readFile(CONFIG_JSON(), { encoding: 'utf-8' }));
 
   // Note: v0.1.0 did not have a version number in the file
   return data.version ?? '0.1.0';
@@ -42,7 +42,7 @@ export async function getConfigVersion(): Promise<string> {
 
 /** Return the configuration, stored in `/data/config.json` */
 export async function getConfig(): Promise<ConfigJson> {
-  const data = await readFile(CONFIG_JSON, { encoding: 'utf-8' });
+  const data = await readFile(CONFIG_JSON(), { encoding: 'utf-8' });
 
   // Validate data
   const [err, parsed] = validate(JSON.parse(data), ConfigJsonStruct);
@@ -57,7 +57,7 @@ export async function getConfig(): Promise<ConfigJson> {
 
 /** Update the configuration, stored in `/data/config.json` */
 export async function setConfig(newConfig: ConfigJson) {
-  await writeFile(CONFIG_JSON, JSON.stringify(newConfig, undefined, 2));
+  await writeFile(CONFIG_JSON(), JSON.stringify(newConfig, undefined, 2));
 }
 
 /** Set up the default server configuration */
