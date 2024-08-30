@@ -33,32 +33,106 @@ import { LinksArray, listItems, setItemInfo } from '../item';
 import type { Infer } from 'superstruct';
 import { version } from '$app/environment';
 import { setupGitignore } from '../git';
+import { capitalize } from '$lib/util';
+
+type OldConfig = { name: string };
+
+type OldItemInfo = {
+  name: string;
+  description: string;
+  color: string;
+  /** External links (not internal associative links) */
+  links?: {
+    repo?: RepoInfo;
+    site?: string;
+    docs?: string;
+  };
+  /** Internal (associative) links */
+  associations: Record<string, string[]>;
+  icon?: string;
+  banner?: string;
+  package?: PackageInfo;
+};
+
+/** How to display links within a group */
+type GroupLinkDisplayOptions = {
+  title: string;
+  display: 'card' | 'chip';
+  reverseLookup: boolean;
+};
+
+type OldGroupInfo = {
+  name: string;
+  description: string;
+  color: string;
+  associations?: Record<string, GroupLinkDisplayOptions>;
+};
+
+/** Minimal representation of old global data */
+type OldGlobals = {
+  config: OldConfig,
+  groups: Record<string, OldGroupInfo>,
+  items: Record<string, Record<string, OldItemInfo>>,
+}
 
 export default async function migrate(dataDir: string) {
   console.log(`Begin data migration v0.1.0 -> ${version}`);
-  await config(dataDir);
-  await readme(dataDir);
+
+  // Load all data in
+  const globals: OldGlobals = {
+    config: await loadOldConfig(dataDir),
+    groups: {},
+    items: {},
+  };
 
   // For each group
   for (const groupId of await listGroups()) {
     // Migrate the group info
-    await groupInfo(dataDir, groupId);
+    globals.groups[groupId] = await loadOldGroupInfo(dataDir, groupId);
+    globals.items[groupId] = {};
     // Then migrate each item
     for (const itemId of await listItems(groupId)) {
-      await itemInfo(dataDir, groupId, itemId);
+      globals.items[groupId][itemId] = await loadOldItemInfo(dataDir, groupId, itemId);
     }
   }
+
+  // For each group
+  for (const groupId of Object.keys(globals.groups)) {
+    // Migrate the group info
+    await migrateGroupInfo(globals, groupId);
+    // Then migrate each item
+    for (const itemId of Object.keys(globals.items[groupId])) {
+      await migrateItemInfo(globals, groupId, itemId);
+    }
+  }
+
+  await migrateConfig(dataDir);
+  await migrateReadme(dataDir);
   // Set up gitignore
   console.log('  .gitignore');
   await setupGitignore();
   console.log('Data migration complete!');
 }
 
+/** Load old config.json */
+async function loadOldConfig(dataDir: string): Promise<OldConfig> {
+  return JSON.parse(await fs.readFile(`${dataDir}/config.json`, { encoding: 'utf-8' }));
+}
+
+/** Load item info in old format */
+async function loadOldItemInfo(dataDir: string, groupId: string, itemId: string): Promise<OldItemInfo> {
+  return JSON.parse(await fs.readFile(`${dataDir}/${groupId}/${itemId}/info.json`, { encoding: 'utf-8' }));
+}
+
+/** Load group info in old format */
+async function loadOldGroupInfo(dataDir: string, groupPath: string): Promise<OldGroupInfo> {
+  return JSON.parse(await fs.readFile(`${dataDir}/${groupPath}/info.json`, { encoding: 'utf-8' }));
+}
+
 /** Migrate config.json */
-async function config(dataDir: string) {
+async function migrateConfig(dataDir: string) {
   console.log('  config.json');
-  const configJsonPath = `${dataDir}/config.json`;
-  const oldConfig: { name: string } = JSON.parse(await fs.readFile(configJsonPath, { encoding: 'utf-8' }));
+  const oldConfig = await loadOldConfig(dataDir);
 
   const groupsList = await listGroups();
 
@@ -75,38 +149,53 @@ async function config(dataDir: string) {
 }
 
 /** Migrate info.md -> README.md */
-async function readme(dataDir: string) {
+async function migrateReadme(dataDir: string) {
   console.log('  info.md -> README.md');
   await fs.unlink(`${dataDir}/README.md`);
   await fs.rename(`${dataDir}/info.md`, `${dataDir}/README.md`);
 }
 
-async function itemInfo(dataDir: string, groupId: string, itemId: string) {
+/** Migrate item info to new format */
+async function migrateItemInfo(globals: OldGlobals, groupId: string, itemId: string) {
   console.log(`  Item: ${groupId}/${itemId}`);
 
-  const itemPath = `${dataDir}/${groupId}/${itemId}`;
-  const item: {
-    name: string,
-    description: string,
-    color: string,
-    /** External links (not internal associative links) */
-    links?: {
-      repo?: RepoInfo,
-      site?: string,
-      docs?: string,
-    },
-    /** Internal (associative) links */
-    associations: Record<string, string[]>,
-    icon?: string,
-    banner?: string,
-    package?: PackageInfo,
-  } = JSON.parse(await fs.readFile(`${itemPath}/info.json`, { encoding: 'utf-8' }));
+  const item = globals.items[groupId][itemId];
 
   const links: Infer<typeof LinksArray> = [];
+  const group = globals.groups[groupId];
 
   if (item.associations) {
     for (const linkedGroup of Object.keys(item.associations)) {
-      links.push([{ groupId: linkedGroup, title: linkedGroup, style: 'chip' }, item.associations[linkedGroup]]);
+      links.push([
+        {
+          groupId: linkedGroup,
+          // Determine title and style from group options if possible
+          title: groupLinkPropertyOr(group, linkedGroup, 'title', capitalize(linkedGroup)),
+          style: groupLinkPropertyOr(group, linkedGroup, 'display', 'chip'),
+        },
+        // If reverse-lookup is enabled for the associations, use that
+        groupLinkPropertyOr(group, linkedGroup, 'reverseLookup', false)
+          ? findReverseLinks(globals, groupId, itemId, linkedGroup)
+          : item.associations[linkedGroup]
+      ]);
+    }
+  }
+
+  // Also set up associations for groups
+  if (group.associations) {
+    for (const linkedGroup of Object.keys(group.associations)) {
+      if (groupLinkPropertyOr(group, linkedGroup, 'reverseLookup', false)) {
+        links.push([
+          {
+            groupId: linkedGroup,
+            // Determine title and style from group options if possible
+            title: groupLinkPropertyOr(group, linkedGroup, 'title', capitalize(linkedGroup)),
+            style: groupLinkPropertyOr(group, linkedGroup, 'display', 'chip'),
+          },
+          // Find reverse links
+          findReverseLinks(globals, groupId, itemId, linkedGroup)
+        ]);
+      }
     }
   }
 
@@ -126,15 +215,43 @@ async function itemInfo(dataDir: string, groupId: string, itemId: string) {
   });
 }
 
-async function groupInfo(dataDir: string, groupId: string) {
+/**
+ * Returns the given property value for the given linked group if possible,
+ * otherwise returns the fallback value.
+ */
+function groupLinkPropertyOr<T extends keyof GroupLinkDisplayOptions>(
+  group: OldGroupInfo,
+  linkedGroup: string,
+  property: T,
+  fallback: GroupLinkDisplayOptions[T],
+): GroupLinkDisplayOptions[T] {
+  return group.associations && group.associations[linkedGroup]
+    ? group.associations[linkedGroup][property]
+    : fallback;
+}
+
+/** Returns all items within the given linkedGroup that link to the given item */
+function findReverseLinks(
+  globals: OldGlobals,
+  groupId: string,
+  itemId: string,
+  linkedGroup: string
+): string[] {
+  const reverseLinks = [];
+
+  for (const [linkedItemId, item] of Object.entries(globals.items[linkedGroup])) {
+    if (item.associations?.[groupId]?.includes(itemId)) {
+      reverseLinks.push(linkedItemId);
+    }
+  }
+
+  return reverseLinks;
+}
+
+async function migrateGroupInfo(globals: OldGlobals, groupId: string) {
   console.log(`  Group: ${groupId}`);
 
-  const groupPath = `${dataDir}/${groupId}`;
-  const group: {
-    name: string,
-    description: string,
-    color: string,
-  } = JSON.parse(await fs.readFile(`${groupPath}/info.json`, { encoding: 'utf-8' }));
+  const group = globals.groups[groupId];
 
   await setGroupInfo(groupId, {
     name: group.name,
