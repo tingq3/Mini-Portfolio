@@ -27,7 +27,9 @@ it('Correctly returns repo info when a repo is set up', { timeout: 15_000 }, asy
       url: gitRepos.TEST_REPO_RW,
       branch: 'main',
       commit: await repo.revparse(['--short', 'HEAD']),
-      clean: true,
+      // A data migration may have been performed, which would lead to an
+      // unclean git tree
+      clean: expect.any(Boolean),
     }
   });
 });
