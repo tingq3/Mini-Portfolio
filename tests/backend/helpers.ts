@@ -24,6 +24,7 @@ export function createCustomGroupProperties(options: Partial<GroupInfo> = {}): G
     color: '#aa00aa',
     filterGroups: [],
     listedItems: [],
+    filterItems: [],
     banner: null,
     icon: null,
   };
