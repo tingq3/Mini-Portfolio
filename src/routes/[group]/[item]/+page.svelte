@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { Navbar, Markdown } from '$components';
+  import { Navbar } from '$components';
   import { IconCard, RepoCard, PackageCard, CardList } from '$components/card';
+  import { ItemChipList } from '$components/chip';
   import Background from '$components/Background.svelte';
   import Paper from '$components/Paper.svelte';
-    import EditableMarkdown from '$components/markdown';
-    import api from '$endpoints';
+  import EditableMarkdown from '$components/markdown';
+  import api from '$endpoints';
   // import AsciinemaPlayer from "$components";
 
   export let data: import('./$types').PageData;
@@ -41,12 +42,24 @@
         editable={data.loggedIn}
         onSave={text => api().group.withId(data.groupId).item.withId(data.itemId).readme.set(text)}
       />
-      <!-- TODO: Display linked items as chips -->
+      <!-- Display linked items as chips -->
+      <div id="chip-links">
+        {#each itemData.info.links.filter(([l]) => l.style === 'chip') as [linkOptions, linkedItems]}
+          <div class="chip-link-row">
+            <h2>{linkOptions.title}</h2>
+            <ItemChipList
+              globals={data.globals}
+              items={[linkedItems.map(i => ({ groupId: linkOptions.groupId, itemId: i, selected: false }))]}
+              link={true}
+            />
+          </div>
+        {/each}
+      </div>
     </div>
   </Paper>
 
   <!-- Display URLs if needed -->
-  <div id="links-list">
+  <div id="urls-list">
     <CardList>
       {#if itemData.info.urls.site}
         <IconCard
@@ -108,18 +121,18 @@
     border-radius: 10px 10px 0 0;
   }
 
-  /* .association-chip-row {
+  .chip-link-row {
     display: flex;
     align-items: baseline;
     gap: 5px;
     margin: 10px 0;
   }
-  .association-chip-row > h3 {
+  .chip-link-row > h2 {
     margin: 0;
     height: min-content;
-  } */
+  }
 
-  #links-list {
+  #urls-list {
     width: 80%;
   }
 
