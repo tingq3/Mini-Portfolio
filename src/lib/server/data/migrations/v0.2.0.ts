@@ -12,7 +12,7 @@ import { unsafeLoadGroupInfo } from './unsafeLoad';
 export default async function migrate(dataDir: string) {
   console.log(`Migrate from v0.2.x -> ${version}`);
 
-  await updateConfigVersions();
+  await updateConfigVersions(dataDir);
 
   // For each group
   for (const groupId of await listGroups()) {

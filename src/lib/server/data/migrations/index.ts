@@ -12,10 +12,11 @@ export type MigrationFunction = (dataDir: string) => Promise<void>;
 const migrations: Record<string, MigrationFunction> = {
   '~0.1.0': migrateFromV010,
   '~0.2.0': migrateFromV020,
+  '~0.3.0': updateConfigVersions,
 };
 
 /** Update config versions (only for minor, non-breaking changes to config.json) */
-export async function updateConfigVersions() {
+export async function updateConfigVersions(dataDir: string) {
   const config = await getConfig();
   config.version = version;
   await setConfig(config);
@@ -38,7 +39,9 @@ export default async function migrate(oldVersion: string) {
       // calls getConfig and getLocalConfig without specifying the desired
       // directory to load from).
       try {
-        return await migrateFunction(getDataDir());
+        await migrateFunction(getDataDir());
+        console.log('Migration success');
+        return;
       } catch (e) {
         console.log('!!! Error during migration');
         console.log(e);
