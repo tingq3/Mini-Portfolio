@@ -1,11 +1,24 @@
 # Minifolio
 # Example docker-compose.yml
-# Adjust as required
+#
+# Usage:
+# * The data directory will be set up inside `./data` on the host system
+# * You should create a `.env` file to contain the `AUTH_SECRET` environment
+#   variable. Perhaps you could generate this using the command here:
+#   https://unix.stackexchange.com/a/476125/161355
+#
+# It is not necessary to set up other environment variables
 services:
-  portfolio:
+  minifolio:
     image: maddyguthridge/minifolio
     hostname: minifolio
     ports:
       - 127.0.0.1:3000:3000/tcp
     volumes:
-      - "./data:/home/node/app/data:rw"
+      - "./data:/data:rw"
+    environment:
+      DATA_REPO_PATH: "/data"
+      HOST: 0.0.0.0
+      PORT: 3000
+    # Set up `AUTH_SECRET` variable within `.env`
+    env_file: ".env"
