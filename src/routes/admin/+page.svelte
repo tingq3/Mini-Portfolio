@@ -52,6 +52,12 @@
             shown in the background on many pages.
           </p>
         </form>
+        <div>
+          <h2>Reload data from disk</h2>
+          If you have edited the data manually, you can use this button to
+          refresh it.
+          <button on:click={() => api().admin.data.refresh()}>Refresh data</button>
+        </div>
       </div>
     </Paper>
   </div>
