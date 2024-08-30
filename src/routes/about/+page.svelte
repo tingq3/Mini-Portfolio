@@ -28,9 +28,6 @@ For security reasons, these details are only shown if you are logged in.
 
 * ${consts.APP_NAME}: v${data.versions.site}
 * Node: ${data.versions.node}
-* Svelte: v${data.versions.svelte}
-* Sveltekit: v${data.versions.sveltekit}
-* Vite: v${data.versions.vite}
 * OS: ${data.versions.os}
 `;
 }
