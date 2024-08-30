@@ -16,12 +16,7 @@
  * Some data is lost in this migration (mainly because I couldn't be bothered
  * to implement anything more than the minimum).
  *
- * * `README.md` clobbered by `info.md`.
- * * Sorting and listing of items within groups. All items are listed.
- * * Ordering of links (formerly associations) in items. Old data format did
- *   not order them.
- * * Link style (can't be bothered to look up data in old format).
- * * Filter groups per group.
+ * * `README.md` is clobbered by `info.md`.
  */
 
 import fs from 'fs/promises';
@@ -52,6 +47,8 @@ type OldItemInfo = {
   icon?: string;
   banner?: string;
   package?: PackageInfo;
+  visibility?: 'filtered';
+  sort?: number;
 };
 
 /** How to display links within a group */
@@ -259,9 +256,13 @@ async function migrateGroupInfo(globals: OldGlobals, groupId: string) {
     color: group.color,
     icon: null,
     banner: null,
-    // Filter using all groups
-    filterGroups: await listGroups(),
-    // List all items
-    listedItems: await listItems(groupId),
+    // Filter using all groups except for this one
+    filterGroups: Object.keys(globals.groups).filter(g => g !== groupId),
+    // List all items, and sort them based on the given sort value
+    listedItems: Object.keys(globals.items[groupId]).toSorted(
+      (i1, i2) => (globals.items[groupId][i1].sort || 0) - (globals.items[groupId][i2].sort || 0)
+    ).toReversed(),
+    // Use all items for filtering where the visibility setting isn't "filtered"
+    filterItems: Object.keys(globals.items[groupId]).filter(i => globals.items[groupId][i].visibility !== 'filtered')
   });
 }

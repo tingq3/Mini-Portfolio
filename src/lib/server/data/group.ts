@@ -46,6 +46,9 @@ export const GroupInfoStruct = type({
    * Array of item IDs to display for this page.
    */
   listedItems: array(string()),
+
+  /** Array of item IDs to use as filters when this group is used as a filter for other group's items */
+  filterItems: array(string()),
 });
 
 /** Brief info about a group */
@@ -126,6 +129,7 @@ export async function createGroup(id: string, name: string, description: string)
     banner: null,
     filterGroups: [],
     listedItems: [],
+    filterItems: [],
   });
   await setGroupReadme(id, readme);
 }
