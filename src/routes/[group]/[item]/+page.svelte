@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Navbar } from '$components';
-  import { IconCard, RepoCard, PackageCard, CardList } from '$components/card';
+  import { IconCard, RepoCard, PackageCard, CardList, ItemCardGrid } from '$components/card';
   import { ItemChipList } from '$components/chip';
   import Background from '$components/Background.svelte';
   import Paper from '$components/Paper.svelte';
@@ -102,7 +102,17 @@
     <AsciinemaPlayer castUrl="/projects/{label.slug}/demo.asciinema" />
   {/if} -->
 
-  <!-- TODO: Display linked items as cards -->
+  <!-- Display linked items as cards -->
+  <div id="card-links">
+    {#each itemData.info.links.filter(([l]) => l.style === 'card') as [linkOptions, linkedItems]}
+    <h2>{linkOptions.title}</h2>
+      <ItemCardGrid
+        globals={data.globals}
+        groupId={linkOptions.groupId}
+        itemIds={linkedItems}
+      />
+    {/each}
+  </div>
 </main>
 
 <style>
@@ -136,7 +146,7 @@
     width: 80%;
   }
 
-  /* #association-cards {
+  #card-links {
     width: 80%;
-  } */
+  }
 </style>
