@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'fs/promises';
 import { array, object, string, validate, type Infer } from 'superstruct';
 import { getDataDir } from './dataDir';
 import { version } from '$app/environment';
+import { unsafeLoadConfig } from './migrations/unsafeLoad';
 
 /** Path to config.json */
 const CONFIG_JSON = () => `${getDataDir()}/config.json`;
@@ -34,7 +35,7 @@ export type ConfigJson = Infer<typeof ConfigJsonStruct>;
  * This does not validate any of the data.
  */
 export async function getConfigVersion(): Promise<string> {
-  const data = JSON.parse(await readFile(CONFIG_JSON(), { encoding: 'utf-8' }));
+  const data = await unsafeLoadConfig(getDataDir()) as { version?: string };
 
   // Note: v0.1.0 did not have a version number in the file
   return data.version ?? '0.1.0';

@@ -10,6 +10,7 @@
  */
 
 import { version } from '$app/environment';
+import semver from 'semver';
 import { getConfig, getConfigVersion, type ConfigJson } from './config';
 import { getGroupData, listGroups, type GroupData } from './group';
 import { getItemData, listItems, type ItemData } from './item';
@@ -35,8 +36,10 @@ async function loadPortfolioGlobals(): Promise<PortfolioGlobals> {
   // Check if a migration is needed
   const dataVersion = await getConfigVersion();
 
-  if (dataVersion !== version) {
+  if (semver.lt(dataVersion, version)) {
     await migrate(dataVersion);
+  } else if (semver.gt(dataVersion, version)) {
+    throw new Error(`Data dir version is invalid (got ${dataVersion}, expected <= ${version})`);
   }
 
   const config = await getConfig();

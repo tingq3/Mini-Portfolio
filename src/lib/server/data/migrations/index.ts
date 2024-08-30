@@ -3,9 +3,19 @@ import { getConfig, setConfig } from '../config';
 import { getDataDir } from '../dataDir';
 import { getLocalConfig, setLocalConfig } from '../localConfig';
 import migrateFromV010 from './v0.1.0';
+import migrateFromV020 from './v0.2.0';
+import semver from 'semver';
 
-/** Update config versions */
-async function updateConfigVersions() {
+export type MigrationFunction = (dataDir: string) => Promise<void>;
+
+/** Lookup table of migrations */
+const migrations: Record<string, MigrationFunction> = {
+  '~0.1.0': migrateFromV010,
+  '~0.2.0': migrateFromV020,
+};
+
+/** Update config versions (only for minor, non-breaking changes to config.json) */
+export async function updateConfigVersions() {
   const config = await getConfig();
   config.version = version;
   await setConfig(config);
@@ -17,21 +27,26 @@ async function updateConfigVersions() {
 /** Perform a migration from the given version */
 export default async function migrate(oldVersion: string) {
   console.log(`Data directory uses version ${oldVersion}. Migration needed`);
-  try {
-    if (oldVersion === '0.1.0') {
-      await migrateFromV010(getDataDir());
-    } else if (oldVersion === '0.2.0') {
-      // FIXME: Need a nicer system for these kinds of version differences
-      // perhaps using semver?
-      await updateConfigVersions();
-    } else {
-      const message = `Migrate: unrecognised old version ${oldVersion}`;
-      console.log(message);
-      throw new Error(message);
+
+  for (const [versionRange, migrateFunction] of Object.entries(migrations)) {
+    if (semver.satisfies(oldVersion, versionRange)) {
+      // TODO: In future, perhaps we should copy the data to a temporary
+      // location before performing the migration to avoid data destruction
+      // if things don't go according to plan.
+      // This may require checking to ensure all data is loaded from the given
+      // data dir by migrate functions (eg `updateConfigVersions` currently
+      // calls getConfig and getLocalConfig without specifying the desired
+      // directory to load from).
+      try {
+        return await migrateFunction(getDataDir());
+      } catch (e) {
+        console.log('!!! Error during migration');
+        console.log(e);
+        throw e;
+      }
     }
-  } catch (e) {
-    console.log('!!! Error during migration');
-    console.log(e);
-    throw e;
   }
+  const msg = `Unable to perform data migration, as version ${oldVersion} does not have a migrate function for ${version}`;
+  console.log(msg);
+  throw new Error(msg);
 }

@@ -29,6 +29,7 @@ import type { Infer } from 'superstruct';
 import { version } from '$app/environment';
 import { setupGitignore } from '../git';
 import { capitalize } from '$lib/util';
+import { unsafeLoadConfig, unsafeLoadGroupInfo, unsafeLoadItemInfo } from './unsafeLoad';
 
 type OldConfig = { name: string };
 
@@ -113,17 +114,17 @@ export default async function migrate(dataDir: string) {
 
 /** Load old config.json */
 async function loadOldConfig(dataDir: string): Promise<OldConfig> {
-  return JSON.parse(await fs.readFile(`${dataDir}/config.json`, { encoding: 'utf-8' }));
+  return await unsafeLoadConfig(dataDir) as OldConfig;
 }
 
 /** Load item info in old format */
 async function loadOldItemInfo(dataDir: string, groupId: string, itemId: string): Promise<OldItemInfo> {
-  return JSON.parse(await fs.readFile(`${dataDir}/${groupId}/${itemId}/info.json`, { encoding: 'utf-8' }));
+  return await unsafeLoadItemInfo(dataDir, groupId, itemId) as OldItemInfo;
 }
 
 /** Load group info in old format */
-async function loadOldGroupInfo(dataDir: string, groupPath: string): Promise<OldGroupInfo> {
-  return JSON.parse(await fs.readFile(`${dataDir}/${groupPath}/info.json`, { encoding: 'utf-8' }));
+async function loadOldGroupInfo(dataDir: string, groupId: string): Promise<OldGroupInfo> {
+  return await unsafeLoadGroupInfo(dataDir, groupId) as OldGroupInfo;
 }
 
 /** Migrate config.json */
