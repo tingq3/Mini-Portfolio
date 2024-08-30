@@ -4,7 +4,8 @@
 
 import { error } from '@sveltejs/kit';
 import type { PortfolioGlobals } from './data';
-import { setItemInfo, type ItemInfoFull } from './data/item';
+import { setItemInfo } from './data/item';
+import { itemHasLink } from '../links';
 
 /** Add a link from groupId/itemId to otherGroupId/otherItemId */
 export async function createLink(
@@ -96,13 +97,6 @@ export async function removeLinkFromItem(
       return;
     }
   }
-}
-
-/** Returns whether the given item links to the target */
-function itemHasLink(item: ItemInfoFull, targetGroup: string, targetItem: string) {
-  return item.links.find(
-    ([{ groupId }, items]) => groupId === targetGroup && items.includes(targetItem)
-  ) !== undefined;
 }
 
 /** Removes all links that point to the given item */

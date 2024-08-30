@@ -3,37 +3,18 @@
   import { ItemChip } from '.';
   import type { PortfolioGlobals } from '$lib';
   import { Separator } from '$components';
+  import type { FilterOptions } from '$lib/itemFilter';
 
   /** Global data */
   export let globals: PortfolioGlobals;
 
   /**
-   * 2D Array of items to display, including whether they are selected.
-   *
-   * Each array of items is displayed split by a separator.
+   * Filter options to display
    */
-  export let items: { itemId: string, groupId: string, selected: boolean }[][];
+  export let items: FilterOptions;
 
   /** Whether to link each chip to its respective page */
   export let link: boolean = false;
-
-  // Dispatch clicks on the chips to be forwarded alongside their classifier
-  // and label
-  const dispatch = createEventDispatcher<{
-    click: {
-      groupId: string,
-      itemId: string,
-      e: MouseEvent,
-    },
-  }>();
-
-  const bubbleClick = (groupId: string, itemId: string, e: MouseEvent) => {
-    dispatch('click', {
-      groupId,
-      itemId,
-      e,
-    });
-  };
 
   // Smoooooooooooth scrolling
   // ==================================================
@@ -107,6 +88,18 @@
     }, 100);
     return () => clearInterval(interval);
   });
+
+  // Filtering
+
+  const dispatch = createEventDispatcher<{
+    filter: FilterOptions,
+  }>();
+
+  // Update filter status
+  function updateFilterStatus(outerIdx: number, innerIdx: number) {
+    items[outerIdx][innerIdx].selected = !items[outerIdx][innerIdx].selected;
+    dispatch('filter', items);
+  }
 </script>
 
 {#if items.length}
@@ -115,29 +108,21 @@
     bind:this={ele}
     on:wheel={onWheel}
   >
-    {#each items.slice(0, -1) as itemGroup}
-      {#each itemGroup as { itemId, groupId, selected }}
+    {#each items as itemGroup, outer}
+      {#each itemGroup as filterItem, inner}
         <ItemChip
           {globals}
-          {groupId}
-          {itemId}
-          {selected}
+          groupId={filterItem.groupId}
+          itemId={filterItem.itemId}
+          selected={filterItem.selected}
           {link}
-          on:click={e => bubbleClick(groupId, itemId, e)}
+          on:click={() => updateFilterStatus(outer, inner)}
         />
       {/each}
-      <Separator />
-    {/each}
-    <!-- Last classifier doesn't have a separator -->
-    {#each items.slice(-1)[0] as { itemId, groupId, selected }}
-      <ItemChip
-        {globals}
-        {groupId}
-        {itemId}
-        {selected}
-        {link}
-        on:click={e => bubbleClick(itemId, groupId, e)}
-      />
+      <!-- Last classifier doesn't have a separator -->
+      {#if outer < items.length - 1}
+        <Separator />
+      {/if}
     {/each}
   </div>
 {/if}

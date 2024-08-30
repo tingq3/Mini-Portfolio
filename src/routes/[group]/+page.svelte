@@ -1,14 +1,23 @@
 <script lang="ts">
-  import { Navbar, Markdown } from '$components';
+  import { Navbar } from '$components';
+  import EditableMarkdown from '$components/markdown';
   import { ItemCardGrid } from '$components/card';
   import Background from '$components/Background.svelte';
-  import Paper from '$components/Paper.svelte';
-    import EditableMarkdown from '$components/markdown';
-    import api from '$endpoints';
+  import api from '$endpoints';
+  import { ItemChipList } from '$components/chip';
+  import { createItemFilter, applyFiltersToGroupItems } from '$lib/itemFilter';
 
   export let data: import('./$types').PageData;
 
   $: groupData = data.globals.groups[data.groupId];
+  $: filterSelections = createItemFilter(data.globals, data.groupId);
+
+  /** By default list all items until a filter is applied */
+  $: itemsToList = applyFiltersToGroupItems(
+    data.globals,
+    data.groupId,
+    filterSelections,
+  );
 </script>
 
 <Background color={groupData.info.color} />
@@ -33,11 +42,19 @@
   </div>
 
   <!-- TODO: Implement filtering -->
+   <div id="filters">
+     <ItemChipList
+      globals={data.globals}
+      items={filterSelections}
+      on:filter={e => { filterSelections = e.detail; }}
+    />
+   </div>
 
   <!-- List all entry cards -->
   <div id="item-list">
     <ItemCardGrid
       groupId={data.groupId}
+      itemIds={itemsToList}
       globals={data.globals}
     />
   </div>
@@ -60,9 +77,9 @@
     padding: 20px;
     width: 90%;
   }
-  /* #filters {
+  #filters {
     width: 100%;
-  } */
+  }
   #item-list {
     width: 100%;
   }

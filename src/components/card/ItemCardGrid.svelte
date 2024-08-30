@@ -4,12 +4,16 @@
   import { ItemCard } from '.';
   import type { PortfolioGlobals } from '$lib';
 
+  /** Portfolio globals */
   export let globals: PortfolioGlobals;
+  /** ID of group to which items belong */
   export let groupId: string;
+  /** Item IDs to show */
+  export let itemIds: string[];
 </script>
 
 <div class="card-grid">
-  {#each globals.groups[groupId].info.listedItems as itemId (itemId)}
+  {#each itemIds as itemId (itemId)}
     <div
       transition:fade={{ duration: 300 }}
       animate:flip={{ duration: 300 }}
