@@ -2,6 +2,7 @@ import sanitize from 'sanitize-filename';
 import fs from 'fs/promises';
 import { error } from '@sveltejs/kit';
 import mime from 'mime-types';
+import { getDataDir } from '$lib/server/data/dataDir.js';
 
 export async function GET({ params, setHeaders }) {
   const { group, item, file } = params;
@@ -10,7 +11,7 @@ export async function GET({ params, setHeaders }) {
   const filename = sanitize(file);
 
   // Get the path of the file to serve
-  const filePath = `data/${group}/${item}/${filename}`;
+  const filePath = `${getDataDir()}/${group}/${item}/${filename}`;
 
   // Ensure file exists
   await fs.access(filePath, fs.constants.R_OK).catch(() => error(404));
