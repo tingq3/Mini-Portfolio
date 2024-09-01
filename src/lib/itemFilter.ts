@@ -19,9 +19,10 @@ export type FilterOptions = {
 export function createItemFilter(globals: PortfolioGlobals, groupId: string): FilterOptions {
   return globals.groups[groupId].info.filterGroups
     .map(groupId => (
-      globals.groups[groupId].info.listedItems
+      globals.groups[groupId].info.filterItems
         .map(itemId => ({ groupId, itemId, selected: false }))
-    ));
+    ))
+    .filter(group => group.length);
 }
 
 /**
