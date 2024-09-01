@@ -19,6 +19,10 @@ test('About page loads', async () => {
   await expect(endpoints.about()).resolves.toStrictEqual(expect.any(String));
 });
 
+test('About page loads with token provided', async () => {
+  await expect(endpoints.about(api.token)).resolves.toStrictEqual(expect.any(String));
+});
+
 test('Group page loads', async () => {
   await api.group.withId('my-group').create('My group', 'My group');
   await expect(endpoints.group('my-group')).resolves.toStrictEqual(expect.any(String));

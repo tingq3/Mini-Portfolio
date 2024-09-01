@@ -6,8 +6,8 @@ export function root(): Promise<string> {
   return text(apiFetch('GET', '/'));
 }
 
-export function about(): Promise<string> {
-  return text(apiFetch('GET', '/about'));
+export function about(token?: string): Promise<string> {
+  return text(apiFetch('GET', '/about', token));
 }
 
 export function group(groupId: string): Promise<string> {
