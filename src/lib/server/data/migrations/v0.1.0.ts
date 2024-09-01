@@ -136,6 +136,9 @@ async function migrateConfig(dataDir: string) {
 
   const newConfig: ConfigJson = {
     siteName: oldConfig.name,
+    siteShortName: oldConfig.name,
+    siteDescription: '',
+    siteKeywords: ['Portfolio'],
     // Assumes that all groups are visible, since there is no visibility
     // setting for groups in 0.1.0
     listedGroups: groupsList,
@@ -200,6 +203,8 @@ async function migrateItemInfo(globals: OldGlobals, groupId: string, itemId: str
   await setItemInfo(groupId, itemId, {
     name: item.name,
     description: item.description,
+    pageDescription: '',
+    keywords: [item.name],
     color: item.color,
     icon: item.icon ?? null,
     banner: item.banner ?? null,
@@ -254,6 +259,8 @@ async function migrateGroupInfo(globals: OldGlobals, groupId: string) {
   await setGroupInfo(groupId, {
     name: group.name,
     description: group.description,
+    pageDescription: '',
+    keywords: [group.name],
     color: group.color,
     icon: null,
     banner: null,
@@ -264,6 +271,6 @@ async function migrateGroupInfo(globals: OldGlobals, groupId: string) {
       (i1, i2) => (globals.items[groupId][i1].sort || 0) - (globals.items[groupId][i2].sort || 0)
     ).toReversed(),
     // Use all items for filtering where the visibility setting isn't "filtered"
-    filterItems: Object.keys(globals.items[groupId]).filter(i => globals.items[groupId][i].visibility !== 'filtered')
+    filterItems: Object.keys(globals.items[groupId]).filter(i => globals.items[groupId][i].visibility !== 'filtered'),
   });
 }
