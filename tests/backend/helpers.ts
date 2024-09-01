@@ -20,6 +20,7 @@ export function makeConfig(options: Partial<ConfigJson> = {}): ConfigJson {
     siteShortName: 'Site',
     siteDescription: 'This is the description for my site',
     siteKeywords: ['Keyword', 'Another keyword'],
+    siteIcon: null,
     listedGroups: [],
     color: '#ffaaff',
     version,

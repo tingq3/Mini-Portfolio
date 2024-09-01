@@ -7,6 +7,7 @@ import { beforeEach, expect, it } from 'vitest';
 import { makeConfig, setup } from '../../helpers';
 import { version } from '$app/environment';
 import type { ApiClient } from '$endpoints';
+import genTokenTests from '../../tokenCase';
 
 let api: ApiClient;
 
@@ -40,10 +41,15 @@ it('Allows listedGroups to contain existing groups', async () => {
     .resolves.toMatchObject({ listedGroups: ['my-group'] });
 });
 
-it('Rejects invalid tokens', async () => {
-  await expect(api.withToken('invalid').admin.config.put(makeConfig()))
-    .rejects.toMatchObject({ code: 401 });
+it("Errors if the icon doesn't exist within the data dir", async () => {
+  await expect(api.admin.config.put(makeConfig({ siteIcon: 'not-a-file.jpg' })))
+    .rejects.toMatchObject({ code: 400 });
 });
+
+genTokenTests(
+  () => api,
+  api => api.admin.config.put(makeConfig()),
+);
 
 it('Errors if site is not set up', async () => {
   await api.debug.clear();

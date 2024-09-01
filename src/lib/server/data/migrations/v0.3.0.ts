@@ -21,6 +21,7 @@ async function migrateConfig(dataDir: string) {
   config.siteShortName = config.siteName;
   config.siteDescription = '';
   config.siteKeywords = ['Portfolio'];
+  config.siteIcon = null;
   await setConfig(config);
 }
 
