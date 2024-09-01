@@ -28,6 +28,15 @@ export const ItemInfoBriefStruct = type({
   /** Short description of the item */
   description: string(),
 
+  /** Description to use for the webpage of the item, used in SEO */
+  pageDescription: string(),
+
+  /**
+   * SEO keywords to use for this group. These are combined with the site and
+   * group keywords.
+   */
+  keywords: array(string()),
+
   /** Color */
   color: string(),
 
@@ -127,6 +136,8 @@ export async function getItemInfoBrief(groupId: string, itemId: string): Promise
   return {
     name: info.name,
     description: info.description,
+    pageDescription: info.pageDescription,
+    keywords: info.keywords,
     color: info.color,
     icon: info.icon,
     banner: info.banner,
@@ -171,6 +182,8 @@ export async function createItem(groupId: string, itemId: string, name: string, 
   await setItemInfo(groupId, itemId, {
     name,
     description,
+    pageDescription: '',
+    keywords: [name],
     // TODO: Generate a random color for the new item
     color: '#aa00aa',
     links: [],

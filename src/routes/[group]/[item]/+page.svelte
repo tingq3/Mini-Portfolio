@@ -6,6 +6,8 @@
   import Paper from '$components/Paper.svelte';
   import EditableMarkdown from '$components/markdown';
   import api from '$endpoints';
+    import consts from '$lib/consts';
+    import { generateKeywords } from '$lib/seo';
   // import AsciinemaPlayer from "$components";
 
   export let data: import('./$types').PageData;
@@ -13,6 +15,15 @@
   $: groupData = data.globals.groups[data.groupId];
   $: itemData = data.globals.items[data.groupId][data.itemId];
 </script>
+
+<!-- TODO: Find a less repetitive way to get this working nicely -->
+<svelte:head>
+  <title>{itemData.info.name} - {groupData.info.name} - {data.globals.config.siteShortName}</title>
+  <meta name="description" content="{itemData.info.pageDescription}">
+  <meta name="generator" content="{consts.APP_NAME}">
+  <meta name="keywords" content="{generateKeywords(data.globals, data.groupId, data.itemId)}">
+  <meta name="theme-color" content="{itemData.info.color}">
+</svelte:head>
 
 <Background color={itemData.info.color}></Background>
 

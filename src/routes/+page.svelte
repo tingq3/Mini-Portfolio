@@ -3,11 +3,20 @@
   import Background from '$components/Background.svelte';
   import { GroupCardGrid } from '$components/card';
   import EditableMarkdown from '$components/markdown';
-  import Paper from '$components/Paper.svelte';
   import api from '$endpoints';
+  import consts from '$lib/consts';
+    import { generateKeywords } from '$lib/seo';
 
   export let data: import('./$types').PageData;
 </script>
+
+<svelte:head>
+  <title>{data.globals.config.siteName}</title>
+  <meta name="description" content="{data.globals.config.siteDescription}">
+  <meta name="generator" content="{consts.APP_NAME}">
+  <meta name="keywords" content="{generateKeywords(data.globals)}">
+  <meta name="theme-color" content="{data.globals.config.color}">
+</svelte:head>
 
 <Navbar
   path={[]}

@@ -35,6 +35,14 @@ For security reasons, these details are only shown if you are logged in.
 const readme = mainInfo + technicalDetails;
 </script>
 
+<svelte:head>
+  <title>About - {data.config.siteName}</title>
+  <meta name="description" content="{data.config.siteDescription}">
+  <meta name="generator" content="{consts.APP_NAME}">
+  <meta name="keywords" content="{data.config.siteKeywords.join(', ')}">
+  <meta name="theme-color" content="{data.config.color}">
+</svelte:head>
+
 <Navbar
   config={data.config}
   loggedIn={data.loggedIn}

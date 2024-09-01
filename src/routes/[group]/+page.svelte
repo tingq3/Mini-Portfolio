@@ -6,6 +6,8 @@
   import api from '$endpoints';
   import { ItemChipList } from '$components/chip';
   import { createItemFilter, applyFiltersToGroupItems } from '$lib/itemFilter';
+    import consts from '$lib/consts';
+    import { generateKeywords } from '$lib/seo';
 
   export let data: import('./$types').PageData;
 
@@ -19,6 +21,15 @@
     filterSelections,
   );
 </script>
+
+<!-- TODO: Find a less repetitive way to get this working nicely -->
+<svelte:head>
+  <title>{groupData.info.name} - {data.globals.config.siteShortName}</title>
+  <meta name="description" content="{groupData.info.pageDescription}">
+  <meta name="generator" content="{consts.APP_NAME}">
+  <meta name="keywords" content="{generateKeywords(data.globals, data.groupId)}">
+  <meta name="theme-color" content="{groupData.info.color}">
+</svelte:head>
 
 <Background color={groupData.info.color} />
 

@@ -26,6 +26,15 @@ export const GroupInfoStruct = type({
   /** Short description of the group */
   description: string(),
 
+  /** Description to use for the webpage of the group, used in SEO */
+  pageDescription: string(),
+
+  /**
+   * SEO keywords to use for this group. These are combined with the site
+   * keywords.
+   */
+  keywords: array(string()),
+
   /** Color */
   color: string(),
 
@@ -123,6 +132,8 @@ export async function createGroup(id: string, name: string, description: string)
   await setGroupInfo(id, {
     name,
     description,
+    pageDescription: '',
+    keywords: [name],
     // TODO: Generate a random color for the new group
     color: '#aa00aa',
     icon: null,

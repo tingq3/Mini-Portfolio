@@ -21,6 +21,14 @@
   }
 </script>
 
+<svelte:head>
+  <title>Admin - {data.globals.config.siteName}</title>
+  <meta name="generator" content="{consts.APP_NAME}">
+  <meta name="theme-color" content="{data.globals.config.color}">
+  <!-- Prevent web crawlers from indexing the admin page -->
+  <meta name="robots" content="noindex">
+</svelte:head>
+
 <Navbar
   path={[{ txt: 'Admin', url: 'admin' }]}
   config={config}
