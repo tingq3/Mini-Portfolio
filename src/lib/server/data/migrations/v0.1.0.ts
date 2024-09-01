@@ -139,6 +139,7 @@ async function migrateConfig(dataDir: string) {
     siteShortName: oldConfig.name,
     siteDescription: '',
     siteKeywords: ['Portfolio'],
+    siteIcon: null,
     // Assumes that all groups are visible, since there is no visibility
     // setting for groups in 0.1.0
     listedGroups: groupsList,

@@ -7,6 +7,7 @@ const blankConfig: ConfigJson = {
   siteShortName: consts.APP_NAME,
   siteDescription: '',
   siteKeywords: [],
+  siteIcon: null,
   listedGroups: [],
   color: '#ffaaff',
   version,
