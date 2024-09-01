@@ -7,7 +7,7 @@
  */
 import type { ApiClient } from '$endpoints';
 import { beforeEach, expect, it, describe } from 'vitest';
-import { createCustomGroupProperties, makeGroup, setup } from '../helpers';
+import { makeGroupInfo, makeGroup, setup } from '../helpers';
 import { invalidNames, validNames } from '../consts';
 import genTokenTests from '../tokenCase';
 
@@ -22,7 +22,7 @@ beforeEach(async () => {
 
 it.each([
   { name: 'Get info', fn: () => api.group.withId(groupId).info.get() },
-  { name: 'Set info', fn: () => api.group.withId(groupId).info.set(createCustomGroupProperties()) },
+  { name: 'Set info', fn: () => api.group.withId(groupId).info.set(makeGroupInfo()) },
 ])('Gives an error if the server is not set up', async ({ fn }) => {
   await api.debug.clear();
   await expect(fn())
@@ -31,24 +31,24 @@ it.each([
 
 genTokenTests(
   () => api,
-  api => api.group.withId(groupId).info.set(createCustomGroupProperties()),
+  api => api.group.withId(groupId).info.set(makeGroupInfo()),
 );
 
 it.each([
   { name: 'Get info', fn: (id: string) => api.group.withId(id).info.get() },
-  { name: 'Set info', fn: (id: string) => api.group.withId(id).info.set(createCustomGroupProperties()) },
+  { name: 'Set info', fn: (id: string) => api.group.withId(id).info.set(makeGroupInfo()) },
 ])("Gives an error if the group doesn't exist ($name)", async ({ fn }) => {
   await expect(fn('invalid'))
     .rejects.toMatchObject({ code: 404 });
 });
 
 it('Gives an error if the "listedItems" field contains invalid item IDs', async () => {
-  await expect(api.group.withId(groupId).info.set(createCustomGroupProperties({ listedItems: ['invalid-item'] })))
+  await expect(api.group.withId(groupId).info.set(makeGroupInfo({ listedItems: ['invalid-item'] })))
     .rejects.toMatchObject({ code: 400 });
 });
 
 it('Successfully updates the group info', async () => {
-  const newInfo = createCustomGroupProperties({ name: 'New name' });
+  const newInfo = makeGroupInfo({ name: 'New name' });
   await expect(api.group.withId(groupId).info.set(newInfo))
     .toResolve();
   await expect(api.group.withId(groupId).info.get())
@@ -58,13 +58,13 @@ it('Successfully updates the group info', async () => {
 describe('Group name', () => {
   // Invalid group names
   it.each(invalidNames)('Rejects invalid group names ($case)', async ({ name }) => {
-    await expect(api.group.withId(groupId).info.set(createCustomGroupProperties({ name })))
+    await expect(api.group.withId(groupId).info.set(makeGroupInfo({ name })))
       .rejects.toMatchObject({ code: 400 });
   });
 
   // Valid group names
   it.each(validNames)('Allows valid group names ($case)', async ({ name }) => {
-    await expect(api.group.withId(groupId).info.set(createCustomGroupProperties({ name })))
+    await expect(api.group.withId(groupId).info.set(makeGroupInfo({ name })))
       .toResolve();
   });
 });

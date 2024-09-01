@@ -1,6 +1,6 @@
 
 import { describe, it, beforeEach, expect } from 'vitest';
-import { createCustomItemProperties, makeGroup, makeItem, setup } from '../helpers';
+import { makeItemInfo, makeGroup, makeItem, setup } from '../helpers';
 import genRemoveTests from './removeCases';
 import type { ApiClient } from '$endpoints';
 import genTokenTests from '../tokenCase';
@@ -60,7 +60,7 @@ describe('Other test cases', () => {
     await makeItem(api, 'group-2', 'item-2');
     // Create the link
     await api.group.withId('group-2').item.withId('item-2').info.set(
-      createCustomItemProperties({
+      makeItemInfo({
         links: [[{ groupId: group, style: 'chip', title: group }, ['item-1']]],
       }),
     );
