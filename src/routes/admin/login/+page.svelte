@@ -4,6 +4,7 @@
   import Navbar from '$components/navbar/Navbar.svelte';
   import Paper from '$components/Paper.svelte';
   import { goto } from '$app/navigation';
+    import consts from '$lib/consts';
 
   export let data: import('./$types').PageData;
 
@@ -16,6 +17,14 @@
     await goto('/admin');
   }
 </script>
+
+<svelte:head>
+  <title>login - {data.globals.config.siteName}</title>
+  <meta name="generator" content="{consts.APP_NAME}">
+  <meta name="theme-color" content="{data.globals.config.color}">
+  <!-- Prevent web crawlers from indexing the admin page -->
+  <meta name="robots" content="noindex">
+</svelte:head>
 
 <Background color={data.globals.config.color}></Background>
 

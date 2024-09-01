@@ -1,5 +1,5 @@
 import { readFile, writeFile } from 'fs/promises';
-import { array, object, string, validate, type Infer } from 'superstruct';
+import { array, nullable, object, string, validate, type Infer } from 'superstruct';
 import { getDataDir } from './dataDir';
 import { version } from '$app/environment';
 import { unsafeLoadConfig } from './migrations/unsafeLoad';
@@ -9,8 +9,19 @@ const CONFIG_JSON = () => `${getDataDir()}/config.json`;
 
 /** Validator for config.json file */
 export const ConfigJsonStruct = object({
-  /** Name of the person to use within the website. */
+  /** Long-form name of the site, displayed in the navigator on the main page */
   siteName: string(),
+  /** Short-form name of the site, displayed in the navigator on other pages */
+  siteShortName: string(),
+  /**
+   * Description of the site, used for SEO on the main page. This will appear
+   * as the description in web search results.
+   */
+  siteDescription: string(),
+  /** Keywords of the site, used for SEO */
+  siteKeywords: array(string()),
+  /** Filename of icon to use for the site */
+  siteIcon: nullable(string()),
   /**
    * The groups to list on the main page, in the order in which they should
    * appear.
@@ -65,6 +76,10 @@ export async function setConfig(newConfig: ConfigJson) {
 export async function initConfig() {
   await setConfig({
     siteName: 'My portfolio',
+    siteShortName: 'Portfolio',
+    siteDescription: 'View my portfolio',
+    siteKeywords: ['portfolio'],
+    siteIcon: null,
     listedGroups: [],
     color: '#ffaaff',
     version,

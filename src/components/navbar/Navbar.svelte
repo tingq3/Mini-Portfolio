@@ -49,7 +49,7 @@
       <h1>{config.siteName}</h1>
     {:else}
       <h1>
-        <a href="/">{config.siteName}</a> /
+        <a href="/">{config.siteShortName}</a> /
         {#each path.slice(0, -1) as p, i}
           <a href="/{pathTo(path, i)}">{p.txt}</a>
           {'/ '}

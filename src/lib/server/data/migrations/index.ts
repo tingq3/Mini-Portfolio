@@ -2,17 +2,18 @@ import { version } from '$app/environment';
 import { getConfig, setConfig } from '../config';
 import { getDataDir } from '../dataDir';
 import { getLocalConfig, setLocalConfig } from '../localConfig';
-import migrateFromV010 from './v0.1.0';
-import migrateFromV020 from './v0.2.0';
+import migrateV010 from './v0.1.0';
+import migrateV020 from './v0.2.0';
+import migrateV030 from './v0.3.0';
 import semver from 'semver';
 
 export type MigrationFunction = (dataDir: string) => Promise<void>;
 
 /** Lookup table of migrations */
 const migrations: Record<string, MigrationFunction> = {
-  '~0.1.0': migrateFromV010,
-  '~0.2.0': migrateFromV020,
-  '~0.3.0': updateConfigVersions,
+  '~0.1.0': migrateV010,
+  '~0.2.0': migrateV020,
+  '~0.3.0': migrateV030,
 };
 
 /** Update config versions (only for minor, non-breaking changes to config.json) */

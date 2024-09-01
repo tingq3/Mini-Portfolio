@@ -1,9 +1,11 @@
 import { error, json } from '@sveltejs/kit';
-import { validateToken, validateTokenFromRequest } from '$lib/server/auth.js';
+import { validateTokenFromRequest } from '$lib/server/auth.js';
 import { ConfigJsonStruct, setConfig } from '$lib/server/data/config.js';
 import { validate } from 'superstruct';
 import { version } from '$app/environment';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
+import fs from 'fs/promises';
+import { getDataDir } from '$lib/server/data/dataDir.js';
 
 export async function GET({ request, cookies }) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
@@ -34,6 +36,12 @@ export async function PUT({ request, cookies }) {
     if (!(groupId in globals.groups)) {
       error(400, `Group '${groupId}' does not exist`);
     }
+  }
+
+  // Check for invalid icon
+  if (newConfig.siteIcon) {
+    await fs.access(`${getDataDir()}/${newConfig.siteIcon}`, fs.constants.R_OK)
+      .catch(() => error(400, `Cannot access site icon ${newConfig.siteIcon}`));
   }
 
   await setConfig(newConfig);

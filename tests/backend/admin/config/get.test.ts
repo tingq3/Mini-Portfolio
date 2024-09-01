@@ -17,6 +17,11 @@ beforeEach(async () => {
 it('Returns the current config contents', async () => {
   await expect(api.admin.config.get()).resolves.toStrictEqual({
     siteName: 'My portfolio',
+    siteShortName: expect.any(String),
+    siteDescription: expect.any(String),
+    // Annoying that I can't specifically expect a string[]
+    siteKeywords: expect.toBeArray(),
+    siteIcon: null,
     listedGroups: [],
     color: expect.any(String),
     version,

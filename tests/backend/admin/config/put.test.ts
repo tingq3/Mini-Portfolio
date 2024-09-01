@@ -4,9 +4,10 @@
  * Allows users to edit the site configuration
  */
 import { beforeEach, expect, it } from 'vitest';
-import { setup } from '../../helpers';
+import { makeConfig, setup } from '../../helpers';
 import { version } from '$app/environment';
 import type { ApiClient } from '$endpoints';
+import genTokenTests from '../../tokenCase';
 
 let api: ApiClient;
 
@@ -15,67 +16,42 @@ beforeEach(async () => {
 });
 
 it('Updates the current config contents', async () => {
-  await expect(api.admin.config.put({
-    siteName: 'Name changed',
-    listedGroups: [],
-    color: '#ffaaff',
-    version,
-  })).resolves.toStrictEqual({});
+  const newConfig = makeConfig();
+  await expect(api.admin.config.put(newConfig)).resolves.toStrictEqual({});
   // Config should have updated
-  await expect(api.admin.config.get()).resolves.toStrictEqual({
-    siteName: 'Name changed',
-    listedGroups: [],
-    color: '#ffaaff',
-    version,
-  });
+  await expect(api.admin.config.get()).resolves.toStrictEqual(newConfig);
 });
 
 it('Errors if the new config has an incorrect version', async () => {
-  await expect(api.admin.config.put({
-    siteName: 'Name changed',
-    listedGroups: [],
-    color: '#ffaaff',
-    version: version + 'invalid',
-  })).rejects.toMatchObject({ code: 400 });
+  await expect(api.admin.config.put(makeConfig({ version: version + 'invalid' })))
+    .rejects.toMatchObject({ code: 400 });
 });
 
-it('Errors if the new config has references a non-existent page group', async () => {
-  await expect(api.admin.config.put({
-    siteName: 'Name changed',
-    listedGroups: ['invalid'],
-    color: '#ffaaff',
-    version,
-  })).rejects.toMatchObject({ code: 400 });
+it('Errors if listedGroups contains non-existent groups', async () => {
+  await expect(api.admin.config.put(makeConfig({ listedGroups: ['invalid'] })))
+    .rejects.toMatchObject({ code: 400 });
 });
 
-it('Can set pages as a main page group', async () => {
+it('Allows listedGroups to contain existing groups', async () => {
   await api.group.withId('my-group').create('my-group', '');
-  await expect(api.admin.config.put({
-    siteName: 'Name changed',
-    listedGroups: ['my-group'],
-    color: '#ffaaff',
-    version,
-  })).resolves.toStrictEqual({});
+  await expect(api.admin.config.put(makeConfig({ listedGroups: ['my-group'] })))
+    .resolves.toStrictEqual({});
   // Config should have updated
   await expect(api.admin.config.get())
     .resolves.toMatchObject({ listedGroups: ['my-group'] });
 });
 
-it('Rejects invalid tokens', async () => {
-  await expect(api.withToken('invalid').admin.config.put({
-    siteName: 'Name changed',
-    listedGroups: [],
-    color: '#ffaaff',
-    version,
-  })).rejects.toMatchObject({ code: 401 });
+it("Errors if the icon doesn't exist within the data dir", async () => {
+  await expect(api.admin.config.put(makeConfig({ siteIcon: 'not-a-file.jpg' })))
+    .rejects.toMatchObject({ code: 400 });
 });
+
+genTokenTests(
+  () => api,
+  api => api.admin.config.put(makeConfig()),
+);
 
 it('Errors if site is not set up', async () => {
   await api.debug.clear();
-  await expect(api.admin.config.put({
-    siteName: 'Name changed',
-    listedGroups: [],
-    color: '#ffaaff',
-    version,
-  })).rejects.toMatchObject({ code: 400 });
+  await expect(api.admin.config.put(makeConfig())).rejects.toMatchObject({ code: 400 });
 });

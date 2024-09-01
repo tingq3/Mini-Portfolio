@@ -13,6 +13,8 @@ export default function api(token?: string | undefined) {
     readme: readme(token),
     /** Create a new API client with the given token */
     withToken: (token: string | undefined) => api(token),
+    /** The token currently being used for this API client */
+    token,
   };
 }
 

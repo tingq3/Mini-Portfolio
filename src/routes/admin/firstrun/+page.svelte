@@ -9,8 +9,8 @@
   import { goto } from '$app/navigation';
   import Navbar from '$components/navbar';
   import blankConfig from '$lib/blankConfig';
-    import CopyButton from '$components/CopyButton.svelte';
-    import consts from '$lib/consts';
+  import CopyButton from '$components/CopyButton.svelte';
+  import consts from '$lib/consts';
 
   let repoUrl = '';
   let repoBranch = '';
@@ -54,6 +54,19 @@
 
   let errorText = '';
 </script>
+
+<svelte:head>
+  <title>Setup - {consts.APP_NAME}</title>
+  <meta name="generator" content="{consts.APP_NAME}">
+  <meta name="theme-color" content="#aa00aa">
+  <!--
+    Prevent web crawlers from indexing the firstrun page. Of course, if someone
+    has an instance of this exposed to the open web without it being set up,
+    that's absolutely on them, but the least we can do is stop instances that
+    aren't set up from being easily searchable.
+  -->
+  <meta name="robots" content="noindex">
+</svelte:head>
 
 <Background color="#aa00aa"></Background>
 
