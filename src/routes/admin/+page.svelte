@@ -10,6 +10,8 @@
   let config = structuredClone(data.globals.config);
 
   async function saveConfig() {
+    // Sort out keywords
+    config.siteKeywords = keywordsString.split('\n');
     await api().admin.config.put(config);
     // Replace the original data so that hitting revert will revert to the last
     // save
@@ -18,7 +20,10 @@
 
   function discardChanges() {
     config = structuredClone(data.globals.config);
+    keywordsString = config.siteKeywords.join('\n');
   }
+
+  let keywordsString = config.siteKeywords.join('\n');
 </script>
 
 <svelte:head>
@@ -50,8 +55,25 @@
           <h2>Site name</h2>
           <input placeholder="My portfolio" bind:value={config.siteName} required>
           <p>
-            This is the name of your portfolio site. It is shown in the
-            navigator in the top-left, and in your browser's tab name.
+            This is the name of your portfolio site. It is shown on the home
+            page of your portfolio.
+          </p>
+          <h2>Site short name</h2>
+          <input placeholder="Portfolio" bind:value={config.siteShortName} required>
+          <p>
+            This is the short name of your portfolio site. It is shown on most
+            pages within your portfolio.
+          </p>
+          <h2>Site description</h2>
+          <input placeholder="My portfolio website" bind:value={config.siteDescription}>
+          <p>
+            This is the description of your portfolio shown to search engines.
+          </p>
+          <h2>Site keywords</h2>
+          <textarea placeholder="Portfolio" bind:value={keywordsString}></textarea>
+          <p>
+            These are the keywords for your portfolio shown to search engines.
+            Place each keyword on a new line.
           </p>
           <h2>Theme color</h2>
           <input type="color" bind:value={config.color} required>
