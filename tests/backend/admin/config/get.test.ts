@@ -21,6 +21,7 @@ it('Returns the current config contents', async () => {
     siteDescription: expect.any(String),
     // Annoying that I can't specifically expect a string[]
     siteKeywords: expect.toBeArray(),
+    siteIcon: null,
     listedGroups: [],
     color: expect.any(String),
     version,

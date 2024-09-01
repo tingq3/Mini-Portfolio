@@ -1,5 +1,6 @@
 /** Migration from 0.3.0 -> current */
 
+import { updateConfigVersions } from '.';
 import { setConfig, type ConfigJson } from '../config';
 import { listGroups, setGroupInfo, type GroupInfo } from '../group';
 import { listItems, setItemInfo, type ItemInfoFull } from '../item';
@@ -13,6 +14,8 @@ export default async function migrate(dataDir: string) {
       await migrateItem(dataDir, groupId, itemId);
     }
   }
+
+  await updateConfigVersions(dataDir);
 }
 
 async function migrateConfig(dataDir: string) {

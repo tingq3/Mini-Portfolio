@@ -4,15 +4,12 @@
  * Adds missing `filterItems` property to groups.
  */
 import { version } from '$app/environment';
-import { updateConfigVersions } from '.';
 import { listGroups, setGroupInfo, type GroupInfo } from '../group';
 import { unsafeLoadGroupInfo } from './unsafeLoad';
 import migrateV030 from './v0.3.0';
 
 export default async function migrate(dataDir: string) {
   console.log(`Migrate from v0.2.x -> ${version}`);
-
-  await updateConfigVersions(dataDir);
 
   // For each group
   for (const groupId of await listGroups()) {
