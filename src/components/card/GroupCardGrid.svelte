@@ -6,16 +6,26 @@
   import type { PortfolioGlobals } from '$lib';
   import { createEventDispatcher } from 'svelte';
   import { send, receive } from '$lib/transition';
+  import IconCard from './IconCard.svelte';
+  import { NewGroupModal } from '$components/modals';
 
   export let globals: PortfolioGlobals;
   /** Groups to display */
   export let groups: string[];
   /** Whether edit mode is active */
   export let editing: boolean;
+  /** Whether to give the option to create a group in edit mode */
+  export let createOption: boolean = false;
 
   const dispatch = createEventDispatcher<{
     click: { groupId: string },
   }>();
+
+  // Logic for new group modal
+  let newGroupModalShown = false;
+  function closeNewGroupModal() {
+    newGroupModalShown = false;
+  }
 </script>
 
 <div class="card-grid">
@@ -33,6 +43,16 @@
       />
     </div>
   {/each}
+  {#if editing && createOption}
+    <IconCard
+      title="New group"
+      color="#888888"
+      on:click={() => { newGroupModalShown = true; }}
+    >
+      <i slot="icon" class="las la-plus"></i>
+    </IconCard>
+    <NewGroupModal show={newGroupModalShown} on:close={closeNewGroupModal} />
+  {/if}
 </div>
 
 <style>

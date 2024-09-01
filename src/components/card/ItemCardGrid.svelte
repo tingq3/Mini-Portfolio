@@ -1,10 +1,11 @@
 <script lang="ts">
   import { flip } from 'svelte/animate';
-  import { fade } from 'svelte/transition';
   import { ItemCard } from '.';
   import type { PortfolioGlobals } from '$lib';
   import { createEventDispatcher } from 'svelte';
   import { send, receive } from '$lib/transition';
+  import IconCard from './IconCard.svelte';
+  import { NewItemModal } from '$components/modals';
 
   /** Portfolio globals */
   export let globals: PortfolioGlobals;
@@ -14,10 +15,17 @@
   export let itemIds: string[];
   /** Whether edit mode is active */
   export let editing: boolean;
+  /** Whether to give the option to create an item in edit mode */
+  export let createOption: boolean = false;
 
-const dispatch = createEventDispatcher<{
-  click: { itemId: string },
-}>();
+  const dispatch = createEventDispatcher<{
+    click: { itemId: string },
+  }>();
+
+  let newItemModalShown = false;
+  function closeNewItemModal() {
+    newItemModalShown = false;
+  }
 </script>
 
 <div class="card-grid">
@@ -36,6 +44,16 @@ const dispatch = createEventDispatcher<{
       />
     </div>
   {/each}
+  {#if editing && createOption}
+    <IconCard
+      title="New item"
+      color="#888888"
+      on:click={() => { newItemModalShown = true; }}
+    >
+      <i slot="icon" class="las la-plus"></i>
+    </IconCard>
+    <NewItemModal {groupId} show={newItemModalShown} on:close={closeNewItemModal} />
+  {/if}
 </div>
 
 <style>

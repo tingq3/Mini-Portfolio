@@ -80,6 +80,7 @@
     <GroupCardGrid
       globals={data.globals}
       groups={listedGroups}
+      createOption
       {editing}
       on:click={e => {
         if (editing) {

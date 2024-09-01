@@ -11,18 +11,6 @@
   export let config: ConfigJson;
   /** Whether the user is logged in. Set to undefined if auth is disabled */
   export let loggedIn: boolean | undefined;
-  export let createGroupButton: boolean = false;
-  export let createItemButtonGroup: string | null = null;
-
-  // Logic for new group modal
-  let createGroupModalShown = false;
-  function closeCreateGroupModal() {
-    createGroupModalShown = false;
-  }
-  let createItemModalShown = false;
-  function closeCreateItemModal() {
-    createItemModalShown = false;
-  }
 
   /** Log out, then reload the page */
   async function logOut() {
@@ -62,22 +50,6 @@
   <!-- Control buttons -->
   <span id="control-buttons">
     {#if loggedIn}
-      {#if createItemButtonGroup}
-        <div>
-          <button on:click={() => { createItemModalShown = true; }}> New item </button>
-          <NewItemModal
-            show={createItemModalShown}
-            groupId={createItemButtonGroup}
-            on:close={closeCreateItemModal}
-          />
-        </div>
-      {/if}
-      {#if createGroupButton}
-        <div>
-          <button on:click={() => { createGroupModalShown = true; }}> New group </button>
-          <NewGroupModal show={createGroupModalShown} on:close={closeCreateGroupModal} />
-        </div>
-      {/if}
       <button on:click={() => goto('/admin')}> Admin </button>
       <button on:click={logOut}> Log out </button>
     {:else if loggedIn !== undefined}

@@ -2,7 +2,7 @@
   import { Card } from '.';
 
   export let title: string;
-  export let link: string;
+  export let link: string | false = false;
   export let color: string;
 </script>
 
@@ -10,6 +10,7 @@
   {link}
   newTab={true}
   {color}
+  on:click
 >
   <span>
     <div class="icon-div">

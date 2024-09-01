@@ -124,6 +124,7 @@
       itemIds={mainItemsList}
       globals={data.globals}
       {editing}
+      createOption
       on:click={e => {
         if (editing) {
           shownItems = shownItems.filter(i => i !== e.detail.itemId);
