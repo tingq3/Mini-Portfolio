@@ -4,8 +4,12 @@
   import { ItemChipList } from '$components/chip';
 
   export let globals: PortfolioGlobals;
+  /** Group ID of item to show */
   export let groupId: string;
+  /** Item ID of item to show */
   export let itemId: string;
+  /** Whether edit mode is active */
+  export let editing: boolean;
 
   $: item = globals.items[groupId][itemId];
   $: associatedChips = item.info.links
@@ -14,10 +18,10 @@
 </script>
 
 <Card
-  link="/{groupId}/{itemId}"
+  link={editing ? false : `/${groupId}/${itemId}`}
   color={item.info.color}
+  on:click
 >
-
   {#if item.info.icon}
     <div class="card-grid">
       <img
@@ -36,7 +40,7 @@
       <p>{item.info.description}</p>
     </div>
   {/if}
-  <ItemChipList slot="bottom" items={associatedChips} {globals} link={true} />
+  <ItemChipList slot="bottom" items={associatedChips} {globals} link={!editing} />
 </Card>
 
 <style>

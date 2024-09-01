@@ -2,7 +2,6 @@
   // FIXME: Code duplication between here and ItemCardGrid -- need to figure
   // out a nice way to do generics in Svelte
   import { flip } from 'svelte/animate';
-  import { fade } from 'svelte/transition';
   import GroupCard from './GroupCard.svelte';
   import type { PortfolioGlobals } from '$lib';
   import { createEventDispatcher } from 'svelte';

@@ -3,6 +3,8 @@
   import { fade } from 'svelte/transition';
   import { ItemCard } from '.';
   import type { PortfolioGlobals } from '$lib';
+  import { createEventDispatcher } from 'svelte';
+  import { send, receive } from '$lib/transition';
 
   /** Portfolio globals */
   export let globals: PortfolioGlobals;
@@ -10,18 +12,27 @@
   export let groupId: string;
   /** Item IDs to show */
   export let itemIds: string[];
+  /** Whether edit mode is active */
+  export let editing: boolean;
+
+const dispatch = createEventDispatcher<{
+  click: { itemId: string },
+}>();
 </script>
 
 <div class="card-grid">
   {#each itemIds as itemId (itemId)}
     <div
-      transition:fade={{ duration: 300 }}
-      animate:flip={{ duration: 300 }}
+    animate:flip={{ duration: 300 }}
+    in:receive={{ key: itemId }}
+    out:send={{ key: itemId }}
     >
       <ItemCard
         {groupId}
         {itemId}
         {globals}
+        {editing}
+        on:click={() => dispatch('click', { itemId })}
       />
     </div>
   {/each}

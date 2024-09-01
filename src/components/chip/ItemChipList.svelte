@@ -97,8 +97,9 @@
 
   // Update filter status
   function updateFilterStatus(outerIdx: number, innerIdx: number) {
-    items[outerIdx][innerIdx].selected = !items[outerIdx][innerIdx].selected;
-    dispatch('filter', items);
+    const newItems = structuredClone(items);
+    newItems[outerIdx][innerIdx].selected = !items[outerIdx][innerIdx].selected;
+    dispatch('filter', newItems);
   }
 </script>
 

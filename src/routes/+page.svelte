@@ -17,7 +17,7 @@
     .filter(g => !data.globals.config.listedGroups.includes(g));
 
   /** Groups that are shown */
-  let shownGroups = data.globals.config.listedGroups;
+  let listedGroups = data.globals.config.listedGroups;
   /** Groups that are hidden */
   let hiddenGroups = listHiddenGroups();
 
@@ -27,13 +27,13 @@
       // Update readme
       data.globals.readme = readme;
       await api().readme.set(readme);
-      data.globals.config.listedGroups = shownGroups;
+      data.globals.config.listedGroups = listedGroups;
       await api().admin.config.put(data.globals.config);
     } else {
       // Discard readme changes
       readme = data.globals.readme;
       // Group listing/ordering
-      shownGroups = data.globals.config.listedGroups;
+      listedGroups = data.globals.config.listedGroups;
       hiddenGroups = listHiddenGroups();
     }
     editing = false;
@@ -79,11 +79,11 @@
   <div class="group-list">
     <GroupCardGrid
       globals={data.globals}
-      groups={shownGroups}
+      groups={listedGroups}
       {editing}
       on:click={e => {
         if (editing) {
-          shownGroups = shownGroups.filter(g => g !== e.detail.groupId);
+          listedGroups = listedGroups.filter(g => g !== e.detail.groupId);
           hiddenGroups = [...hiddenGroups, e.detail.groupId];
         }
       }}
@@ -97,7 +97,7 @@
       groups={hiddenGroups}
       {editing}
       on:click={e => {
-        shownGroups = [...shownGroups, e.detail.groupId];
+        listedGroups = [...listedGroups, e.detail.groupId];
         hiddenGroups = hiddenGroups.filter(g => g !== e.detail.groupId);
       }}
     />

@@ -16,7 +16,6 @@
   color={group.info.color}
   on:click
 >
-
   {#if group.info.icon}
     <div class="card-grid">
       <img
