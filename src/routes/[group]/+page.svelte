@@ -87,8 +87,6 @@
   path={[{ url: data.groupId, txt: groupData.info.name }]}
   config={data.globals.config}
   loggedIn={data.loggedIn}
-  createGroupButton
-  createItemButtonGroup={data.groupId}
 />
 
 <main>

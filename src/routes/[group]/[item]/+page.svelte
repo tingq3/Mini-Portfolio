@@ -34,8 +34,6 @@
   ]}
   config={data.globals.config}
   loggedIn={data.loggedIn}
-  createGroupButton
-  createItemButtonGroup={data.groupId}
 />
 
 <main>
@@ -50,8 +48,7 @@
     <div id="info-container">
       <EditableMarkdown
         source={itemData.readme}
-        editable={data.loggedIn}
-        onSave={text => api().group.withId(data.groupId).item.withId(data.itemId).readme.set(text)}
+        editing={false}
       />
       <!-- Display linked items as chips -->
       <div id="chip-links">
@@ -121,6 +118,7 @@
         globals={data.globals}
         groupId={linkOptions.groupId}
         itemIds={linkedItems}
+        editing={false}
       />
     {/each}
   </div>

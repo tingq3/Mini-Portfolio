@@ -53,7 +53,6 @@
   path={[]}
   config={data.globals.config}
   loggedIn={data.loggedIn}
-  createGroupButton
 />
 
 <Background color={data.globals.config.color} />
