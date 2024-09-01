@@ -1,9 +1,18 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+  import { goto } from '$app/navigation';
   import Color from 'color';
 
+  /** Location to link to, or `false` to not give a link */
   export let link: string | false = false;
+  /** Whether to open link in new tab */
   export let newTab: boolean = false;
+  /** Color to use for the card */
   export let color: string;
+
+  const dispatch = createEventDispatcher<{
+    click: void,
+  }>();
 
   $: baseColor = Color(color).lightness(85).hex();
   $: hoverColor = Color(color).lightness(70).hex();
@@ -11,6 +20,13 @@
 
 <a
   href={link || undefined}
+  on:click={async () => {
+    if (link) {
+      await goto(link);
+    } else {
+      dispatch('click');
+    }
+  }}
   target={newTab ? '_blank' : undefined}
 >
   <div

@@ -5,19 +5,32 @@
   import { fade } from 'svelte/transition';
   import GroupCard from './GroupCard.svelte';
   import type { PortfolioGlobals } from '$lib';
+  import { createEventDispatcher } from 'svelte';
+  import { send, receive } from '$lib/transition';
 
   export let globals: PortfolioGlobals;
+  /** Groups to display */
+  export let groups: string[];
+  /** Whether edit mode is active */
+  export let editing: boolean;
+
+  const dispatch = createEventDispatcher<{
+    click: { groupId: string },
+  }>();
 </script>
 
 <div class="card-grid">
-  {#each globals.config.listedGroups as groupId (groupId)}
+  {#each groups as groupId (groupId)}
     <div
-      transition:fade={{ duration: 300 }}
       animate:flip={{ duration: 300 }}
+      in:receive={{ key: groupId }}
+      out:send={{ key: groupId }}
     >
       <GroupCard
-        {groupId}
         {globals}
+        {groupId}
+        {editing}
+        on:click={() => dispatch('click', { groupId })}
       />
     </div>
   {/each}

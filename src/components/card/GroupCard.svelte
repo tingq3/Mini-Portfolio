@@ -3,14 +3,18 @@
   import Card from './Card.svelte';
 
   export let globals: PortfolioGlobals;
+  /** Group ID of group to show */
   export let groupId: string;
+  /** Whether edit mode is active */
+  export let editing: boolean;
 
   $: group = globals.groups[groupId];
 </script>
 
 <Card
-  link="/{groupId}"
+  link={editing ? false : `/${groupId}`}
   color={group.info.color}
+  on:click
 >
 
   {#if group.info.icon}
