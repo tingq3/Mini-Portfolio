@@ -4,8 +4,12 @@
   import { ItemChipList } from '$components/chip';
 
   export let globals: PortfolioGlobals;
+  /** Group ID of item to show */
   export let groupId: string;
+  /** Item ID of item to show */
   export let itemId: string;
+  /** Whether edit mode is active */
+  export let editing: boolean;
 
   $: item = globals.items[groupId][itemId];
   $: associatedChips = item.info.links
@@ -14,29 +18,29 @@
 </script>
 
 <Card
-  link="/{groupId}/{itemId}"
+  link={editing ? false : `/${groupId}/${itemId}`}
   color={item.info.color}
+  on:click
+  hasIcon={!!item.info.icon}
 >
-
-  {#if item.info.icon}
-    <div class="card-grid">
+  <div slot="icon">
+    {#if item.info.icon}
       <img
         src="/{groupId}/{itemId}/{item.info.icon}"
         alt="Icon for {item.info.name}"
         class="label-icon"
       />
-      <div>
-        <h3>{item.info.name}</h3>
-        <p>{item.info.description}</p>
-      </div>
-    </div>
-  {:else}
-    <div class="card-no-icon">
-      <h3>{item.info.name}</h3>
-      <p>{item.info.description}</p>
-    </div>
-  {/if}
-  <ItemChipList slot="bottom" items={associatedChips} {globals} link={true} />
+    {/if}
+  </div>
+  <div>
+    <h3>{item.info.name}</h3>
+    <p>{item.info.description}</p>
+  </div>
+  <div slot="bottom">
+    {#if !editing}
+      <ItemChipList items={associatedChips} {globals} link />
+    {/if}
+  </div>
 </Card>
 
 <style>
@@ -44,18 +48,8 @@
     margin-bottom: 0;
   }
 
-  .card-grid {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 10px;
-  }
-
   .label-icon {
     width: 100%;
     border-radius: 15px;
-  }
-
-  .card-no-icon {
-    margin: 0 20px;
   }
 </style>

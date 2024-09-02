@@ -48,6 +48,7 @@ export async function POST({ params, request, cookies }) {
 
   const groupInfo = data.groups[groupId].info;
   groupInfo.listedItems.push(itemId);
+  groupInfo.filterItems.push(itemId);
   await setGroupInfo(groupId, groupInfo);
   invalidatePortfolioGlobals();
 

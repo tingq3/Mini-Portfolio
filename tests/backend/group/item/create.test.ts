@@ -69,7 +69,15 @@ describe('Other test cases', async () => {
     await api.group.withId(groupId).item.withId('item-id').create('Item name', 'Item description');
     // Item should be listed
     await expect(api.group.withId(groupId).info.get()).resolves.toMatchObject({
-      listedItems: ['item-id']
+      listedItems: ['item-id'],
+    });
+  });
+
+  test('New items are used as filters by their group by default', async () => {
+    await api.group.withId(groupId).item.withId('item-id').create('Item name', 'Item description');
+    // Item should be listed
+    await expect(api.group.withId(groupId).info.get()).resolves.toMatchObject({
+      filterItems: ['item-id'],
     });
   });
 

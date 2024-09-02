@@ -93,12 +93,14 @@
 
   const dispatch = createEventDispatcher<{
     filter: FilterOptions,
+    click: { groupId: string, itemId: string }
   }>();
 
   // Update filter status
   function updateFilterStatus(outerIdx: number, innerIdx: number) {
-    items[outerIdx][innerIdx].selected = !items[outerIdx][innerIdx].selected;
-    dispatch('filter', items);
+    const newItems = structuredClone(items);
+    newItems[outerIdx][innerIdx].selected = !items[outerIdx][innerIdx].selected;
+    dispatch('filter', newItems);
   }
 </script>
 
@@ -116,7 +118,10 @@
           itemId={filterItem.itemId}
           selected={filterItem.selected}
           {link}
-          on:click={() => updateFilterStatus(outer, inner)}
+          on:click={() => {
+            updateFilterStatus(outer, inner);
+            dispatch('click', { groupId: filterItem.groupId, itemId: filterItem.itemId });
+          }}
         />
       {/each}
       <!-- Last classifier doesn't have a separator -->

@@ -4,62 +4,14 @@
 
   /** Markdown source code */
   export let source: string;
-  /** Whether the editing mode should be visible */
-  export let editable: boolean;
+  /** Whether we are currently editing the markdown */
+  export let editing: boolean;
 
   const originalSource = source;
-
-  /** Callback to save the markdown contents */
-  export let onSave: (newSource: string) => Promise<any>;
-
-  let isEditing = false;
-
-  async function finishEditing() {
-    isEditing = false;
-    await onSave(source);
-    // TODO: Error handling
-  }
-
-  function cancelEditing() {
-    source = originalSource;
-    isEditing = false;
-  }
 </script>
 
-{#if !editable}
-  <Markdown {source} />
+{#if editing}
+  <MarkdownEditor bind:source={source} on:submit />
 {:else}
-  {#if isEditing}
-    <div class="edit-container">
-      <button on:click={finishEditing}>Done</button>
-      <button on:click={cancelEditing}>Cancel</button>
-    </div>
-    <MarkdownEditor bind:source={source} on:submit={finishEditing} />
-  {:else}
-    <div class="edit-container">
-      <button on:click={() => { isEditing = true; }}>Edit</button>
-    </div>
-    <Markdown {source} />
-  {/if}
+  <Markdown {source} />
 {/if}
-
-<style>
-  .edit-container {
-    display: flex;
-    flex-direction: row-reverse;
-    gap: 10px;
-  }
-  button {
-    height: 2rem;
-    background-color: rgb(221, 221, 221);
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-  }
-  button:hover {
-    background-color: rgb(210, 210, 210);
-    cursor: pointer;
-  }
-</style>

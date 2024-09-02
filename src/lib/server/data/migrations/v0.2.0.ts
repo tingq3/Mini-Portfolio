@@ -17,7 +17,7 @@ export default async function migrate(dataDir: string) {
     // Technically the `filterItems` property doesn't exist, but it's close
     // enough since we add it immediately
     const info = await unsafeLoadGroupInfo(dataDir, groupId) as GroupInfo;
-    info.filterItems = [];
+    info.filterItems = info.listedItems;
     await setGroupInfo(groupId, info);
   }
 

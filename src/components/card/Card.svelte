@@ -1,9 +1,20 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+  import { goto } from '$app/navigation';
   import Color from 'color';
 
+  /** Location to link to, or `false` to not give a link */
   export let link: string | false = false;
+  /** Whether to open link in new tab */
   export let newTab: boolean = false;
+  /** Color to use for the card */
   export let color: string;
+  /** Whether the card has an icon */
+  export let hasIcon: boolean = false;
+
+  const dispatch = createEventDispatcher<{
+    click: void,
+  }>();
 
   $: baseColor = Color(color).lightness(85).hex();
   $: hoverColor = Color(color).lightness(70).hex();
@@ -11,6 +22,13 @@
 
 <a
   href={link || undefined}
+  on:click={async () => {
+    if (link) {
+      await goto(link);
+    } else {
+      dispatch('click');
+    }
+  }}
   target={newTab ? '_blank' : undefined}
 >
   <div
@@ -18,12 +36,20 @@
     style:--base-color={baseColor}
     style:--hover-color={hoverColor}
   >
-    <div class="card-top">
-      <slot name="top" />
-    </div>
-    <div class="card-main">
-      <slot />
-    </div>
+    {#if hasIcon}
+      <div class="card-grid">
+        <div class="icon-div">
+          <slot name="icon" />
+        </div>
+        <div class="card-main">
+          <slot />
+        </div>
+      </div>
+    {:else}
+      <div class="card-main">
+        <slot />
+      </div>
+    {/if}
     <div class="card-bottom">
       <slot name="bottom" />
     </div>
@@ -34,6 +60,22 @@
   a {
     color: black;
     text-decoration: none;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 10px;
+    /* Make main content of card leave some space before the bottom slot */
+    flex-grow: 1;
+  }
+  .card-main {
+    flex-grow: 1;
+  }
+
+  /* Make icons using Line Awesome render at a nice font size */
+  .icon-div {
+    font-size: 3em;
   }
 
   .card {
@@ -64,10 +106,5 @@
       max-width: 100%;
       padding: 10px 15px;
     }
-  }
-
-  .card-main {
-    /* Make main content of card leave some space before the bottom slot */
-    flex-grow: 1;
   }
 </style>
