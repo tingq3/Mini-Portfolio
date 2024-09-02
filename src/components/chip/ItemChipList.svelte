@@ -93,6 +93,7 @@
 
   const dispatch = createEventDispatcher<{
     filter: FilterOptions,
+    click: { groupId: string, itemId: string }
   }>();
 
   // Update filter status
@@ -117,7 +118,10 @@
           itemId={filterItem.itemId}
           selected={filterItem.selected}
           {link}
-          on:click={() => updateFilterStatus(outer, inner)}
+          on:click={() => {
+            updateFilterStatus(outer, inner);
+            dispatch('click', { groupId: filterItem.groupId, itemId: filterItem.itemId });
+          }}
         />
       {/each}
       <!-- Last classifier doesn't have a separator -->
