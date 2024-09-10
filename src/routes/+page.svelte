@@ -12,6 +12,11 @@
 
   let editing = false;
   let readme = data.globals.readme;
+  let siteName = data.globals.config.siteName;
+  let siteShortName = data.globals.config.siteShortName;
+  let siteDescription = data.globals.config.siteDescription;
+  let siteKeywords = data.globals.config.siteKeywords.join('\n');
+  let siteColor = data.globals.config.color;
 
   const listHiddenGroups = () => Object.keys(data.globals.groups)
     .filter(g => !data.globals.config.listedGroups.includes(g));
@@ -28,10 +33,20 @@
       data.globals.readme = readme;
       await api().readme.set(readme);
       data.globals.config.listedGroups = listedGroups;
+      data.globals.config.siteName = siteName;
+      data.globals.config.siteShortName = siteShortName;
+      data.globals.config.siteDescription = siteDescription;
+      data.globals.config.siteKeywords = siteKeywords.split('\n').filter(k => k.length);
+      data.globals.config.color = siteColor;
       await api().admin.config.put(data.globals.config);
     } else {
       // Discard readme changes
       readme = data.globals.readme;
+      siteName = data.globals.config.siteName;
+      siteShortName = data.globals.config.siteShortName;
+      siteDescription = data.globals.config.siteDescription;
+      siteKeywords = data.globals.config.siteKeywords.join('\n');
+      siteColor = data.globals.config.color;
       // Group listing/ordering
       listedGroups = data.globals.config.listedGroups;
       hiddenGroups = listHiddenGroups();
@@ -63,6 +78,40 @@
     on:beginEdits={() => { editing = true; }}
     on:finishEdits={e => finishEditing(e.detail)}
   />
+
+  {#if editing}
+    <form on:submit|preventDefault={() => finishEditing(true)}>
+      <h2>Site name</h2>
+      <input placeholder="My portfolio" bind:value={siteName} required>
+      <p>
+        This is the name of your portfolio site. It is shown on the home
+        page of your portfolio.
+      </p>
+      <h2>Site short name</h2>
+      <input placeholder="Portfolio" bind:value={siteShortName} required>
+      <p>
+        This is the short name of your portfolio site. It is shown on most
+        pages within your portfolio.
+      </p>
+      <h2>Site description</h2>
+      <input placeholder="My portfolio website" bind:value={siteDescription}>
+      <p>
+        This is the description of your portfolio shown to search engines.
+      </p>
+      <h2>Site keywords</h2>
+      <textarea placeholder="Portfolio" bind:value={siteKeywords}></textarea>
+      <p>
+        These are the keywords for your portfolio shown to search engines.
+        Place each keyword on a new line.
+      </p>
+      <h2>Theme color</h2>
+      <input type="color" bind:value={siteColor} required>
+      <p>
+        This is the main theme color for your portfolio site. It is subtly
+        shown in the background on many pages.
+      </p>
+    </form>
+  {/if}
 
   <div id="readme">
     <div id="info-container">
@@ -111,6 +160,9 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+  }
+  form {
+    width: 90%;
   }
   #readme {
     width: 100%;
