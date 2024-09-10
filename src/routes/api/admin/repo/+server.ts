@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
-import { dataDirIsInit, dataDirUsesGit, getDataDir } from '$lib/server/data/dataDir';
-import { validateToken, validateTokenFromRequest } from '$lib/server/auth.js';
+import { dataDirUsesGit, getDataDir } from '$lib/server/data/dataDir';
+import { validateTokenFromRequest } from '$lib/server/auth.js';
 import simpleGit from 'simple-git';
 import { getPortfolioGlobals } from '$lib/server/data/index.js';
 

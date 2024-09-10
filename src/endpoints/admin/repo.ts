@@ -25,12 +25,39 @@ export default function repo(token: string | undefined) {
     )) as Promise<RepoInfo>;
   };
 
+  const commit = async (message: string) => {
+    return json(apiFetch(
+      'POST',
+      '/api/admin/repo/commit',
+      token,
+      { message },
+    )) as Promise<RepoInfo>;
+  };
+
+  const push = async () => {
+    return json(apiFetch(
+      'POST',
+      '/api/admin/repo/push',
+      token,
+    )) as Promise<RepoInfo>;
+  };
+
+  const pull = async () => {
+    return json(apiFetch(
+      'POST',
+      '/api/admin/repo/pull',
+      token,
+    )) as Promise<RepoInfo>;
+  };
+
   return {
-    /**
-     * Retrieve information about the data repository.
-     *
-     * @param token The authentication token
-     */
+    /** Retrieve information about the data repository */
     get,
+    /** Perform a git commit */
+    commit,
+    /** Perform a git push */
+    push,
+    /** Perform a git pull */
+    pull,
   };
 }
