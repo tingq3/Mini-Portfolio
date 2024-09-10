@@ -6,24 +6,6 @@
   import consts from '$lib/consts';
 
   export let data: import('./$types').PageData;
-
-  let config = structuredClone(data.globals.config);
-
-  async function saveConfig() {
-    // Sort out keywords
-    config.siteKeywords = keywordsString.split('\n');
-    await api().admin.config.put(config);
-    // Replace the original data so that hitting revert will revert to the last
-    // save
-    data.globals.config = structuredClone(config);
-  }
-
-  function discardChanges() {
-    config = structuredClone(data.globals.config);
-    keywordsString = config.siteKeywords.join('\n');
-  }
-
-  let keywordsString = config.siteKeywords.join('\n');
 </script>
 
 <svelte:head>
@@ -36,55 +18,19 @@
 
 <Navbar
   path={[{ txt: 'Admin', url: 'admin' }]}
-  config={config}
+  config={data.globals.config}
   loggedIn={true}
 />
 
-<Background color={config.color} />
+<Background color={data.globals.config.color} />
 
 <main>
   <div id="paper-container">
     <Paper>
       <div id="contents">
-        <form on:submit|preventDefault={saveConfig}>
-          <div class="edit-buttons">
-            <input type="submit" value="Save">
-            <input on:click={discardChanges} type="submit" value="Revert" />
-          </div>
-          <h1>{consts.APP_NAME} Settings</h1>
-          <h2>Site name</h2>
-          <input placeholder="My portfolio" bind:value={config.siteName} required>
-          <p>
-            This is the name of your portfolio site. It is shown on the home
-            page of your portfolio.
-          </p>
-          <h2>Site short name</h2>
-          <input placeholder="Portfolio" bind:value={config.siteShortName} required>
-          <p>
-            This is the short name of your portfolio site. It is shown on most
-            pages within your portfolio.
-          </p>
-          <h2>Site description</h2>
-          <input placeholder="My portfolio website" bind:value={config.siteDescription}>
-          <p>
-            This is the description of your portfolio shown to search engines.
-          </p>
-          <h2>Site keywords</h2>
-          <textarea placeholder="Portfolio" bind:value={keywordsString}></textarea>
-          <p>
-            These are the keywords for your portfolio shown to search engines.
-            Place each keyword on a new line.
-          </p>
-          <h2>Theme color</h2>
-          <input type="color" bind:value={config.color} required>
-          <p>
-            This is the main theme color for your portfolio site. It is subtly
-            shown in the background on many pages.
-          </p>
-        </form>
         <div>
           <h2>Reload data from disk</h2>
-          If you have edited the data manually, you can use this button to
+          If you have edited your data manually, you can use this button to
           refresh it.
           <button on:click={() => api().admin.data.refresh()}>Refresh data</button>
         </div>
@@ -108,23 +54,5 @@
   }
   #contents {
     padding: 20px;
-  }
-
-  .edit-buttons {
-    display: flex;
-    flex-direction: row-reverse;
-    gap: 10px;
-  }
-  input[type="submit"] {
-    /* TODO: These buttons don't have properly-centred text */
-    height: 2rem;
-    background-color: rgb(221, 221, 221);
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  input[type="submit"]:hover {
-    background-color: rgb(210, 210, 210);
-    cursor: pointer;
   }
 </style>
