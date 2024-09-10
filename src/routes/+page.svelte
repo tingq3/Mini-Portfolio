@@ -7,52 +7,50 @@
   import api from '$endpoints';
   import consts from '$lib/consts';
   import { generateKeywords } from '$lib/seo';
+  import type { ConfigJson } from '$lib/server/data/config';
 
   export let data: import('./$types').PageData;
 
-  let editing = false;
-  let readme = data.globals.readme;
-  let siteName = data.globals.config.siteName;
-  let siteShortName = data.globals.config.siteShortName;
-  let siteDescription = data.globals.config.siteDescription;
-  let siteKeywords = data.globals.config.siteKeywords.join('\n');
-  let siteColor = data.globals.config.color;
+  const listHiddenGroups = (config: ConfigJson) => Object.keys(data.globals.groups)
+    .filter(g => !config.listedGroups.includes(g));
 
-  const listHiddenGroups = () => Object.keys(data.globals.groups)
-    .filter(g => !data.globals.config.listedGroups.includes(g));
+  let editing: boolean;
+  let readme: string;
+  let configEdit: ConfigJson;
+  let siteKeywords: string;
 
   /** Groups that are shown */
-  let listedGroups = data.globals.config.listedGroups;
+  let listedGroups: string[];
   /** Groups that are hidden */
-  let hiddenGroups = listHiddenGroups();
+  let hiddenGroups: string[];
+
+  function setupData() {
+    editing = false;
+    readme = data.globals.readme;
+    configEdit = structuredClone(data.globals.config);
+    siteKeywords = configEdit.siteKeywords.join('\n');
+    listedGroups = configEdit.listedGroups;
+    hiddenGroups = listHiddenGroups(configEdit);
+  }
 
   /** Callback for when editing is finished */
-  export async function finishEditing(save: boolean) {
+  async function finishEditing(save: boolean) {
     if (save) {
       // Update readme
       data.globals.readme = readme;
       await api().readme.set(readme);
-      data.globals.config.listedGroups = listedGroups;
-      data.globals.config.siteName = siteName;
-      data.globals.config.siteShortName = siteShortName;
-      data.globals.config.siteDescription = siteDescription;
-      data.globals.config.siteKeywords = siteKeywords.split('\n').filter(k => k.length);
-      data.globals.config.color = siteColor;
+      configEdit.listedGroups = listedGroups;
+      // NOTE: Currently it is possible to completely mess up the keywords by including
+      // a ',' character -- probably a good idea to make the API break those
+      configEdit.siteKeywords = siteKeywords.split('\n').filter(k => k.length);
+      data.globals.config = structuredClone(configEdit);
       await api().admin.config.put(data.globals.config);
-    } else {
-      // Discard readme changes
-      readme = data.globals.readme;
-      siteName = data.globals.config.siteName;
-      siteShortName = data.globals.config.siteShortName;
-      siteDescription = data.globals.config.siteDescription;
-      siteKeywords = data.globals.config.siteKeywords.join('\n');
-      siteColor = data.globals.config.color;
-      // Group listing/ordering
-      listedGroups = data.globals.config.listedGroups;
-      hiddenGroups = listHiddenGroups();
     }
-    editing = false;
+    // Discard changes and reload data
+    setupData();
   }
+
+  setupData();
 
 </script>
 
@@ -82,19 +80,19 @@
   {#if editing}
     <form on:submit|preventDefault={() => finishEditing(true)}>
       <h2>Site name</h2>
-      <input placeholder="My portfolio" bind:value={siteName} required>
+      <input type="text" placeholder="My portfolio" bind:value={configEdit.siteName} required>
       <p>
         This is the name of your portfolio site. It is shown on the home
         page of your portfolio.
       </p>
       <h2>Site short name</h2>
-      <input placeholder="Portfolio" bind:value={siteShortName} required>
+      <input type="text" placeholder="Portfolio" bind:value={configEdit.siteShortName} required>
       <p>
         This is the short name of your portfolio site. It is shown on most
         pages within your portfolio.
       </p>
       <h2>Site description</h2>
-      <input placeholder="My portfolio website" bind:value={siteDescription}>
+      <input type="text" placeholder="My portfolio website" bind:value={configEdit.siteDescription}>
       <p>
         This is the description of your portfolio shown to search engines.
       </p>
@@ -105,7 +103,7 @@
         Place each keyword on a new line.
       </p>
       <h2>Theme color</h2>
-      <input type="color" bind:value={siteColor} required>
+      <input type="color" bind:value={configEdit.color} required>
       <p>
         This is the main theme color for your portfolio site. It is subtly
         shown in the background on many pages.
@@ -163,6 +161,15 @@
   }
   form {
     width: 90%;
+  }
+  input[type="text"] {
+    width: 50%;
+    height: 1.5rem;
+  }
+  textarea {
+    width: 50%;
+    height: 5rem;
+    resize: vertical;
   }
   #readme {
     width: 100%;
