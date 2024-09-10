@@ -1,8 +1,8 @@
 import { error, json } from '@sveltejs/kit';
-import { dataDirUsesGit, getDataDir } from '$lib/server/data/dataDir';
+import { dataDirUsesGit } from '$lib/server/data/dataDir';
 import { validateTokenFromRequest } from '$lib/server/auth.js';
-import simpleGit from 'simple-git';
 import { getPortfolioGlobals } from '$lib/server/data/index.js';
+import { getRepoStatus } from '$lib/server/data/git.js';
 
 export async function GET({ request, cookies }) {
   await getPortfolioGlobals().catch(e => error(400, e));
@@ -12,17 +12,5 @@ export async function GET({ request, cookies }) {
     return json({ repo: null }, { status: 200 });
   }
 
-  const repo = simpleGit(getDataDir());
-
-  const status = await repo.status();
-  return json(
-    {
-      repo: {
-        url: (await repo.remote(['get-url', 'origin']) || '').trim(),
-        branch: status.current,
-        commit: await repo.revparse(['--short', 'HEAD']),
-        clean: status.isClean()
-      }
-    },
-    { status: 200 });
+  return json({ repo: await getRepoStatus() }, { status: 200 });
 }

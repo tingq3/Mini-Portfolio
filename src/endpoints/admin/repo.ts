@@ -1,20 +1,6 @@
 /** Git repository endpoints */
+import type { RepoStatus } from '$lib/server/data/git';
 import { apiFetch, json } from '../fetch';
-
-/** Information about the repo */
-export type RepoInfo = {
-  /** Object if repo exists, or null otherwise */
-  repo: {
-    /** The repo URL */
-    url: string
-    /** The current branch */
-    branch: string
-    /** The current commit hash */
-    commit: string
-    /** Whether the repository has any uncommitted changes */
-    clean: boolean
-  } | null,
-};
 
 export default function repo(token: string | undefined) {
   const get = async () => {
@@ -22,7 +8,7 @@ export default function repo(token: string | undefined) {
       'GET',
       '/api/admin/repo',
       token,
-    )) as Promise<RepoInfo>;
+    )) as Promise<{ repo: RepoStatus }>;
   };
 
   const commit = async (message: string) => {
@@ -31,7 +17,7 @@ export default function repo(token: string | undefined) {
       '/api/admin/repo/commit',
       token,
       { message },
-    )) as Promise<RepoInfo>;
+    )) as Promise<RepoStatus>;
   };
 
   const push = async () => {
@@ -39,7 +25,7 @@ export default function repo(token: string | undefined) {
       'POST',
       '/api/admin/repo/push',
       token,
-    )) as Promise<RepoInfo>;
+    )) as Promise<RepoStatus>;
   };
 
   const pull = async () => {
@@ -47,7 +33,7 @@ export default function repo(token: string | undefined) {
       'POST',
       '/api/admin/repo/pull',
       token,
-    )) as Promise<RepoInfo>;
+    )) as Promise<RepoStatus>;
   };
 
   return {

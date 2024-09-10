@@ -8,6 +8,31 @@ const DEFAULT_GITIGNORE = `
 config.local.json
 `.trimStart();
 
+/** Status information of a git repo */
+export type RepoStatus = {
+  /** The repo URL */
+  url: string
+  /** The current branch */
+  branch: string
+  /** The current commit hash */
+  commit: string
+  /** Whether the repository has any uncommitted changes */
+  clean: boolean
+};
+
+/** Return status info for repo */
+export async function getRepoStatus(): Promise<RepoStatus> {
+  const repo = simpleGit(getDataDir());
+  const status = await repo.status();
+
+  return {
+    url: (await repo.remote(['get-url', 'origin']) || '').trim(),
+    branch: status.current as string,
+    commit: await repo.revparse(['--short', 'HEAD']),
+    clean: status.isClean(),
+  };
+}
+
 /** Set up the data dir given a git repo URL and branch name */
 export async function setupGitRepo(repo: string, branch: string | null) {
   // Check whether the data repo is set up
