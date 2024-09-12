@@ -1,6 +1,6 @@
 # Minifolio
 
-A data-driven portfolio to showcase your best work.
+A simple but powerful portfolio content management system to showcase your best work.
 
 ## Features
 
