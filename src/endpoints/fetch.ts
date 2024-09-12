@@ -113,7 +113,7 @@ export async function json(response: Promise<Response>): Promise<object> {
   if ([404, 405].includes(res.status)) {
     throw new ApiError(404, `Error ${res.status} at ${res.url}`);
   }
-  if (![200, 304].includes(res.status)) {
+  if (res.status >= 500) {
     // Unknown error
     throw new ApiError(res.status, `Request got status code ${res.status}`);
   }
