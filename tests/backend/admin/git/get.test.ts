@@ -10,19 +10,19 @@ import { getDataDir } from '$lib/server/data/dataDir';
 
 it('Blocks unauthorized users', async () => {
   const { api } = await setup();
-  await expect(api.withToken(undefined).admin.repo.get()).rejects.toMatchObject({ code: 401 });
+  await expect(api.withToken(undefined).admin.git.status()).rejects.toMatchObject({ code: 401 });
 });
 
 it('Gives a 400 when no data directory is set up', async () => {
   const { api } = await setup();
   await api.debug.clear();
-  await expect(api.admin.repo.get()).rejects.toMatchObject({ code: 400 });
+  await expect(api.admin.git.status()).rejects.toMatchObject({ code: 400 });
 });
 
 it('Correctly returns repo info when a repo is set up', { timeout: 15_000 }, async () => {
   const { token } = (await api().admin.firstrun(gitRepos.TEST_REPO_RW, null)).credentials;
   const repo = simpleGit(getDataDir());
-  await expect(api(token).admin.repo.get()).resolves.toStrictEqual({
+  await expect(api(token).admin.git.status()).resolves.toStrictEqual({
     repo: {
       url: gitRepos.TEST_REPO_RW,
       branch: 'main',
@@ -40,7 +40,7 @@ it('Correctly returns repo info when a repo is set up', { timeout: 15_000 }, asy
 
 test('Commit and branch are null when repo has no commits', { timeout: 15_000 }, async () => {
   const { api } = await setup(gitRepos.EMPTY);
-  await expect(api.admin.repo.get()).resolves.toStrictEqual({
+  await expect(api.admin.git.status()).resolves.toStrictEqual({
     repo: expect.objectContaining({
       branch: null,
       commit: null,
@@ -50,7 +50,7 @@ test('Commit and branch are null when repo has no commits', { timeout: 15_000 },
 
 it('Correctly returns null info when a repo is not set up', async () => {
   const { api } = await setup();
-  await expect(api.admin.repo.get()).resolves.toStrictEqual({
+  await expect(api.admin.git.status()).resolves.toStrictEqual({
     repo: null,
   });
 });

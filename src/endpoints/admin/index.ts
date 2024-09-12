@@ -1,7 +1,7 @@
 /** Admin endpoints */
 import auth from './auth';
 import config from './config';
-import repo from './repo';
+import git from './git';
 import firstrun from './firstrun';
 import { apiFetch, json } from '$endpoints/fetch';
 
@@ -13,7 +13,7 @@ export default function admin(token: string | undefined) {
   return {
     auth: auth(token),
     config: config(token),
-    repo: repo(token),
+    git: git(token),
     firstrun,
     data: {
       /** Refresh the data store */

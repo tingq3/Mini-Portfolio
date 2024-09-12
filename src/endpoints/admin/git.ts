@@ -2,11 +2,11 @@
 import type { RepoStatus } from '$lib/server/git';
 import { apiFetch, json } from '../fetch';
 
-export default function repo(token: string | undefined) {
-  const get = async () => {
+export default function git(token: string | undefined) {
+  const status = async () => {
     return json(apiFetch(
       'GET',
-      '/api/admin/repo',
+      '/api/admin/git',
       token,
     )) as Promise<{ repo: RepoStatus }>;
   };
@@ -14,7 +14,7 @@ export default function repo(token: string | undefined) {
   const init = async (url: string) => {
     return json(apiFetch(
       'POST',
-      '/api/admin/repo/init',
+      '/api/admin/git/init',
       token,
       { url },
     )) as Promise<RepoStatus>;
@@ -23,7 +23,7 @@ export default function repo(token: string | undefined) {
   const commit = async (message: string) => {
     return json(apiFetch(
       'POST',
-      '/api/admin/repo/commit',
+      '/api/admin/git/commit',
       token,
       { message },
     )) as Promise<RepoStatus>;
@@ -32,7 +32,7 @@ export default function repo(token: string | undefined) {
   const push = async () => {
     return json(apiFetch(
       'POST',
-      '/api/admin/repo/push',
+      '/api/admin/git/push',
       token,
     )) as Promise<RepoStatus>;
   };
@@ -40,14 +40,14 @@ export default function repo(token: string | undefined) {
   const pull = async () => {
     return json(apiFetch(
       'POST',
-      '/api/admin/repo/pull',
+      '/api/admin/git/pull',
       token,
     )) as Promise<RepoStatus>;
   };
 
   return {
     /** Retrieve information about the data repository */
-    get,
+    status,
     /** Initialise a git repo */
     init,
     /** Perform a git commit */

@@ -17,7 +17,8 @@ export async function POST({ request, cookies }) {
 
   const { commit: prevCommit } = await getRepoStatus();
 
-  await git.pull().catch(e => error(400, `${e}`));
+  // Merge divergent changes
+  await git.pull(['--no-rebase']).catch(e => error(400, `${e}`));
   const status = await getRepoStatus();
 
   if (status.commit === prevCommit) {

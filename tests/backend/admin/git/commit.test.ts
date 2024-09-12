@@ -15,10 +15,10 @@ vi.setConfig({ testTimeout: 15_000 });
 it('Creates a commit with the current changes', async () => {
   const { api } = await setup(gitRepos.TEST_REPO_RW);
   // Get current commit hash
-  const { repo: { commit } } = await api.admin.repo.get();
+  const { repo: { commit } } = await api.admin.git.status();
   // Make some small change
   await api.readme.set(`# Test repo\n\nUpdated at ${Date()}`);
-  const commitResult = await api.admin.repo.commit('Updated repo');
+  const commitResult = await api.admin.git.commit('Updated repo');
   expect(commitResult).toMatchObject({
     // One commit ahead of origin
     ahead: 1,
@@ -28,14 +28,14 @@ it('Creates a commit with the current changes', async () => {
 
 it("Gives a 400 error when data dir isn't using git", async () => {
   const { api } = await setup();
-  await expect(api.admin.repo.commit('Commit message')).rejects.toMatchObject({
+  await expect(api.admin.git.commit('Commit message')).rejects.toMatchObject({
     code: 400,
   });
 });
 
 it('Gives a 400 when no data dir set up', async () => {
   const api = apiClient();
-  await expect(api.admin.repo.commit('Commit message')).rejects.toMatchObject({
+  await expect(api.admin.git.commit('Commit message')).rejects.toMatchObject({
     code: 400,
   });
 });
@@ -43,9 +43,9 @@ it('Gives a 400 when no data dir set up', async () => {
 it('Gives a 400 when there are no current changes', async () => {
   const { api } = await setup(gitRepos.TEST_REPO_RW);
   // Need to do an earlier commit because a data migration may have occurred
-  await api.admin.repo.commit('First commit').catch(() => {});
+  await api.admin.git.commit('First commit').catch(() => {});
   // Second commit fails as there are no changes
-  await expect(api.admin.repo.commit('Second commit')).rejects.toMatchObject({
+  await expect(api.admin.git.commit('Second commit')).rejects.toMatchObject({
     code: 400,
   });
 });
@@ -58,6 +58,6 @@ describe('token test', () => {
 
   genTokenTests(
     () => api,
-    async api => api.admin.repo.commit('Commit message'),
+    async api => api.admin.git.commit('Commit message'),
   );
 });
