@@ -3,7 +3,7 @@
  */
 import { it, expect, beforeEach, describe, vi } from 'vitest';
 import { forceRewindDataRepoGit, setup } from '../../helpers';
-import { type ApiClient } from '$endpoints';
+import makeClient, { type ApiClient } from '$endpoints';
 import gitRepos from '../../gitRepos';
 import genTokenTests from '../../tokenCase';
 
@@ -30,9 +30,14 @@ it('Gives a 400 error if pushing fails due to conflicting commits on the origin'
   await expect(api.admin.git.push()).rejects.toMatchObject({ code: 400 });
 });
 
-it.todo("Gives a 400 error when data dir isn't using git");
+it("Gives a 400 error when data dir isn't using git", async () => {
+  const { api } = await setup();
+  await expect(api.admin.git.push()).rejects.toMatchObject({ code: 400 });
+});
 
-it.todo('Gives a 400 when no data dir set up');
+it('Gives a 400 when no data dir set up', async () => {
+  await expect(makeClient().admin.git.push()).rejects.toMatchObject({ code: 400 });
+});
 
 describe('token tests', () => {
   let api: ApiClient;
