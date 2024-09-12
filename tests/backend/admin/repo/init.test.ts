@@ -1,13 +1,16 @@
 /**
  * Test cases for POST /api/admin/repo/init
  */
-import { it, expect, beforeEach, describe } from 'vitest';
+import { it, expect, beforeEach, describe, vi } from 'vitest';
 import { setup } from '../../helpers';
 import gitRepos, { resetTestRepo } from '../../gitRepos';
 import simpleGit from 'simple-git';
 import { getDataDir } from '$lib/server/data/dataDir';
 import genTokenTests from '../../tokenCase';
 import type { ApiClient } from '$endpoints';
+
+// Git clone takes a while, increase the test timeout
+vi.setConfig({ testTimeout: 15_000 });
 
 it.fails('Initializes the git repo with the given upstream URL', async () => {
   const api = (await setup()).api;
