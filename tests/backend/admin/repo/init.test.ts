@@ -22,9 +22,19 @@ it('Gives a 400 if the repo is already set up', async () => {
     .rejects.toMatchObject({ code: 400 });
 });
 
-it.todo('Gives a 400 if the upstream repo contains content already');
+it('Gives a 400 if the upstream repo contains content already', async () => {
+  const api = (await setup()).api;
+  await expect(api.admin.repo.init(gitRepos.TEST_REPO_RW)).rejects.toMatchObject({
+    code: 400,
+  });
+});
 
-it.todo('Gives a 400 if the upstream repo does not exist');
+it('Gives a 400 if the upstream repo does not exist', async () => {
+  const api = (await setup()).api;
+  await expect(api.admin.repo.init(gitRepos.INVALID)).rejects.toMatchObject({
+    code: 400,
+  });
+});
 
 describe('token tests', async () => {
   let api: ApiClient;
