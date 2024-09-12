@@ -37,6 +37,10 @@ jobs:
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null
         chmod 0600 .github/workflows/secrets/id_ed25519
         ssh-add .github/workflows/secrets/id_ed25519
+    - name: Set up git config
+      run: |
+        git config --global user.name "MadGutsBot"
+        git config --global user.email "103484332+MadGutsBot@users.noreply.github.com"
     - name: Set up .env
       run: cp .env.example .env
     - name: Run test suite
