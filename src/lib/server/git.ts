@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
-import { dataDirContainsData, dataDirIsInit, getDataDir } from './dataDir';
-import simpleGit from 'simple-git';
+import { dataDirContainsData, dataDirIsInit, getDataDir } from './data/dataDir';
+import simpleGit, { type FileStatusResult } from 'simple-git';
 import { appendFile, readdir } from 'fs/promises';
 import { rimraf } from 'rimraf';
 
@@ -18,6 +18,12 @@ export type RepoStatus = {
   commit: string
   /** Whether the repository has any uncommitted changes */
   clean: boolean
+  /** Number of commits ahead of origin */
+  ahead: number
+  /** Number of commits behind origin */
+  behind: number
+  /** Changes for files */
+  changes: FileStatusResult[],
 };
 
 /** Return status info for repo */
@@ -25,11 +31,16 @@ export async function getRepoStatus(): Promise<RepoStatus> {
   const repo = simpleGit(getDataDir());
   const status = await repo.status();
 
+  void status.created;
+
   return {
     url: (await repo.remote(['get-url', 'origin']) || '').trim(),
     branch: status.current as string,
     commit: await repo.revparse(['--short', 'HEAD']),
     clean: status.isClean(),
+    ahead: status.ahead,
+    behind: status.behind,
+    changes: status.files,
   };
 }
 

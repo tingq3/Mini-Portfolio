@@ -1,11 +1,11 @@
 import { error, json } from '@sveltejs/kit';
-import { dataDirContainsData, dataDirIsInit, getDataDir } from '$lib/server/data/dataDir.js';
+import { dataDirContainsData, dataDirIsInit, getDataDir } from '$lib/server/data/dataDir';
 import { mkdir } from 'fs/promises';
-import { setupGitignore, setupGitRepo } from '$lib/server/data/git.js';
-import { authSetup } from '$lib/server/auth.js';
-import { initConfig } from '$lib/server/data/config.js';
-import { initReadme } from '$lib/server/data/readme.js';
-import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
+import { setupGitignore, setupGitRepo } from '$lib/server/git';
+import { authSetup } from '$lib/server/auth';
+import { initConfig } from '$lib/server/data/config';
+import { initReadme } from '$lib/server/data/readme';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 
 export async function POST({ request, cookies }) {
   const { repoUrl, branch }: { repoUrl: string | null, branch: string | null }

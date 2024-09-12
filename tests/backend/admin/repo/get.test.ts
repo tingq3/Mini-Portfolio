@@ -30,6 +30,10 @@ it('Correctly returns repo info when a repo is set up', { timeout: 15_000 }, asy
       // A data migration may have been performed, which would lead to an
       // unclean git tree
       clean: expect.any(Boolean),
+      ahead: 0,
+      behind: 0,
+      // No nice way to expect string[]
+      changes: expect.any(Array),
     }
   });
 });

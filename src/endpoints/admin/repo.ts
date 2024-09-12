@@ -1,5 +1,5 @@
 /** Git repository endpoints */
-import type { RepoStatus } from '$lib/server/data/git';
+import type { RepoStatus } from '$lib/server/git';
 import { apiFetch, json } from '../fetch';
 
 export default function repo(token: string | undefined) {
@@ -9,6 +9,15 @@ export default function repo(token: string | undefined) {
       '/api/admin/repo',
       token,
     )) as Promise<{ repo: RepoStatus }>;
+  };
+
+  const init = async (url: string) => {
+    return json(apiFetch(
+      'POST',
+      '/api/admin/repo/init',
+      token,
+      { url },
+    )) as Promise<RepoStatus>;
   };
 
   const commit = async (message: string) => {
@@ -39,6 +48,8 @@ export default function repo(token: string | undefined) {
   return {
     /** Retrieve information about the data repository */
     get,
+    /** Initialise a git repo */
+    init,
     /** Perform a git commit */
     commit,
     /** Perform a git push */
