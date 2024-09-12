@@ -1,12 +1,51 @@
 import { error } from '@sveltejs/kit';
-import { dataDirContainsData, dataDirIsInit, getDataDir } from './dataDir';
-import simpleGit from 'simple-git';
+import { dataDirContainsData, dataDirIsInit, getDataDir } from './data/dataDir';
+import simpleGit, { type FileStatusResult } from 'simple-git';
 import { appendFile, readdir } from 'fs/promises';
 import { rimraf } from 'rimraf';
 
 const DEFAULT_GITIGNORE = `
 config.local.json
 `.trimStart();
+
+/** Status information of a git repo */
+export type RepoStatus = {
+  /** The repo URL */
+  url: string
+  /** The current branch */
+  branch: string | null
+  /** The current commit hash */
+  commit: string | null
+  /** Whether the repository has any uncommitted changes */
+  clean: boolean
+  /** Number of commits ahead of origin */
+  ahead: number
+  /** Number of commits behind origin */
+  behind: number
+  /** Changes for files */
+  changes: FileStatusResult[],
+};
+
+/** Return status info for repo */
+export async function getRepoStatus(): Promise<RepoStatus> {
+  const repo = simpleGit(getDataDir());
+  const status = await repo.status();
+
+  // Workaround for issue with simple-git
+  // https://github.com/steveukx/git-js/issues/1020
+  const branch = status.current !== 'No' ? status.current : null;
+
+  return {
+    url: (await repo.remote(['get-url', 'origin']) || '').trim(),
+    branch,
+    // If command fails, no commit has been made
+    commit: await repo.revparse(['--short', 'HEAD']).catch(() => null),
+    clean: status.isClean(),
+    ahead: status.ahead,
+    behind: status.behind,
+    changes: status.files,
+  };
+}
 
 /** Set up the data dir given a git repo URL and branch name */
 export async function setupGitRepo(repo: string, branch: string | null) {

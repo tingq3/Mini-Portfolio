@@ -27,7 +27,7 @@ import type { PackageInfo } from '../itemPackage';
 import { LinksArray, listItems, setItemInfo } from '../item';
 import type { Infer } from 'superstruct';
 import { version } from '$app/environment';
-import { setupGitignore } from '../git';
+import { setupGitignore } from '../../git';
 import { capitalize } from '$lib/util';
 import { unsafeLoadConfig, unsafeLoadGroupInfo, unsafeLoadItemInfo } from './unsafeLoad';
 

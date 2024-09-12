@@ -3,10 +3,14 @@ import type { ConfigJson } from '$lib/server/data/config';
 import type { GroupInfo } from '$lib/server/data/group';
 import type { ItemInfoFull } from '$lib/server/data/item';
 import { version } from '$app/environment';
+import simpleGit from 'simple-git';
+import { getDataDir } from '$lib/server/data/dataDir';
 
 /** Set up the server, returning (amongst other things) an API client */
-export async function setup() {
-  const credentials = (await api(undefined).admin.firstrun(null, null)).credentials;
+export async function setup(repoUrl?: string, branch?: string) {
+  const credentials
+    = (await api(undefined).admin.firstrun(repoUrl ?? null, branch ?? null))
+      .credentials;
   return {
     api: api(credentials.token),
     credentials,
@@ -77,4 +81,15 @@ export function makeItemInfo(options: Partial<ItemInfoFull> = {}): ItemInfoFull 
   };
 
   return { ...item, ...options };
+}
+
+/** Rewind the data repo's git repo to an earlier commit */
+export async function forceRewindDataRepoGit(api: ApiClient) {
+  const OLD_COMMIT_HASH = 'd7ef6fd7ef9bac4c24f5634e6b1e76d201507498';
+  // Forcefully move back a number of commits, then invalidate the data
+  const git = simpleGit(getDataDir());
+  await git.reset(['--hard', OLD_COMMIT_HASH]);
+  await api.admin.data.refresh();
+  // Attempt to make a commit just in case of data migrations
+  await api.admin.git.commit('Migrate data').catch(() => {});
 }
