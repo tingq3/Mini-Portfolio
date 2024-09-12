@@ -1,7 +1,7 @@
 /**
  * Test cases for GET /api/admin/repo
  */
-import { it, expect } from 'vitest';
+import { it, expect, test } from 'vitest';
 import { setup } from '../../helpers';
 import api from '$endpoints';
 import gitRepos from '../../gitRepos';
@@ -35,6 +35,16 @@ it('Correctly returns repo info when a repo is set up', { timeout: 15_000 }, asy
       // No nice way to expect string[]
       changes: expect.any(Array),
     }
+  });
+});
+
+test('Commit and branch are null when repo has no commits', { timeout: 15_000 }, async () => {
+  const { api } = await setup(gitRepos.EMPTY);
+  await expect(api.admin.repo.get()).resolves.toStrictEqual({
+    repo: expect.objectContaining({
+      branch: null,
+      commit: null,
+    })
   });
 });
 

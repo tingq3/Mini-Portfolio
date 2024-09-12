@@ -5,8 +5,10 @@ import type { ItemInfoFull } from '$lib/server/data/item';
 import { version } from '$app/environment';
 
 /** Set up the server, returning (amongst other things) an API client */
-export async function setup() {
-  const credentials = (await api(undefined).admin.firstrun(null, null)).credentials;
+export async function setup(repoUrl?: string, branch?: string) {
+  const credentials
+    = (await api(undefined).admin.firstrun(repoUrl ?? null, branch ?? null))
+      .credentials;
   return {
     api: api(credentials.token),
     credentials,

@@ -1,29 +1,39 @@
 /**
  * Test cases for POST /api/admin/repo/init
  */
-import { it, expect, beforeEach } from 'vitest';
+import { it, expect, beforeEach, describe } from 'vitest';
 import { setup } from '../../helpers';
-import gitRepos from '../../gitRepos';
+import gitRepos, { resetTestRepo } from '../../gitRepos';
 import simpleGit from 'simple-git';
 import { getDataDir } from '$lib/server/data/dataDir';
 import genTokenTests from '../../tokenCase';
 import type { ApiClient } from '$endpoints';
 
-let api: ApiClient;
-
-beforeEach(async () => {
-  api = (await setup()).api;
+it.fails('Initializes the git repo with the given upstream URL', async () => {
+  const api = (await setup()).api;
+  await expect(api.admin.repo.init(gitRepos.EMPTY)).resolves.toMatchObject({
+    url: gitRepos.EMPTY,
+  });
 });
 
-it.todo('Initializes the git repo with the given upstream URL');
+it('Gives a 400 if the repo is already set up', async () => {
+  const api = (await setup(gitRepos.EMPTY)).api;
+  await expect(api.admin.repo.init(gitRepos.TEST_REPO_RW))
+    .rejects.toMatchObject({ code: 400 });
+});
 
-it.todo('Gives a 400 if the repo is already set up');
+it.todo('Gives a 400 if the upstream repo contains content already');
 
-it.todo('Gives a 400 if the repo contains content already');
+it.todo('Gives a 400 if the upstream repo does not exist');
 
-it.todo('Gives a 400 if the repo does not exist');
+describe('token tests', async () => {
+  let api: ApiClient;
 
-genTokenTests(
-  () => api,
-  async api => {},
-);
+  beforeEach(async () => {
+    api = (await setup()).api;
+  });
+  genTokenTests(
+    () => api,
+    async api => api.admin.repo.init(gitRepos.TEST_REPO_RW),
+  );
+});

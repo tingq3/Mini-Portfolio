@@ -13,9 +13,9 @@ export type RepoStatus = {
   /** The repo URL */
   url: string
   /** The current branch */
-  branch: string
+  branch: string | null
   /** The current commit hash */
-  commit: string
+  commit: string | null
   /** Whether the repository has any uncommitted changes */
   clean: boolean
   /** Number of commits ahead of origin */
@@ -31,12 +31,15 @@ export async function getRepoStatus(): Promise<RepoStatus> {
   const repo = simpleGit(getDataDir());
   const status = await repo.status();
 
-  void status.created;
+  // Workaround for issue with simple-git
+  // https://github.com/steveukx/git-js/issues/1020
+  const branch = status.current !== 'No' ? status.current : null;
 
   return {
     url: (await repo.remote(['get-url', 'origin']) || '').trim(),
-    branch: status.current as string,
-    commit: await repo.revparse(['--short', 'HEAD']),
+    branch,
+    // If command fails, no commit has been made
+    commit: await repo.revparse(['--short', 'HEAD']).catch(() => null),
     clean: status.isClean(),
     ahead: status.ahead,
     behind: status.behind,
