@@ -15,7 +15,15 @@ export async function POST({ request, cookies }) {
 
   const git = simpleGit(getDataDir());
 
-  await git.pull();
+  const { commit: prevCommit } = await getRepoStatus();
+
+  await git.pull().catch(e => error(400, `${e}`));
+  const status = await getRepoStatus();
+
+  if (status.commit === prevCommit) {
+    error(400, 'No changes to pull');
+  }
+
   invalidatePortfolioGlobals();
-  return json(await getRepoStatus(), { status: 200 });
+  return json(status, { status: 200 });
 }

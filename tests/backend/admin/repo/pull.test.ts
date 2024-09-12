@@ -35,6 +35,11 @@ it('Gives a 400 when no data dir set up', async () => {
   await expect(makeClient().admin.repo.pull()).rejects.toMatchObject({ code: 400 });
 });
 
+it('Gives a 400 when there are no commits to pull', async () => {
+  const { api } = await setup(gitRepos.TEST_REPO_RW);
+  await expect(api.admin.repo.pull()).rejects.toMatchObject({ code: 400 });
+});
+
 describe('token tests', () => {
   let api: ApiClient;
 
