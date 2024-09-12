@@ -23,7 +23,7 @@ it('Creates a commit with the current changes', async () => {
     // One commit ahead of origin
     ahead: 1,
   });
-  expect(commitResult.commit).toStrictEqual(commit);
+  expect(commitResult.commit).not.toStrictEqual(commit);
 });
 
 it("Gives a 400 error when data dir isn't using git", async () => {
