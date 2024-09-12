@@ -1,5 +1,6 @@
 import { validateTokenFromRequest } from '$lib/server/auth.js';
 import { dataDirUsesGit, getDataDir } from '$lib/server/data/dataDir.js';
+import { getRepoStatus } from '$lib/server/git.js';
 import { getPortfolioGlobals } from '$lib/server/index.js';
 import { error, json } from '@sveltejs/kit';
 import simpleGit from 'simple-git';
@@ -31,5 +32,5 @@ export async function POST({ request, cookies }) {
     error(400, 'Git repo is not empty');
   }
 
-  return json({}, { status: 200 });
+  return json(await getRepoStatus(), { status: 200 });
 }

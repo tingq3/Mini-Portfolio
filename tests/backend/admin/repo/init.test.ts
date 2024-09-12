@@ -12,7 +12,7 @@ import type { ApiClient } from '$endpoints';
 // Git clone takes a while, increase the test timeout
 vi.setConfig({ testTimeout: 15_000 });
 
-it.fails('Initializes the git repo with the given upstream URL', async () => {
+it('Initializes the git repo with the given upstream URL', async () => {
   const api = (await setup()).api;
   await expect(api.admin.repo.init(gitRepos.EMPTY)).resolves.toMatchObject({
     url: gitRepos.EMPTY,
