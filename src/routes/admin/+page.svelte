@@ -6,6 +6,9 @@
   import consts from '$lib/consts';
 
   export let data: import('./$types').PageData;
+
+  // Git setup
+  let gitUrl = '';
 </script>
 
 <svelte:head>
@@ -28,6 +31,32 @@
   <div id="paper-container">
     <Paper>
       <div id="contents">
+        <div>
+          {#if data.repo}
+          <h2>Git status</h2>
+          <p>Current branch: {data.repo.branch}</p>
+          <p>Current commit: {data.repo.commit}</p>
+          <p>
+            {#if data.repo.behind}
+              {data.repo.behind} commits behind.
+            {/if}
+            {#if data.repo.ahead}
+              {data.repo.ahead} commits ahead.
+            {/if}
+          </p>
+
+          {:else}
+          <h2>Git is currently not in use</h2>
+
+          You can use a Git repository to back up your portfolio data. Enter the
+          clone URL for an empty Git repository and it will be set up for you.
+
+          <form>
+            <input type="text" name="git-url" id="git-url" placeholder="git@github.com:MaddyGuthridge/Minifolio.git" bind:value={gitUrl}>
+            <input type="submit" value="Switch to a Git repository">
+          </form>
+          {/if}
+        </div>
         <div>
           <h2>Reload data from disk</h2>
           If you have edited your data manually, you can use this button to
