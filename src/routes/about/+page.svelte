@@ -3,6 +3,7 @@ import Background from '$components/Background.svelte';
 import Markdown from '$components/markdown/Markdown.svelte';
 import Navbar from '$components/navbar';
 import consts from '$lib/consts';
+import { dev } from '$app/environment';
 
 export let data: import('./$types').PageData;
 
@@ -26,7 +27,7 @@ if (data.versions) {
 
 For security reasons, these details are only shown if you are logged in.
 
-* ${consts.APP_NAME}: v${data.versions.site}
+* ${consts.APP_NAME}: v${data.versions.site} ${dev ? '(dev)' : ''}
 * Node: ${data.versions.node}
 * OS: ${data.versions.os}
 `;
