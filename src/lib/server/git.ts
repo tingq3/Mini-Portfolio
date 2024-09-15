@@ -43,7 +43,9 @@ export async function getRepoStatus(): Promise<RepoStatus> {
     clean: status.isClean(),
     ahead: status.ahead,
     behind: status.behind,
-    changes: status.files,
+    // Need to map changed files to a new object or we get a JSON serialize
+    // error
+    changes: status.files.map(f => ({ ...f })),
   };
 }
 
