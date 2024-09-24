@@ -2,6 +2,17 @@
  * Tests for POST /api/admin/auth/login
  *
  * Allows users to log into the site, enabling editing of the data.
+ *
+ * # Errors
+ * - Invalid username
+ * - Invalid password
+ * - After repeated failed logins, all requests are rejected
+ *
+ * # Success
+ * - Lets user log in if they give the correct credentials
+ *
+ * # Edge cases
+ * - Empty form fields
  */
 import { it, expect, beforeEach } from 'vitest';
 import { setup } from '../../helpers';
@@ -30,9 +41,25 @@ it('Blocks logins with non-existent usernames', async () => {
     .rejects.toMatchObject({ code: 401 });
 });
 
+it('Errors if fields are empty', async () => {
+  await expect(api().admin.auth.login('', ''))
+    .rejects.toMatchObject({ code: 401 });
+});
+
 it('Blocks logins with incorrect passwords', async () => {
   await expect(api().admin.auth.login(credentials.username, credentials.password + 'hi'))
     .rejects.toMatchObject({ code: 401 });
+});
+
+it('Blocks all logins after 25 failed login requests', { fails: true }, async () => {
+  for (let i = 0; i < 25; i++) {
+    await api().admin.auth.login(credentials.username + 'hi', credentials.password)
+      // Discard error
+      .catch(() => {});
+  }
+  // User has been banned because of login failure happening too many times
+  await expect(api().admin.auth.login(credentials.username, credentials.password))
+    .rejects.toMatchObject({ code: 403 });
 });
 
 /**
