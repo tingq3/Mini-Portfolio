@@ -1,4 +1,5 @@
 export const invalidIds = [
+  // Add a '/' at the end or fetch will trim it
   { id: ' /', case: 'Purely whitespace' },
   { id: 'hello=world', case: 'Non alphanumeric characters: "="' },
   { id: 'hello_world', case: 'Non alphanumeric characters: "_"' },
