@@ -41,7 +41,7 @@ it('Gives a 400 when no data dir set up', async () => {
 it('Gives a 400 when there are no current changes', async () => {
   const { api } = await setup(gitRepos.TEST_REPO_RW);
   // Need to do an earlier commit because a data migration may have occurred
-  await api.admin.git.commit('First commit').catch();
+  await api.admin.git.commit('First commit').catch(e => {void e});
   // Second commit fails as there are no changes
   await expect(api.admin.git.commit('Second commit')).rejects.toMatchObject({
     code: 400,

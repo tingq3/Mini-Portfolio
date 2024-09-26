@@ -91,5 +91,5 @@ export async function forceRewindDataRepoGit(api: ApiClient) {
   await git.reset(['--hard', OLD_COMMIT_HASH]);
   await api.admin.data.refresh();
   // Attempt to make a commit just in case of data migrations
-  await api.admin.git.commit('Migrate data').catch();
+  await api.admin.git.commit('Migrate data').catch(e => {void e});
 }
