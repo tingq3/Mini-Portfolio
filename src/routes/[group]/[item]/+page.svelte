@@ -3,7 +3,6 @@
   import { IconCard, RepoCard, PackageCard, CardList, ItemCardGrid } from '$components/card';
   import { ItemChipList } from '$components/chip';
   import Background from '$components/Background.svelte';
-  import Paper from '$components/Paper.svelte';
   import EditableMarkdown from '$components/markdown';
   import api from '$endpoints';
   import consts from '$lib/consts';

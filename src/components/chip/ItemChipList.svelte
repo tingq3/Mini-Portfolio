@@ -14,7 +14,7 @@
   export let items: FilterOptions;
 
   /** Whether to link each chip to its respective page */
-  export let link: boolean = false;
+  export let link = false;
 
   // Smoooooooooooth scrolling
   // ==================================================

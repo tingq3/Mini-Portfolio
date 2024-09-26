@@ -4,8 +4,6 @@
   import api from '$endpoints';
   import type { ConfigJson } from '$lib/server/data/config';
   import Separator from '$components/Separator.svelte';
-  import NewGroupModal from '$components/modals/NewGroupModal.svelte';
-  import NewItemModal from '$components/modals/NewItemModal.svelte';
 
   export let path: { url: string, txt: string }[];
   export let config: ConfigJson;

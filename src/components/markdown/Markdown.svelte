@@ -19,6 +19,8 @@
   $: rendered = marked(source);
 
   // https://stackoverflow.com/a/75688200/6335363
+  // TODO: Find a way to automagically disable this but only for Svelte
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   $: rendered && markdownRender && applySyntaxHighlighting(markdownRender);
 
   function applySyntaxHighlighting(renderElement: HTMLDivElement) {

@@ -1,16 +1,41 @@
 // @ts-check
-
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import eslintPluginSvelte from 'eslint-plugin-svelte';
+import js from '@eslint/js';
+import ts from 'typescript-eslint';
+import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 
-export default tseslint.config(
-  eslint.configs.recommended,
-  ...tseslint.configs.recommended,
-  ...tseslint.configs.strict,
-  ...tseslint.configs.stylistic,
-  ...eslintPluginSvelte.configs['flat/recommended'],
+export default ts.config(
+  js.configs.recommended,
+  ...ts.configs.recommended,
+  ...svelte.configs['flat/recommended'],
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        // Seemingly not defined in `globals.browser`
+        ScrollBehavior: 'readonly',
+      }
+    }
+  },
+  {
+    files: ['**/*.svelte'],
+    languageOptions: {
+      parserOptions: {
+        parser: ts.parser
+      }
+    }
+  },
+  {
+    rules: {
+      // Allow explicit any, to avoid type gymnastics
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": ["error", {
+        argsIgnorePattern: "^_",
+        caughtErrors: "none",
+      }]
+    },
+  },
   {
     ignores: [
       "**/.DS_Store",
@@ -28,20 +53,5 @@ export default tseslint.config(
       "**/vitest.config.ts",
       "eslint.config.mjs",
     ],
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.browser,
-      }
-    },
-    rules: {
-      // Allow explicit any, to avoid type gymnastics
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": ["error", {
-        argsIgnorePattern: "^_",
-        caughtErrors: "none",
-      }]
-    },
   },
 );
-

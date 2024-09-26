@@ -16,7 +16,7 @@
   /** Whether edit mode is active */
   export let editing: boolean;
   /** Whether to give the option to create an item in edit mode */
-  export let createOption: boolean = false;
+  export let createOption = false;
 
   const dispatch = createEventDispatcher<{
     click: { itemId: string },
