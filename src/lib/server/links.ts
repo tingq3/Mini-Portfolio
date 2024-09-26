@@ -55,7 +55,7 @@ export async function changeLinkStyle(
   // Find linked group and update style
   // This code is sorta yucky imo
   let foundMatch = false;
-  for (const [linkInfo, items] of item.links) {
+  for (const [linkInfo, /* items */] of item.links) {
     if (linkInfo.groupId === otherGroupId) {
       linkInfo.style = style;
       foundMatch = true;

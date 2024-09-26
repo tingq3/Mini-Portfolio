@@ -3,9 +3,7 @@
  */
 import { it, expect, beforeEach, describe, vi } from 'vitest';
 import { setup } from '../../helpers';
-import gitRepos, { resetTestRepo } from '../../gitRepos';
-import simpleGit from 'simple-git';
-import { getDataDir } from '$lib/server/data/dataDir';
+import gitRepos from '../../gitRepos';
 import genTokenTests from '../../tokenCase';
 import apiClient, { type ApiClient } from '$endpoints';
 
@@ -43,7 +41,7 @@ it('Gives a 400 when no data dir set up', async () => {
 it('Gives a 400 when there are no current changes', async () => {
   const { api } = await setup(gitRepos.TEST_REPO_RW);
   // Need to do an earlier commit because a data migration may have occurred
-  await api.admin.git.commit('First commit').catch(() => {});
+  await api.admin.git.commit('First commit').catch();
   // Second commit fails as there are no changes
   await expect(api.admin.git.commit('Second commit')).rejects.toMatchObject({
     code: 400,

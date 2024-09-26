@@ -4,7 +4,7 @@ import { validateTokenFromRequest } from '$lib/server/auth';
 import { assert, string } from 'superstruct';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 
-export async function GET({ params, request, cookies }) {
+export async function GET({ params }) {
   const groupId = params.groupId;
   const data = await getPortfolioGlobals().catch(e => error(400, e));
 

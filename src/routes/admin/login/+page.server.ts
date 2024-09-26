@@ -10,7 +10,7 @@ export async function load(req) {
     await validateTokenFromRequest(req);
     // Success, redirect them
     loggedIn = true;
-  } catch {}
+  } catch { /* empty */ }
   if (loggedIn) {
     redirect(303, '/admin');
   }
