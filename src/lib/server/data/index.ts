@@ -19,7 +19,7 @@ import migrate from './migrations';
 import { getReadme } from './readme';
 
 /** Public global data for the portfolio */
-export type PortfolioGlobals = {
+export interface PortfolioGlobals {
   config: ConfigJson,
   readme: string,
   groups: Record<string, GroupData>,

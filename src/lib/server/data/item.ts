@@ -208,10 +208,10 @@ export async function deleteItem(groupId: string, itemId: string) {
  * Overall data for an item, comprised of the item's `info.json`, `README.md`
  * and potentially other data as required.
  */
-export type ItemData = {
+export interface ItemData {
   info: ItemInfoFull,
   readme: string,
-};
+}
 
 /** Return full data for the item */
 export async function getItemData(groupId: string, itemId: string) {
