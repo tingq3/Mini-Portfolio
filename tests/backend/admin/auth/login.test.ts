@@ -51,6 +51,7 @@ it('Blocks logins with incorrect passwords', async () => {
     .rejects.toMatchObject({ code: 401 });
 });
 
+// This test fails, because I haven't implemented the feature yet
 it('Blocks all logins after 25 failed login requests', { fails: true }, async () => {
   for (let i = 0; i < 25; i++) {
     await api().admin.auth.login(credentials.username + 'hi', credentials.password)
