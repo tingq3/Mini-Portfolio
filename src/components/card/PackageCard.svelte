@@ -1,9 +1,8 @@
 <script lang="ts">
   import { packageIsWithProvider, packageProviders } from '$lib/packageInfo';
   import { Card } from '.';
-  import { tooltip } from '$lib/tooltip';
   import type { PackageInfo } from '$lib/server/data/itemPackage';
-    import CopyButton from '$components/CopyButton.svelte';
+  import CopyButton from '$components/CopyButton.svelte';
 
   export let info: PackageInfo;
   export let color: string;
@@ -27,10 +26,6 @@
     packageIsWithProvider(info)
       ? packageProviders[info.provider].makeInstallCmd(info.id)
       : info.command);
-
-  async function copyInstallCommand() {
-    await navigator.clipboard.writeText(installCommand);
-  }
 </script>
 
 <Card

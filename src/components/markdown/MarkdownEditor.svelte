@@ -5,7 +5,7 @@
 
   export let source: string;
 
-  const dispatch = createEventDispatcher<{ submit: void }>();
+  const dispatch = createEventDispatcher<{ submit: undefined }>();
 
   function handleKeypress(e: KeyboardEvent) {
     if (e.ctrlKey && e.key === 'Enter') {

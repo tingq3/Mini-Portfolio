@@ -1,13 +1,12 @@
 /** Endpoint for get/setting the README */
 
 import { error, json } from '@sveltejs/kit';
-import { dataDirIsInit } from '$lib/server/data/dataDir';
-import { validateToken, validateTokenFromRequest } from '$lib/server/auth.js';
+import { validateTokenFromRequest } from '$lib/server/auth.js';
 import { object, string, validate } from 'superstruct';
-import { getReadme, setReadme } from '$lib/server/data/readme.js';
+import { setReadme } from '$lib/server/data/readme.js';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 
-export async function GET(req) {
+export async function GET() {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   return json({ readme: data.readme }, { status: 200 });

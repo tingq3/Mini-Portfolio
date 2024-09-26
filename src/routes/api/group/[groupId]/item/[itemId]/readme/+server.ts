@@ -4,14 +4,14 @@ import { assert, string } from 'superstruct';
 import { getItemInfo, setItemReadme } from '$lib/server/data/item.js';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
 
-export async function GET({ params, request, cookies }) {
+export async function GET({ params }) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   const { groupId, itemId } = params;
 
   try {
     return json({ readme: data.items[groupId][itemId].readme }, { status: 200 });
-  } catch (e) {
+  } catch {
     return error(400, `Item with ID ${itemId} in group ${groupId} doesn't exist`);
   }
 }
@@ -23,7 +23,7 @@ export async function PUT({ params, request, cookies }) {
   const { groupId, itemId } = params;
 
   await getItemInfo(groupId, itemId)
-    .catch(e => error(404, `Item with ID ${itemId} in group ${groupId} doesn't exist`));
+    .catch(() => error(404, `Item with ID ${itemId} in group ${groupId} doesn't exist`));
 
   let readme: string;
   try {

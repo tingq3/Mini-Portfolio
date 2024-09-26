@@ -7,7 +7,7 @@
   /** Whether we are currently editing the markdown */
   export let editing: boolean;
 
-  const originalSource = source;
+  // const originalSource = source;
 </script>
 
 {#if editing}

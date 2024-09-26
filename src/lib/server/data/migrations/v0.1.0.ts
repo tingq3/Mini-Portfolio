@@ -31,9 +31,9 @@ import { setupGitignore } from '../../git';
 import { capitalize } from '$lib/util';
 import { unsafeLoadConfig, unsafeLoadGroupInfo, unsafeLoadItemInfo } from './unsafeLoad';
 
-type OldConfig = { name: string };
+interface OldConfig { name: string }
 
-type OldItemInfo = {
+interface OldItemInfo {
   name: string;
   description: string;
   color: string;
@@ -50,24 +50,24 @@ type OldItemInfo = {
   package?: PackageInfo;
   visibility?: 'filtered';
   sort?: number;
-};
+}
 
 /** How to display links within a group */
-type GroupLinkDisplayOptions = {
+interface GroupLinkDisplayOptions {
   title: string;
   display: 'card' | 'chip';
   reverseLookup: boolean;
-};
+}
 
-type OldGroupInfo = {
+interface OldGroupInfo {
   name: string;
   description: string;
   color: string;
   associations?: Record<string, GroupLinkDisplayOptions>;
-};
+}
 
 /** Minimal representation of old global data */
-type OldGlobals = {
+interface OldGlobals {
   config: OldConfig,
   groups: Record<string, OldGroupInfo>,
   items: Record<string, Record<string, OldItemInfo>>,

@@ -2,7 +2,7 @@
   import { tooltip } from '$lib/tooltip';
 
   export let text: string;
-  export let hint: string = 'Copy';
+  export let hint = 'Copy';
 
   async function copy() {
     await navigator.clipboard.writeText(text);

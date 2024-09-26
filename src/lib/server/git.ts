@@ -9,7 +9,7 @@ config.local.json
 `.trimStart();
 
 /** Status information of a git repo */
-export type RepoStatus = {
+export interface RepoStatus {
   /** The repo URL */
   url: string
   /** The current branch */
@@ -24,7 +24,7 @@ export type RepoStatus = {
   behind: number
   /** Changes for files */
   changes: FileStatusResult[],
-};
+}
 
 /** Return status info for repo */
 export async function getRepoStatus(): Promise<RepoStatus> {

@@ -154,7 +154,7 @@ export async function deleteGroup(id: string) {
  * Overall data for a group, comprised of the group's `info.json`, `README.md`
  * and potentially other data as required.
  */
-export type GroupData = {
+export interface GroupData {
   info: GroupInfo,
   readme: string,
 }

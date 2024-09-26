@@ -7,14 +7,14 @@ import { validateId, validateName } from '$lib/validators';
 import { removeAllLinksToItem } from '$lib/server/links.js';
 import { setConfig } from '$lib/server/data/config.js';
 
-export async function GET({ params, request, cookies }) {
+export async function GET({ params }) {
   const groupId = params.groupId;
 
   const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   try {
     return json(data.groups[groupId].info, { status: 200 });
-  } catch (e) {
+  } catch {
     // Catch "cannot read properties of undefined"
     return error(404, `Group with ID ${groupId} doesn't exist`);
   }

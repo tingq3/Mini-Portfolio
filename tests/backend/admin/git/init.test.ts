@@ -3,9 +3,7 @@
  */
 import { it, expect, beforeEach, describe, vi } from 'vitest';
 import { setup } from '../../helpers';
-import gitRepos, { resetTestRepo } from '../../gitRepos';
-import simpleGit from 'simple-git';
-import { getDataDir } from '$lib/server/data/dataDir';
+import gitRepos from '../../gitRepos';
 import genTokenTests from '../../tokenCase';
 import type { ApiClient } from '$endpoints';
 
