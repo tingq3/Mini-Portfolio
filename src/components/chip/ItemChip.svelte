@@ -5,8 +5,8 @@
   export let globals: PortfolioGlobals;
   export let groupId: string;
   export let itemId: string;
-  export let link: boolean = false;
-  export let selected: boolean = false;
+  export let link = false;
+  export let selected = false;
 
   $: item = globals.items[groupId][itemId];
 </script>

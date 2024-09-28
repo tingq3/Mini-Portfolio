@@ -4,7 +4,7 @@
   import Navbar from '$components/navbar/Navbar.svelte';
   import Paper from '$components/Paper.svelte';
   import { goto } from '$app/navigation';
-    import consts from '$lib/consts';
+  import consts from '$lib/consts';
 
   export let data: import('./$types').PageData;
 

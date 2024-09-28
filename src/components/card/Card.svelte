@@ -6,14 +6,14 @@
   /** Location to link to, or `false` to not give a link */
   export let link: string | false = false;
   /** Whether to open link in new tab */
-  export let newTab: boolean = false;
+  export let newTab = false;
   /** Color to use for the card */
   export let color: string;
   /** Whether the card has an icon */
-  export let hasIcon: boolean = false;
+  export let hasIcon = false;
 
   const dispatch = createEventDispatcher<{
-    click: void,
+    click: undefined,
   }>();
 
   $: baseColor = Color(color).lightness(85).hex();

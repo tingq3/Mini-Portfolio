@@ -16,10 +16,6 @@
   const dispatch = createEventDispatcher<{
     close: object,
   }>();
-
-  const bubbleClick = (groupId: string, itemId: string, e: MouseEvent) => {
-
-  };
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->

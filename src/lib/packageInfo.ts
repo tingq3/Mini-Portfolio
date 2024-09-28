@@ -1,7 +1,7 @@
 import type { ProvidedPackageInfo, PackageProvider, PackageInfo } from '$lib/server/data/itemPackage';
 
 /** Info required to register a package provider */
-type ProviderInfo = {
+interface ProviderInfo {
   /** Name of provider (eg Pypi) */
   name: string
   /** Icon id to use (from LineAwesome) */
@@ -10,7 +10,7 @@ type ProviderInfo = {
   makeUrl: (id: string) => string
   /** Return a command to install the package with the given ID */
   makeInstallCmd: (id: string) => string
-};
+}
 
 export const packageProviders: Record<PackageProvider, ProviderInfo> = {
   // Pypi (Python)

@@ -21,7 +21,7 @@ export async function setup() {
     // If it succeeded, there is no need to start the server, it is already
     // running
     return;
-  } catch {}
+  } catch { /* empty */ }
   // It failed, start up the server
 
   if (!HOST) {
@@ -44,9 +44,7 @@ export async function setup() {
     try {
       await api().debug.echo('Wait for server startup');
       return;
-    } catch (e) {
-      // console.error(e);
-    }
+    } catch { /* empty */ }
   }
   // If we reach this point, the server failed to start in-time
   server.kill('SIGTERM');

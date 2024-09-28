@@ -1,11 +1,11 @@
 <script lang="ts">
+  import type { FirstRunCredentials } from '$lib/server/auth';
   import api from '$endpoints';
   import Paper from '$components/Paper.svelte';
   import Background from '$components/Background.svelte';
   import Spinner from '$components/modals/Spinner.svelte';
   import Error from '$components/modals/Error.svelte';
   import Modal from '$components/modals/Modal.svelte';
-  import type { FirstRunCredentials } from '$lib/server/auth';
   import { goto } from '$app/navigation';
   import Navbar from '$components/navbar';
   import blankConfig from '$lib/blankConfig';

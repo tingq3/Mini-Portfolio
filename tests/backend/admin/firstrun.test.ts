@@ -111,7 +111,7 @@ describe('Sets up required starting files', () => {
     });
   });
 
-  test.todo('config.json', async () => {});
+  test.todo('config.json');
 });
 
 it.todo('Leaves the .gitignore as-is if config.local.json is already there');

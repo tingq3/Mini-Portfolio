@@ -17,7 +17,7 @@ const migrations: Record<string, MigrationFunction> = {
 };
 
 /** Update config versions (only for minor, non-breaking changes to config.json) */
-export async function updateConfigVersions(dataDir: string) {
+export async function updateConfigVersions(_dataDir: string) {
   const config = await getConfig();
   config.version = version;
   await setConfig(config);

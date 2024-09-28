@@ -1,7 +1,7 @@
 import type { ProvidedRepoInfo, RepoProvider, RepoInfo } from '$lib/server/data/itemRepo';
 
 /** Info required to register a repo provider */
-type RepoProviderInfo = {
+interface RepoProviderInfo {
   /** Name of provider (eg GitHub) */
   name: string
   /** Icon id to use (from LineAwesome) */
@@ -16,7 +16,7 @@ type RepoProviderInfo = {
    * Function is undefined if fetching star counts is unavailable.
    */
   getStarCount: ((repo: string) => Promise<number | undefined>) | undefined
-};
+}
 
 export const repoProviders: Record<RepoProvider, RepoProviderInfo> = {
   // GitHub

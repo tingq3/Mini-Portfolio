@@ -164,7 +164,7 @@ export async function revokeSession(token: string): Promise<void> {
 }
 
 /** Credentials provided after first run */
-export type FirstRunCredentials = {
+export interface FirstRunCredentials {
   username: string,
   password: string,
   token: string,

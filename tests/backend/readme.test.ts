@@ -1,5 +1,5 @@
 import type { ApiClient } from '$endpoints';
-import { beforeEach, describe, expect, it, test } from 'vitest';
+import { beforeEach, describe, expect, test } from 'vitest';
 import { setup } from './helpers';
 import genReadmeTests from './readmeCases';
 import { readFile } from 'fs/promises';

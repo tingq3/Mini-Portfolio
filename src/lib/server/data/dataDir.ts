@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs/promises';
-import simpleGit, { CheckRepoActions, type SimpleGit } from 'simple-git';
+import simpleGit, { CheckRepoActions } from 'simple-git';
 
 /** Returns the path to the data repository */
 export function getDataDir(): string {

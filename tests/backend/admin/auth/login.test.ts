@@ -77,7 +77,7 @@ it('Has random variance in the timing for failed passwords', async () => {
     try {
       await api().admin.auth.login(credentials.username + 'hi', credentials.password);
       expect.unreachable('Login should have failed');
-    } catch { }
+    } catch { /* empty */ }
     const time = Date.now() - start;
     if (time > slowest) {
       slowest = time;

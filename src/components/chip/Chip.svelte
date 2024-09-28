@@ -11,7 +11,7 @@
   /** Location to link to on click (or `undefined` for no link) */
   export let link: string | undefined;
   /** Whether the chip should render as selected (filled) */
-  export let selected: boolean = false;
+  export let selected = false;
 
   $: fillColor = selected ? Color(color).lightness(80).hex() : Color(color).lightness(95).hex();
   $: borderColor = selected ? Color(color).lightness(50).hex() : Color(color).lightness(85).hex();
