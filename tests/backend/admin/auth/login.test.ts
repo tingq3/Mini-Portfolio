@@ -37,7 +37,7 @@ it('Returns a token when correct credentials are provided', async () => {
 });
 
 it('Blocks logins with non-existent usernames', async () => {
-  await expect(api().admin.auth.login(credentials.username + 'hi', credentials.password))
+  await expect(api().admin.auth.login('invalid user', credentials.password))
     .rejects.toMatchObject({ code: 401 });
 });
 
@@ -47,7 +47,7 @@ it('Errors if fields are empty', async () => {
 });
 
 it('Blocks logins with incorrect passwords', async () => {
-  await expect(api().admin.auth.login(credentials.username, credentials.password + 'hi'))
+  await expect(api().admin.auth.login(credentials.username, 'incorrect password'))
     .rejects.toMatchObject({ code: 401 });
 });
 
@@ -72,6 +72,10 @@ it('Has random variance in the timing for failed passwords', async () => {
   let slowest = -1;
   // Run many logins, and check that there is more than 10ms difference between the
   // fastest and slowest
+  // FIXME: Reduce this number so that the number of unsuccessful logins before a
+  // ban is reduced
+  // and perhaps find a way to get vitest to retry it a number of times if it
+  // fails
   for (let i = 0; i < 25; i++) {
     const start = Date.now();
     try {
