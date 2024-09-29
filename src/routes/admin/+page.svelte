@@ -6,6 +6,7 @@
   import GitSettings from "./GitSettings.svelte";
   import ChangePassword from "./ChangePassword.svelte";
   import ReloadData from "./ReloadData.svelte";
+    import LogOutAll from "./LogOutAll.svelte";
 
   export let data: import("./$types").PageData;
 </script>
@@ -32,6 +33,7 @@
       <div id="contents">
         <GitSettings {data} />
         <ChangePassword username={"admin"} />
+        <LogOutAll />
         <ReloadData />
       </div>
     </Paper>
