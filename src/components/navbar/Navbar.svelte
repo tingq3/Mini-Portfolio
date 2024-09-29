@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { dev } from '$app/environment';
-  import { goto } from '$app/navigation';
-  import api from '$endpoints';
-  import type { ConfigJson } from '$lib/server/data/config';
-  import Separator from '$components/Separator.svelte';
+  import { dev } from "$app/environment";
+  import { goto } from "$app/navigation";
+  import api from "$endpoints";
+  import type { ConfigJson } from "$lib/server/data/config";
+  import Separator from "$components/Separator.svelte";
 
-  export let path: { url: string, txt: string }[];
+  export let path: { url: string; txt: string }[];
   export let config: ConfigJson;
   /** Whether the user is logged in. Set to undefined if auth is disabled */
   export let loggedIn: boolean | undefined;
@@ -16,16 +16,26 @@
     location.reload();
   }
 
+  /**
+   * Go to the login page, with the from parameter determining the origin page.
+   */
+  async function gotoLogin() {
+    await goto(`/admin/login?from=${window.location.pathname}`);
+  }
+
   /** Clear all data, and take the user to the firstrun page */
   async function clear() {
     await api().debug.clear();
-    await goto('/admin/firstrun');
+    await goto("/admin/firstrun");
   }
 
   // This function needs to accept `path` as an input, otherwise the links
   // stop being reactive due to cacheing or something
-  function pathTo(path: { url: string, txt: string }[], i: number) {
-    return path.slice(0, i + 1).map(p => p.url).join('/');
+  function pathTo(path: { url: string; txt: string }[], i: number) {
+    return path
+      .slice(0, i + 1)
+      .map((p) => p.url)
+      .join("/");
   }
 </script>
 
@@ -38,7 +48,7 @@
         <a href="/">{config.siteShortName}</a> /
         {#each path.slice(0, -1) as p, i}
           <a href="/{pathTo(path, i)}">{p.txt}</a>
-          {'/ '}
+          {"/ "}
         {/each}
         {path[path.length - 1].txt}
       </h1>
@@ -48,14 +58,14 @@
   <!-- Control buttons -->
   <span id="control-buttons">
     {#if loggedIn}
-      <button on:click={() => goto('/admin')}> Admin </button>
+      <button on:click={() => goto("/admin")}> Admin </button>
       <button on:click={logOut}> Log out </button>
     {:else if loggedIn !== undefined}
       <!-- Only include a login button if logging in is enabled -->
-      <button on:click={() => goto('/admin/login')}> Log in </button>
+      <button on:click={gotoLogin}> Log in </button>
     {/if}
     <!-- About button navigates to about page -->
-    <button on:click={() => goto('/about')}> About </button>
+    <button on:click={() => goto("/about")}> About </button>
     <!-- In dev mode, add a quick shortcut to delete everything -->
     {#if dev}
       <Separator />

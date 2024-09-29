@@ -12,7 +12,8 @@ export async function load(req) {
     loggedIn = true;
   } catch { /* empty */ }
   if (loggedIn) {
-    redirect(303, '/admin');
+    // If they are logged in, redirect them to the `from` URL if it exists.
+    redirect(303, req.url.searchParams.get("from") || '/');
   }
   const globals = await getPortfolioGlobals();
   return { globals };
