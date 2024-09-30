@@ -34,9 +34,9 @@
 
     <!-- Push/pull -->
     {#if data.repo.behind}
-      <button on:click={() => api().admin.git.push()}>Push</button>
-    {:else if data.repo.ahead}
       <button on:click={() => api().admin.git.pull()}>Pull</button>
+    {:else if data.repo.ahead}
+      <button on:click={() => api().admin.git.push()}>Push</button>
     {/if}
 
     <!-- Commit -->
