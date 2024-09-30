@@ -73,6 +73,7 @@
 <main>
   <EditControls
     {editing}
+    loggedIn={data.loggedIn}
     on:beginEdits={() => { editing = true; }}
     on:finishEdits={e => finishEditing(e.detail)}
   />
