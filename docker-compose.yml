@@ -12,11 +12,14 @@
 # It is not necessary to set up other environment variables
 services:
   minifolio:
-    # image: maddyguthridge/minifolio
-    build:
-      context: .
-      ssh:
-        - default
+    # Uncomment these lines to build from the local repository, rather than the
+    # latest published version
+    # build:
+    #   context: .
+    #   ssh:
+    #     - default
+    # And comment out this line
+    image: maddyguthridge/minifolio
     hostname: minifolio
     restart: always
     ports:
