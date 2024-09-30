@@ -1,8 +1,17 @@
 import { error } from '@sveltejs/kit';
 import { dataDirContainsData, dataDirIsInit, getDataDir } from './data/dataDir';
 import simpleGit, { type FileStatusResult } from 'simple-git';
-import { appendFile, readdir } from 'fs/promises';
+import fs from 'fs/promises';
 import { rimraf } from 'rimraf';
+import { spawn } from 'child-process-promise';
+import os from 'os';
+import { fileExists } from '.';
+
+/** Path to SSH directory */
+const SSH_DIR = `${os.homedir()}/.ssh`;
+
+/** Path to the SSH known hosts file */
+const KNOWN_HOSTS_FILE = `${os.homedir()}/.ssh/known_hosts`;
 
 const DEFAULT_GITIGNORE = `
 config.local.json
@@ -24,6 +33,47 @@ export interface RepoStatus {
   behind: number
   /** Changes for files */
   changes: FileStatusResult[],
+}
+
+/** Returns whether the given URL requires SSH */
+export function urlRequiresSsh(url: string): boolean {
+  return (
+    url.includes('@')
+    && url.includes(':')
+  );
+}
+
+/**
+ * Run an ssh-keyscan command for the host at the given URL.
+ *
+ * Eg given URL "git@host.com:path/to/repo", we should extract:
+ *                   ^^^^^^^^
+ */
+export async function runSshKeyscan(url: string) {
+  // FIXME: This probably doesn't work in some cases
+  const host = url.split('@', 2)[1].split(':', 1)[0];
+
+  // mkdir -p ~/.ssh
+  await fs.mkdir(SSH_DIR).catch(() => { });
+
+  // Check if ~/.ssh/known_hosts already has this host in it
+  if (await fileExists(KNOWN_HOSTS_FILE)) {
+    const hostsContent = await fs.readFile(KNOWN_HOSTS_FILE, { encoding: 'utf-8' });
+    for (const line of hostsContent.split(/\r?\n/)) {
+      if (line.startsWith(`${host} `)) {
+        // Host is already known
+        return;
+      }
+    }
+  }
+
+  const process = await spawn('ssh-keyscan', [host], { capture: ['stdout'] });
+
+  console.log(process.stdout);
+  console.log(typeof process.stdout);
+
+  // Now add to ~/.ssh/known_hosts
+  await fs.appendFile(KNOWN_HOSTS_FILE, process.stdout, { encoding: 'utf-8' });
 }
 
 /** Return status info for repo */
@@ -63,14 +113,15 @@ export async function setupGitRepo(repo: string, branch: string | null) {
 
   try {
     await simpleGit().clone(repo, dir, options);
-  } catch (e) {
+  } catch (e: any) {
+    console.log(e);
     throw error(400, `${e}`);
   }
 
   // If there are files in the repo, we should validate that it is a proper
   // portfolio data repo.
   // Ignore .git, since it is included in empty repos too.
-  if ((await readdir(getDataDir())).find(f => f !== '.git')) {
+  if ((await fs.readdir(getDataDir())).find(f => f !== '.git')) {
     if (!await dataDirContainsData()) {
       // Clean up and delete repo before giving error
       await rimraf(getDataDir());
@@ -87,5 +138,8 @@ export async function setupGitRepo(repo: string, branch: string | null) {
 
 /** Set up a default gitignore */
 export async function setupGitignore() {
-  await appendFile(`${getDataDir()}/.gitignore`, DEFAULT_GITIGNORE, { encoding: 'utf-8' });
+  // TODO: Skip this step if the gitignore already ignores all contents
+  // probably worth finding a library to deal with this, since it is
+  // complicated
+  await fs.appendFile(`${getDataDir()}/.gitignore`, DEFAULT_GITIGNORE, { encoding: 'utf-8' });
 }
