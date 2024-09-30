@@ -12,16 +12,30 @@
 # It is not necessary to set up other environment variables
 services:
   minifolio:
-    image: maddyguthridge/minifolio
+    # image: maddyguthridge/minifolio
+    build:
+      context: .
+      ssh:
+        - default
     hostname: minifolio
     restart: always
     ports:
       - 127.0.0.1:3000:3000/tcp
     volumes:
       - "./data:/data:rw"
+        # Forward local machine SSH key to docker
+        # Note: this may need changes on MacOS
+        # Source: https://stackoverflow.com/a/36648428/6335363
+      - $SSH_AUTH_SOCK:/ssh-agent
+      - "ssh_dir:/home/node/.ssh:rw"
+
     environment:
       DATA_REPO_PATH: "/data"
       HOST: 0.0.0.0
       PORT: 3000
+      # Tell the container where to find the SSH auth socket
+      SSH_AUTH_SOCK: /ssh-agent
     # Set up `AUTH_SECRET` variable within `.env`
     env_file: ".env"
+volumes:
+  ssh_dir:

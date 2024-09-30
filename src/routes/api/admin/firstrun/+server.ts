@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { dataDirContainsData, dataDirIsInit, getDataDir } from '$lib/server/data/dataDir';
 import { mkdir } from 'fs/promises';
-import { setupGitignore, setupGitRepo } from '$lib/server/git';
+import { runSshKeyscan, setupGitignore, setupGitRepo, urlRequiresSsh } from '$lib/server/git';
 import { authSetup } from '$lib/server/auth';
 import { initConfig } from '$lib/server/data/config';
 import { initReadme } from '$lib/server/data/readme';
@@ -24,10 +24,14 @@ export async function POST({ request, cookies }) {
 
   // If we were given a repoUrl, set it up
   if (repoUrl) {
+    if (urlRequiresSsh(repoUrl)) {
+      await runSshKeyscan(repoUrl);
+    }
     await setupGitRepo(repoUrl, branch);
   } else {
     // Otherwise, just create the data dir empty
-    await mkdir(getDataDir());
+    // Discard errors for this, as the dir may already exist
+    await mkdir(getDataDir()).catch(() => { });
     // Setup a gitignore just in case
     await setupGitignore();
   }

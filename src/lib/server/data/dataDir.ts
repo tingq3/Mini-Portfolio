@@ -1,6 +1,6 @@
 import path from 'path';
-import fs from 'fs/promises';
 import simpleGit, { CheckRepoActions } from 'simple-git';
+import { fileExists } from '..';
 
 /** Returns the path to the data repository */
 export function getDataDir(): string {
@@ -20,15 +20,7 @@ export function getDataDir(): string {
  */
 export async function dataDirContainsData(): Promise<boolean> {
   const repoPath = getDataDir();
-
-  // Check for config.json
-  const configLocal = path.join(repoPath, 'config.json');
-  try {
-    await fs.access(configLocal, fs.constants.F_OK);
-  } catch {
-    return false;
-  }
-  return true;
+  return await fileExists(path.join(repoPath, 'config.json'));
 }
 
 /**
@@ -38,15 +30,7 @@ export async function dataDirContainsData(): Promise<boolean> {
  */
 export async function dataDirIsInit(): Promise<boolean> {
   const repoPath = getDataDir();
-
-  // Check for config.local.json
-  const configLocal = path.join(repoPath, 'config.local.json');
-  try {
-    await fs.access(configLocal, fs.constants.F_OK);
-  } catch {
-    return false;
-  }
-  return true;
+  return await fileExists(path.join(repoPath, 'config.local.json'));
 }
 
 /** Returns whether the data directory is backed by git */

@@ -1,5 +1,11 @@
 FROM node:20
 
+# Make volumes be owned by the node user
+RUN mkdir /home/node/.ssh
+RUN chown node:node /home/node/.ssh
+RUN mkdir /data
+RUN chown node:node /data
+
 USER node
 
 WORKDIR /home/node/app
