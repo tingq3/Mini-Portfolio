@@ -1,5 +1,4 @@
 import path from 'path';
-import fs from 'fs/promises';
 import simpleGit, { CheckRepoActions } from 'simple-git';
 import { fileExists } from '..';
 
