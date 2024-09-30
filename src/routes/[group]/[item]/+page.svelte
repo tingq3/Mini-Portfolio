@@ -112,7 +112,7 @@
   {/if}
   <div id="info-container">
     <EditableMarkdown
-      source={readme}
+      bind:source={readme}
       {editing}
     />
     <!-- Display linked items as chips -->
