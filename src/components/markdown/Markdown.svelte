@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { marked } from 'marked';
-  import hljs from 'highlight.js';
-  import 'highlight.js/styles/stackoverflow-light.css';
+  import { marked } from "marked";
+  import hljs from "highlight.js";
+  import "highlight.js/styles/stackoverflow-light.css";
 
   export let source: string;
 
@@ -9,8 +9,8 @@
   const renderer = {
     link(href: string, title: string | null | undefined, text: string) {
       const link = marked.Renderer.prototype.link.call(this, href, title, text);
-      return link.replace('<a', "<a target='_blank' rel='noreferrer' ");
-    }
+      return link.replace("<a", "<a target='_blank' rel='noreferrer' ");
+    },
   };
   marked.use({ renderer });
 
@@ -31,7 +31,7 @@
     // function when we just subscribe to what their contents are supposed to
     // be
     setTimeout(() => {
-      renderElement.querySelectorAll('pre code').forEach((el) => {
+      renderElement.querySelectorAll("pre code").forEach((el) => {
         hljs.highlightElement(el as HTMLElement);
       });
     });
@@ -48,7 +48,8 @@
 </div>
 
 <style>
-  .markdown-render :global(p > code), .markdown-render :global(pre) {
+  .markdown-render :global(p > code),
+  .markdown-render :global(pre) {
     background-color: rgb(245, 245, 245);
     padding: 2px 5px;
     border-radius: 3px;
@@ -65,6 +66,28 @@
 
   .markdown-render :global(pre > code) {
     padding: 1em;
+  }
+
+  /*
+    Pretty block-quotes
+    Source: https://css-tricks.com/snippets/css/simple-and-nice-blockquote-styling/
+  */
+  .markdown-render :global(blockquote) {
+    background: #f9f9f973;
+    border-left: 5px solid #ccccccc2;
+    margin: 1.5em 10px;
+    padding: 0.5em 10px;
+  }
+  .markdown-render :global(blockquote:before) {
+    color: #ccccccc2;
+    content: "\201C";
+    font-size: 4em;
+    line-height: 0.1em;
+    margin-right: 0.25em;
+    vertical-align: -0.4em;
+  }
+  .markdown-render :global(blockquote p) {
+    display: inline;
   }
 
   .markdown-render :global(a) {
