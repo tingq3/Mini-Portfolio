@@ -14,6 +14,10 @@ const migrations: Record<string, MigrationFunction> = {
   '~0.1.0': migrateV010,
   '~0.2.0': migrateV020,
   '~0.3.0': migrateV030,
+  // No major changes to data format this release
+  '~0.4.0': updateConfigVersions,
+  // Pre-empt future releases
+  '~0.5.0': updateConfigVersions,
 };
 
 /** Update config versions (only for minor, non-breaking changes to config.json) */
