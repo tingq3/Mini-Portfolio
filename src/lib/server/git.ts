@@ -100,7 +100,7 @@ export async function getRepoStatus(): Promise<RepoStatus> {
 }
 
 /** Set up the data dir given a git repo URL and branch name */
-export async function setupGitRepo(repo: string, branch: string | null) {
+export async function setupGitRepo(repo: string, branch?: string | null) {
   // Check whether the data repo is set up
   if (await serverIsSetUp()) {
     throw error(403, 'Data repo is already set up');
@@ -109,7 +109,9 @@ export async function setupGitRepo(repo: string, branch: string | null) {
   const dir = getDataDir();
 
   // Set up branch options
-  const options: Record<string, string> = branch === null ? {} : { '--branch': branch };
+  // FIXME: This may cause git to only track that branch on the remote, making
+  // switching branches impossible.
+  const options: Record<string, string> = branch ? { '--branch': branch } : {};
 
   try {
     await simpleGit().clone(repo, dir, options);

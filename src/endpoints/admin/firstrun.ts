@@ -1,5 +1,5 @@
 /** Git repository endpoints */
-import type { FirstRunCredentials } from '$lib/server/auth/tokens';
+import type { FirstRunCredentials } from '$lib/server/auth/setup';
 import { apiFetch, json } from '../fetch';
 
 /**
@@ -9,13 +9,15 @@ import { apiFetch, json } from '../fetch';
  * @param branch The branch to check-out
  */
 export default async function (
-  repoUrl: string | null,
-  branch: string | null,
+  username: string,
+  password: string,
+  repoUrl?: string | undefined,
+  branch?: string | undefined,
 ) {
   return json(apiFetch(
     'POST',
     '/api/admin/firstrun',
     undefined,
-    { repoUrl, branch },
+    { username, password, repoUrl, branch },
   )) as Promise<{ credentials: FirstRunCredentials, firstTime: boolean }>;
 }
