@@ -57,7 +57,7 @@ export type ConfigLocalJson = Infer<typeof ConfigLocalJsonStruct>;
 /** Cache of the local config to speed up operations */
 let localConfigCache: ConfigLocalJson | undefined;
 
-/** Return the local configuration, stored in `/data/config.local.json` */
+/** Return the local configuration, stored in `/private-data/config.local.json` */
 export async function getLocalConfig(): Promise<ConfigLocalJson> {
   if (localConfigCache) {
     return localConfigCache;

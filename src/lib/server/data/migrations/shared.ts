@@ -1,14 +1,32 @@
 /**
  * Shared helper functions for common data migration actions.
  */
-import { dev } from '$app/environment';
+import { dev, version } from '$app/environment';
 import fs from 'fs/promises';
+import { getConfig, setConfig } from '../config';
+import { getLocalConfig, setLocalConfig } from '../localConfig';
+import { serverIsSetUp } from '../dataDir';
+
+/** Update config versions (only for minor, non-breaking changes to config.json) */
+export async function updateConfigVersions() {
+  const config = await getConfig();
+  config.version = version;
+  await setConfig(config);
+  // Only migrate local config if it is created
+  if (await serverIsSetUp()) {
+    const configLocal = await getLocalConfig();
+    configLocal.version = version;
+    await setLocalConfig(configLocal);
+  }
+}
 
 /** Move config.local.json to the private data directory */
 export async function moveLocalConfig(dataDir: string, privateDataDir: string) {
   const originalPath = `${dataDir}/config.local.json`;
   const newPath = `${privateDataDir}/config.local.json`;
-  await fs.rename(originalPath, newPath);
+  // Discard error (file not found), which occurs when cloning a new repo,
+  // since the auth info isn't set up yet
+  await fs.rename(originalPath, newPath).catch(() => { });
 }
 
 /** Write auth secret from environment variable */

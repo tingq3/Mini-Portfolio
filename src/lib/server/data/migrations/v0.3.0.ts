@@ -1,12 +1,13 @@
 /** Migration from 0.3.0 -> current */
 
-import { updateConfigVersions } from '.';
+import { updateConfigVersions } from './shared';
 import { setConfig, type ConfigJson } from '../config';
 import { listGroups, setGroupInfo, type GroupInfo } from '../group';
 import { listItems, setItemInfo, type ItemInfoFull } from '../item';
+import { moveLocalConfig } from './shared';
 import { unsafeLoadConfig, unsafeLoadGroupInfo, unsafeLoadItemInfo } from './unsafeLoad';
 
-export default async function migrate(dataDir: string) {
+export default async function migrate(dataDir: string, privateDataDir: string) {
   await migrateConfig(dataDir);
   for (const groupId of await listGroups()) {
     await migrateGroup(dataDir, groupId);
@@ -15,7 +16,8 @@ export default async function migrate(dataDir: string) {
     }
   }
 
-  await updateConfigVersions(dataDir);
+  await moveLocalConfig(dataDir, privateDataDir);
+  await updateConfigVersions();
 }
 
 async function migrateConfig(dataDir: string) {
