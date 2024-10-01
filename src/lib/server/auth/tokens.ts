@@ -2,11 +2,9 @@ import { nanoid } from 'nanoid';
 import { validate, number, string, type, type Infer } from 'superstruct';
 import jwt, { type Algorithm as JwtAlgorithm } from 'jsonwebtoken';
 import { unixTime } from '$lib/util';
-import { hash } from 'crypto';
-import { generate as generateWords } from 'random-words';
-import { getLocalConfig, setLocalConfig, type ConfigLocalJson } from './data/localConfig';
-import { dev, version } from '$app/environment';
+import { getLocalConfig, setLocalConfig } from '../data/localConfig';
 import { error, redirect, type Cookies } from '@sveltejs/kit';
+import { getAuthSecret } from './secret';
 
 /** Maximum lifetime of a session -- 14 days */
 const sessionLifetime = 60 * 60 * 24 * 14;
@@ -23,36 +21,26 @@ const algorithm: JwtAlgorithm = 'HS256';
 export const JwtPayload = type({
   /** Session ID */
   sessionId: string(),
+  /** User ID of the user who owns this token */
+  uid: string(),
   /** Expiry time (as UNIX timestamp) */
   exp: number(),
   /** Initialization time (as UNIX timestamp) */
   iat: number(),
 });
 
-/** Returns the secret value used to validate JWTs */
-function getTokenSecret(): string {
-  const secret = process.env.AUTH_SECRET;
-  if (!secret) {
-    throw new Error('AUTH_SECRET environment variable must be set to a value');
-  }
-  if (!dev && secret === 'CHANGE ME') {
-    throw new Error('AUTH_SECRET must be changed when running in production');
-  }
-  return secret;
-}
-
 /**
  * Generate a token.
  *
  * If cookies is provided, the token will also be stored to the cookies.
  */
-export function generateToken(cookies?: Cookies): string {
+export async function generateToken(userId: string, cookies?: Cookies): Promise<string> {
   const sessionId = nanoid();
   const iat = unixTime();
 
   const token = jwt.sign(
-    { sessionId, iat },
-    getTokenSecret(),
+    { sessionId, iat, uid: userId },
+    await getAuthSecret(),
     { expiresIn: sessionLifetime, algorithm }
   );
   const expires = iat + sessionLifetime;
@@ -83,7 +71,7 @@ export async function validateToken(token: string): Promise<Infer<typeof JwtPayl
   // Otherwise attempt to validate the token
   let payload: unknown;
   try {
-    payload = jwt.verify(token, getTokenSecret(), { algorithms: [algorithm] });
+    payload = jwt.verify(token, await getAuthSecret(), { algorithms: [algorithm] });
   } catch (e) {
     // Token failed to validate
     if (e instanceof Error) {
@@ -93,21 +81,37 @@ export async function validateToken(token: string): Promise<Infer<typeof JwtPayl
       throw Error('Token failed to validate');
     }
   }
+  // TODO: Create a helper function that lets as async-ify these checks, so
+  // that it's easier to `.catch(e => error(400, e))` them
   const [err, data] = validate(payload, JwtPayload);
   if (err) {
     // Token data format is incorrect
     throw Error('Token data is in incorrect format');
   }
   // Ensure that the session isn't in our revoked list
-  if (data.sessionId in config.auth.sessions.revokedSessions) {
+  if (data.sessionId in config.auth[data.uid].sessions.revokedSessions) {
     throw Error('This session has been revoked');
   }
 
   // And also that it wasn't issued before our notBefore time
-  if (data.iat < config.auth.sessions.notBefore) {
+  if (data.iat < config.auth[data.uid].sessions.notBefore) {
     throw Error('This session was created too long ago');
   }
   return data;
+}
+
+/** Revoke the session of the given token */
+export async function revokeSession(token: string): Promise<void> {
+  const config = await getLocalConfig();
+  if (!config.auth) {
+    // Can't invalidate tokens if there is not auth
+    throw Error('Authentication is disabled');
+  }
+  const sessionData = await validateToken(token);
+  // Add to the revoked sessions
+  config.auth[sessionData.uid].sessions.revokedSessions[sessionData.sessionId]
+    = sessionData.exp;
+  await setLocalConfig(config);
 }
 
 /**
@@ -135,91 +139,17 @@ export async function validateTokenFromRequest(req: { request: Request, cookies:
   return token;
 }
 
-/** Return whether the request is authorized (has a token) */
+/** Return whether the request is authorized (has a valid token) */
 export async function isRequestAuthorized(req: { request: Request, cookies: Cookies }): Promise<boolean> {
-  try {
-    await validateTokenFromRequest(req);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/** If the given token is invalid, throw a redirect to the given page */
-export async function redirectOnInvalidToken(req: { request: Request, cookies: Cookies }, url: string) {
-  await validateTokenFromRequest(req).catch(() => redirect(303, url));
-}
-
-/** Revoke the session of the given token */
-export async function revokeSession(token: string): Promise<void> {
-  const config = await getLocalConfig();
-  if (!config.auth) {
-    // Can't invalidate tokens if there is not auth
-    throw Error('Authentication is disabled');
-  }
-  const sessionData = await validateToken(token);
-  // Add to the revoked sessions
-  config.auth.sessions.revokedSessions[sessionData.sessionId] = sessionData.exp;
-  await setLocalConfig(config);
-}
-
-/** Credentials provided after first run */
-export interface FirstRunCredentials {
-  username: string,
-  password: string,
-  token: string,
-}
-
-/** Hash a password with the given salt, returning the result */
-export function hashAndSalt(salt: string, password: string): string {
-  // TODO: Thoroughly check this against the OWASP guidelines -- it probably
-  // doesn't match the requirements.
-  // https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
-  return hash('SHA256', salt + password);
+  // This feels kinda like Rust's Result type and I like that
+  return validateTokenFromRequest(req)
+    .then(() => true)
+    .catch(() => false);
 }
 
 /**
- * Set up auth information.
- *
- * This is responsible for generating and storing a secure password, thereby
- * creating the default "admin" account.
+ * If the given request's token is invalid, throw a redirect to the given URL.
  */
-export async function authSetup(cookies?: Cookies): Promise<FirstRunCredentials> {
-  const username = 'admin';
-
-  // generate password using 4 random dictionary words
-  // as per tradition, https://xkcd.com/936/
-  // TODO: Can this package be used securely?
-  // If not maybe just use a nanoid, even though that's much less fun
-  const password = (generateWords({ exactly: 4, minLength: 5 }) as string[]).join('-');
-
-  // Generate a salt for the password
-  // Using nanoid for secure generation
-  const salt = nanoid();
-
-  const passwordHash = hashAndSalt(salt, password);
-
-  // Set up auth config
-  const config: ConfigLocalJson = {
-    auth: {
-      username,
-      password: {
-        hash: passwordHash,
-        salt: salt,
-      },
-      sessions: {
-        notBefore: unixTime(),
-        revokedSessions: {},
-      }
-    },
-    version,
-  };
-
-  await setLocalConfig(config);
-
-  return {
-    username,
-    password,
-    token: generateToken(cookies),
-  };
+export async function redirectOnInvalidToken(req: { request: Request, cookies: Cookies }, url: string) {
+  await validateTokenFromRequest(req).catch(() => redirect(303, url));
 }

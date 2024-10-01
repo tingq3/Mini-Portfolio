@@ -1,5 +1,5 @@
 /** Git repository endpoints */
-import type { FirstRunCredentials } from '$lib/server/auth';
+import type { FirstRunCredentials } from '$lib/server/auth/tokens';
 import { apiFetch, json } from '../fetch';
 
 /**
