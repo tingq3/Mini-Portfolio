@@ -10,10 +10,13 @@ import { nanoid } from "nanoid";
 import { moveLocalConfig, updateConfigVersions } from "./shared";
 import { unsafeLoadLocalConfig } from "./unsafeLoad";
 import { setLocalConfig } from "../localConfig";
+import { serverIsSetUp } from "../dataDir";
 
 export default async function migrate(dataDir: string, privateDataDir: string) {
   await moveLocalConfig(dataDir, privateDataDir);
-  await updateLocalConfig(privateDataDir);
+  if (await serverIsSetUp()) {
+    await updateLocalConfig(privateDataDir);
+  }
   await updateConfigVersions();
 }
 

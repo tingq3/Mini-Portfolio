@@ -29,7 +29,7 @@ export async function POST({ params, request, cookies }) {
   // Ensure group exists
   await getGroupInfo(groupId).catch(e => error(404, e));
 
-  validateId(itemId);
+  validateId('Item ID', itemId);
 
   const [err, body] = validate(await request.json(), object({ name: string(), description: string() }));
   if (err) {

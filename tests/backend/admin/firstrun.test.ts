@@ -76,7 +76,7 @@ describe('git', () => {
       .resolves.toStrictEqual(true);
   });
 
-  it.only('Checks out a branch when one is given', async () => {
+  it('Checks out a branch when one is given', async () => {
     await firstrun({ repoUrl: gitRepos.TEST_REPO_RW, branch: 'example' });
     // Check branch name matches
     await expect(repo().status()).resolves.toMatchObject({ current: 'example' });

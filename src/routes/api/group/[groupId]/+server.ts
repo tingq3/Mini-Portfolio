@@ -25,7 +25,7 @@ export async function POST({ params, request, cookies }) {
   await validateTokenFromRequest({ request, cookies });
 
   // Validate group ID
-  const groupId = validateId(params.groupId);
+  const groupId = validateId('Group ID', params.groupId);
 
   const [err, body] = validate(await request.json(), object({ name: string(), description: string() }));
   if (err) {
