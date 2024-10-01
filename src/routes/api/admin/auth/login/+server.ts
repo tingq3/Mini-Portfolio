@@ -11,5 +11,5 @@ export async function POST({ request, cookies }) {
 
   const uid = await validateCredentials(username, password);
 
-  return json({ token: generateToken(uid, cookies) }, { status: 200 });
+  return json({ token: await generateToken(uid, cookies) }, { status: 200 });
 }

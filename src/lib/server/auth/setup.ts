@@ -10,11 +10,6 @@ import { generateToken } from './tokens';
 import type { Cookies } from '@sveltejs/kit';
 import { generateAuthSecret } from './secret';
 
-/** Info returned during first-run */
-export interface FirstRunCredentials {
-  token: string,
-}
-
 /**
  * Set up auth information.
  *
@@ -28,7 +23,7 @@ export async function authSetup(
   username: string,
   password: string,
   cookies?: Cookies,
-): Promise<FirstRunCredentials> {
+): Promise<string> {
   // 1. Set up the auth secret
   await generateAuthSecret();
 
@@ -59,5 +54,5 @@ export async function authSetup(
   };
   await setLocalConfig(config);
 
-  return { token: await generateToken(userId, cookies) };
+  return generateToken(userId, cookies);
 }

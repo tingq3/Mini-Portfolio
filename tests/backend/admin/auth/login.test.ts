@@ -6,12 +6,11 @@
 import { it, expect, beforeEach } from 'vitest';
 import { setup } from '../../helpers';
 import api from '$endpoints';
-import type { FirstRunCredentials } from '$lib/server/auth/tokens';
 
-let credentials: FirstRunCredentials;
+let credentials: Awaited<ReturnType<typeof setup>>;
 
 beforeEach(async () => {
-  credentials = (await setup()).credentials;
+  credentials = (await setup());
 });
 
 it("Gives an error when the server isn't setup", async () => {

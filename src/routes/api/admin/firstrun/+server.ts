@@ -36,7 +36,7 @@ export async function POST({ request, cookies }) {
   const firstTime = await setupData(options.repoUrl, options.branch);
 
   // Now set up auth
-  const credentials = await authSetup(options.username, options.password, cookies);
+  const token = await authSetup(options.username, options.password, cookies);
 
-  return json({ credentials, firstTime }, { status: 200 });
+  return json({ token, firstTime }, { status: 200 });
 }
