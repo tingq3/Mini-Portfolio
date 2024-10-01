@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { dataDirContainsData, dataDirIsInit, getDataDir } from './data/dataDir';
+import { dataDirContainsData, serverIsSetUp, getDataDir } from './data/dataDir';
 import simpleGit, { type FileStatusResult } from 'simple-git';
 import fs from 'fs/promises';
 import { rimraf } from 'rimraf';
@@ -102,7 +102,7 @@ export async function getRepoStatus(): Promise<RepoStatus> {
 /** Set up the data dir given a git repo URL and branch name */
 export async function setupGitRepo(repo: string, branch: string | null) {
   // Check whether the data repo is set up
-  if (await dataDirIsInit()) {
+  if (await serverIsSetUp()) {
     throw error(403, 'Data repo is already set up');
   }
 

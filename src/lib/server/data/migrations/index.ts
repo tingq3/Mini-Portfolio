@@ -2,23 +2,10 @@ import { version } from '$app/environment';
 import { getConfig, setConfig } from '../config';
 import { getDataDir } from '../dataDir';
 import { getLocalConfig, setLocalConfig } from '../localConfig';
-import migrateV010 from './v0.1.0';
-import migrateV020 from './v0.2.0';
-import migrateV030 from './v0.3.0';
+import migrateFromV010 from './v0.1.0';
+import migrateFromV020 from './v0.2.0';
+import migrateFromV030 from './v0.3.0';
 import semver from 'semver';
-
-export type MigrationFunction = (dataDir: string) => Promise<void>;
-
-/** Lookup table of migrations */
-const migrations: Record<string, MigrationFunction> = {
-  '~0.1.0': migrateV010,
-  '~0.2.0': migrateV020,
-  '~0.3.0': migrateV030,
-  // No major changes to data format this release
-  '~0.4.0': updateConfigVersions,
-  // Pre-empt future releases
-  '~0.5.0': updateConfigVersions,
-};
 
 /** Update config versions (only for minor, non-breaking changes to config.json) */
 export async function updateConfigVersions(_dataDir: string) {
@@ -29,6 +16,19 @@ export async function updateConfigVersions(_dataDir: string) {
   configLocal.version = version;
   await setLocalConfig(configLocal);
 }
+
+export type MigrationFunction = (dataDir: string) => Promise<void>;
+
+/** Lookup table of migrations */
+const migrations: Record<string, MigrationFunction> = {
+  '~0.1.0': migrateFromV010,
+  '~0.2.0': migrateFromV020,
+  '~0.3.0': migrateFromV030,
+  // No major changes to data format this release
+  '~0.4.0': updateConfigVersions,
+  // Pre-empt future releases
+  '~0.5.0': updateConfigVersions,
+};
 
 /** Perform a migration from the given version */
 export default async function migrate(oldVersion: string) {
