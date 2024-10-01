@@ -1,8 +1,8 @@
 import { error, json } from '@sveltejs/kit';
 import { setGroupReadme } from '$lib/server/data/group';
-import { validateTokenFromRequest } from '$lib/server/auth';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
 import { assert, string } from 'superstruct';
-import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 
 export async function GET({ params }) {
   const groupId = params.groupId;

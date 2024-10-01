@@ -85,11 +85,12 @@ export function makeItemInfo(options: Partial<ItemInfoFull> = {}): ItemInfoFull 
 
 /** Rewind the data repo's git repo to an earlier commit */
 export async function forceRewindDataRepoGit(api: ApiClient) {
+  // A commit hash within MaddyGuthridge/portfolio-data
   const OLD_COMMIT_HASH = 'd7ef6fd7ef9bac4c24f5634e6b1e76d201507498';
   // Forcefully move back a number of commits, then invalidate the data
   const git = simpleGit(getDataDir());
   await git.reset(['--hard', OLD_COMMIT_HASH]);
   await api.admin.data.refresh();
   // Attempt to make a commit just in case of data migrations
-  await api.admin.git.commit('Migrate data').catch(e => {void e});
+  await api.admin.git.commit('Migrate data').catch(e => { void e });
 }

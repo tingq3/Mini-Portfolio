@@ -6,7 +6,7 @@
 import { it, expect, beforeEach } from 'vitest';
 import { setup } from '../../helpers';
 import api from '$endpoints';
-import type { FirstRunCredentials } from '$lib/server/auth';
+import type { FirstRunCredentials } from '$lib/server/auth/tokens';
 
 let credentials: FirstRunCredentials;
 

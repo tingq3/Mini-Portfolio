@@ -1,5 +1,5 @@
 import { getPortfolioGlobals } from '$lib/server';
-import { validateTokenFromRequest } from '$lib/server/auth.js';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
 import { redirect } from '@sveltejs/kit';
 
 export async function load(req) {

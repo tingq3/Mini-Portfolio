@@ -1,11 +1,11 @@
 import { error, json } from '@sveltejs/kit';
 import { getGroupInfo, setGroupInfo } from '$lib/server/data/group';
-import { validateTokenFromRequest } from '$lib/server/auth';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
 import { object, string, validate } from 'superstruct';
-import { createItem, setItemInfo, ItemInfoFullStruct, deleteItem } from '$lib/server/data/item.js';
-import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
-import { validateId, validateName } from '$lib/validators.js';
-import { removeAllLinksToItem } from '$lib/server/links.js';
+import { createItem, setItemInfo, ItemInfoFullStruct, deleteItem } from '$lib/server/data/item';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
+import { validateId, validateName } from '$lib/validators';
+import { removeAllLinksToItem } from '$lib/server/links';
 
 export async function GET({ params }) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));

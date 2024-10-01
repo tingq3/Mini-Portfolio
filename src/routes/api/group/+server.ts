@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import { getPortfolioGlobals } from '$lib/server/data/index.js';
+import { getPortfolioGlobals } from '$lib/server/data/index';
 
 export async function GET() {
   const data = await getPortfolioGlobals().catch(e => error(400, e));

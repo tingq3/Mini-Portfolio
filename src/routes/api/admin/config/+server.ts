@@ -1,11 +1,11 @@
 import { error, json } from '@sveltejs/kit';
-import { validateTokenFromRequest } from '$lib/server/auth.js';
-import { ConfigJsonStruct, setConfig } from '$lib/server/data/config.js';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { ConfigJsonStruct, setConfig } from '$lib/server/data/config';
 import { validate } from 'superstruct';
 import { version } from '$app/environment';
-import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 import fs from 'fs/promises';
-import { getDataDir } from '$lib/server/data/dataDir.js';
+import { getDataDir } from '$lib/server/data/dataDir';
 
 export async function GET({ request, cookies }) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));

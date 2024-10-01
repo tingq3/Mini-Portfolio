@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import { error } from '@sveltejs/kit';
 import mime from 'mime-types';
-import { getDataDir } from '$lib/server/data/dataDir.js';
-import { getPortfolioGlobals } from '$lib/server/index.js';
+import { getDataDir } from '$lib/server/data/dataDir';
+import { getPortfolioGlobals } from '$lib/server/index';
 
 export async function GET({ setHeaders }) {
   const globals = await getPortfolioGlobals();

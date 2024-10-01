@@ -1,17 +1,18 @@
 import { error, json } from '@sveltejs/kit';
-import { dataDirContainsData, dataDirIsInit, getDataDir } from '$lib/server/data/dataDir';
+import { dataDirContainsData, serverIsSetUp, getDataDir } from '$lib/server/data/dataDir';
 import { mkdir } from 'fs/promises';
 import { runSshKeyscan, setupGitignore, setupGitRepo, urlRequiresSsh } from '$lib/server/git';
-import { authSetup } from '$lib/server/auth';
+import { authSetup } from '$lib/server/auth/setup';
 import { initConfig } from '$lib/server/data/config';
 import { initReadme } from '$lib/server/data/readme';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 
+// FIXME: Make this accept a username and password
 export async function POST({ request, cookies }) {
   const { repoUrl, branch }: { repoUrl: string | null, branch: string | null }
     = await request.json();
 
-  if (await dataDirIsInit()) {
+  if (await serverIsSetUp()) {
     error(403);
   }
 

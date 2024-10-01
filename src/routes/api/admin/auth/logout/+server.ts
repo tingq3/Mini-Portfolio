@@ -1,5 +1,5 @@
-import { revokeSession, validateTokenFromRequest } from '$lib/server/auth';
-import { getPortfolioGlobals } from '$lib/server/data/index.js';
+import { revokeSession, validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { getPortfolioGlobals } from '$lib/server/data/index';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST(req) {

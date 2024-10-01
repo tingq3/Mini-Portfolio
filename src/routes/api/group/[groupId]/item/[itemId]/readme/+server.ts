@@ -1,8 +1,8 @@
 import { error, json } from '@sveltejs/kit';
-import { validateTokenFromRequest } from '$lib/server/auth';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
 import { assert, string } from 'superstruct';
-import { getItemInfo, setItemReadme } from '$lib/server/data/item.js';
-import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
+import { getItemInfo, setItemReadme } from '$lib/server/data/item';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 
 export async function GET({ params }) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));

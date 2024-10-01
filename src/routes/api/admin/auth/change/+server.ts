@@ -1,6 +1,6 @@
-import { hashAndSalt, validateTokenFromRequest } from '$lib/server/auth';
-import { getPortfolioGlobals } from '$lib/server/data/index.js';
-import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig.js';
+import { hashAndSalt, validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { getPortfolioGlobals } from '$lib/server/data/index';
+import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig';
 import { error, json } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
 import { object, string, validate } from 'superstruct';

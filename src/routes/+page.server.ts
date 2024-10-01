@@ -1,10 +1,10 @@
 import { redirect } from '@sveltejs/kit';
 import { getPortfolioGlobals } from '$lib/server';
-import { dataDirIsInit } from '$lib/server/data/dataDir.js';
-import { isRequestAuthorized } from '$lib/server/auth.js';
+import { serverIsSetUp } from '$lib/server/data/dataDir';
+import { isRequestAuthorized } from '$lib/server/auth/tokens';
 
 export async function load(req) {
-  if (!await dataDirIsInit()) {
+  if (!await serverIsSetUp()) {
     redirect(303, '/admin/firstrun');
   }
   const globals = await getPortfolioGlobals();

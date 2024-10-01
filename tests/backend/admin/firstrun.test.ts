@@ -8,7 +8,7 @@ import simpleGit, { CheckRepoActions } from 'simple-git';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { version } from '$app/environment';
-import type { FirstRunCredentials } from '$lib/server/auth';
+import type { FirstRunCredentials } from '$lib/server/auth/tokens';
 
 // Git clone takes a while, increase the test timeout
 vi.setConfig({ testTimeout: 15_000 });

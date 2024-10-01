@@ -1,6 +1,6 @@
 import { dev } from '$app/environment';
-import { getDataDir } from '$lib/server/data/dataDir.js';
-import { invalidatePortfolioGlobals } from '$lib/server/data/index.js';
+import { getDataDir } from '$lib/server/data/dataDir';
+import { invalidatePortfolioGlobals } from '$lib/server/data/index';
 import { error, json } from '@sveltejs/kit';
 import { rimraf } from 'rimraf';
 

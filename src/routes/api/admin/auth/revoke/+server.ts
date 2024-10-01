@@ -1,7 +1,7 @@
-import { validateTokenFromRequest } from '$lib/server/auth';
-import { getPortfolioGlobals } from '$lib/server/data/index.js';
-import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig.js';
-import { unixTime } from '$lib/util.js';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { getPortfolioGlobals } from '$lib/server/data/index';
+import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig';
+import { unixTime } from '$lib/util';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ request, cookies }) {

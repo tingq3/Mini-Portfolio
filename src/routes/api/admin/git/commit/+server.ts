@@ -1,7 +1,7 @@
-import { validateTokenFromRequest } from '$lib/server/auth.js';
-import { dataDirUsesGit, getDataDir } from '$lib/server/data/dataDir.js';
-import { getRepoStatus } from '$lib/server/git.js';
-import { getPortfolioGlobals } from '$lib/server/index.js';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { dataDirUsesGit, getDataDir } from '$lib/server/data/dataDir';
+import { getRepoStatus } from '$lib/server/git';
+import { getPortfolioGlobals } from '$lib/server/index';
 import { error, json } from '@sveltejs/kit';
 import simpleGit from 'simple-git';
 import { object, string, validate } from 'superstruct';
