@@ -91,7 +91,7 @@ describe('git', () => {
 it('Gives a token on success', async () => {
   await expect(firstrun())
     .resolves.toMatchObject({
-      credentials: { token: expect.any(String) }
+      token: expect.any(String)
     });
 });
 

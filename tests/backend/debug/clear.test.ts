@@ -14,7 +14,7 @@ it('Removes all content from the data directory', async () => {
 });
 
 it('Removes the login credentials', async () => {
-  const credentials = (await setup()).credentials;
+  const credentials = (await setup());
   await api().debug.clear();
   // Logging in should fail
   await expect(api().admin.auth.login(credentials.username, credentials.password)).toReject();

@@ -27,7 +27,7 @@ export default function auth(token: string | undefined) {
       'POST',
       '/api/admin/auth/logout',
       token,
-    )) as Promise<{ token: string }>;
+    ));
   };
 
   /**
@@ -66,12 +66,12 @@ export default function auth(token: string | undefined) {
    * @param token The auth token
    * @param password The password to the admin account
    */
-  const disable = async (password: string) => {
+  const disable = async (username: string, password: string) => {
     return json(apiFetch(
       'POST',
       '/api/admin/auth/disable',
       token,
-      { password }
+      { username, password }
     )) as Promise<Record<string, never>>;
   };
 

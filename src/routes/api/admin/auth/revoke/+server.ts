@@ -13,9 +13,9 @@ export async function POST({ request, cookies }) {
     return error(403, 'Authentication was disabled');
   }
 
-  await validateTokenFromRequest({ request, cookies });
+  const uid = await validateTokenFromRequest({ request, cookies });
 
-  local.auth.sessions.notBefore = unixTime();
+  local.auth[uid].sessions.notBefore = unixTime();
 
   await setLocalConfig(local);
 

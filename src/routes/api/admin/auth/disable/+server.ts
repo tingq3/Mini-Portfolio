@@ -1,11 +1,13 @@
-import { hashAndSalt, validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { validateCredentials } from '$lib/server/auth/passwords';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
 import { getPortfolioGlobals } from '$lib/server/data/index';
 import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig';
 import { error, json } from '@sveltejs/kit';
 
+// TODO: Remove this when setting up user management
 export async function POST({ request, cookies }) {
   await getPortfolioGlobals().catch(e => error(400, e));
-  await validateTokenFromRequest({ request, cookies });
+  const uid = await validateTokenFromRequest({ request, cookies });
 
   const local = await getLocalConfig();
 
@@ -13,14 +15,12 @@ export async function POST({ request, cookies }) {
     throw Error('Unreachable');
   }
 
-  const { password } = await request.json();
+  const { username, password } = await request.json();
 
-  if (hashAndSalt(local.auth.password.salt, password) !== local.auth.password.hash) {
-    return error(403, 'Incorrect password');
-  }
+  await validateCredentials(username, password, 403);
 
-  // Disable authentication
-  local.auth = null;
+  // Delete this user
+  delete local.auth[uid];
   await setLocalConfig(local);
 
   return json({}, { status: 200 });

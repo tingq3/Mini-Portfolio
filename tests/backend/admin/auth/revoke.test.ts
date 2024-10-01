@@ -8,7 +8,7 @@ import api from '$endpoints';
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 it('Revokes the current token', async () => {
-  const { api, credentials: { username, password } } = await setup();
+  const { api, username, password } = await setup();
   const { token: token2 } = await api.admin.auth.login(username, password);
   // Wait a second, since otherwise the token will have been created at the new
   // notBefore time

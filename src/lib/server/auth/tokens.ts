@@ -100,6 +100,13 @@ export async function validateToken(token: string): Promise<Infer<typeof JwtPayl
   return data;
 }
 
+export function getTokenFromRequest(req: { request: Request, cookies: Cookies }): string | undefined {
+  const tokenFromHeader = req.request.headers.get('Authorization');
+  const tokenFromCookie = req.cookies.get('token');
+
+  return tokenFromHeader || tokenFromCookie;
+}
+
 /** Revoke the session of the given token */
 export async function revokeSession(token: string): Promise<void> {
   const config = await getLocalConfig();
@@ -115,7 +122,9 @@ export async function revokeSession(token: string): Promise<void> {
 }
 
 /**
- * Validates and returns the token from the given request.
+ * Validates the token from the given request.
+ *
+ * Returns the user ID of the token's owner.
  *
  * First attempts to get the token from the "Authorization" header, but if that
  * isn't present, the "token" property is checked within the cookies.
@@ -123,20 +132,16 @@ export async function revokeSession(token: string): Promise<void> {
  * If the token is invalid, it is removed from the cookies.
  */
 export async function validateTokenFromRequest(req: { request: Request, cookies: Cookies }): Promise<string> {
-  const tokenFromHeader = req.request.headers.get('Authorization');
-  const tokenFromCookie = req.cookies.get('token');
-
-  const token = tokenFromHeader || tokenFromCookie;
-
+  const token = getTokenFromRequest(req);
   if (!token) {
     throw error(401, 'A token is required to access this endpoint');
   }
-  await validateToken(token).catch(e => {
+  const data = await validateToken(token).catch(e => {
     // Remove token from cookies, as it is invalid
     req.cookies.delete('token', { path: '/' });
     error(401, `${e}`);
   });
-  return token;
+  return data.uid;
 }
 
 /** Return whether the request is authorized (has a valid token) */

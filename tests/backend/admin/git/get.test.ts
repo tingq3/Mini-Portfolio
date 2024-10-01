@@ -20,7 +20,7 @@ it('Gives a 400 when no data directory is set up', async () => {
 });
 
 it('Correctly returns repo info when a repo is set up', { timeout: 15_000 }, async () => {
-  const { token } = (await api().admin.firstrun(gitRepos.TEST_REPO_RW, null)).credentials;
+  const { token } = await api().admin.firstrun('admin', 'abc123ABC!', gitRepos.TEST_REPO_RW);
   const repo = simpleGit(getDataDir());
   await expect(api(token).admin.git.status()).resolves.toStrictEqual({
     repo: {

@@ -19,9 +19,9 @@ const sleepRandom = () => new Promise<void>((r) => setTimeout(r, Math.random() *
  * Throw a 401 after a random (small) amount of time, so that timing attacks
  * cannot be used reliably.
  */
-async function fail(timer: Promise<void>) {
+async function fail(timer: Promise<void>, code: number) {
   await timer;
-  return error(401, 'The username or password is incorrect');
+  return error(code, 'The username or password is incorrect');
 }
 
 /** Hash a password with the given salt, returning the result */
@@ -43,6 +43,7 @@ export function hashAndSalt(salt: string, password: string): string {
 export async function validateCredentials(
   username: string,
   password: string,
+  code: number = 403,
 ): Promise<string> {
   const local = await getLocalConfig();
 
@@ -52,13 +53,13 @@ export async function validateCredentials(
   const userId = Object.keys(local.auth).find(id => local.auth[id].username === username);
 
   if (!userId) {
-    return fail(failTimer);
+    return fail(failTimer, code);
   }
 
   const hashResult = hashAndSalt(local.auth[userId].password.salt, password);
 
   if (hashResult !== local.auth[userId].password.hash) {
-    return fail(failTimer);
+    return fail(failTimer, code);
   }
   return userId;
 }
