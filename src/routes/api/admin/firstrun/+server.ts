@@ -1,22 +1,23 @@
 import { error, json } from '@sveltejs/kit';
 import { serverIsSetUp } from '$lib/server/data/dataDir';
 import { authSetup } from '$lib/server/auth/setup';
-import { object, optional, string } from 'superstruct';
+import { object, optional, string, type Infer } from 'superstruct';
 import { applyStruct } from '$lib/server/util';
 import { validateId } from '$lib/validators';
-import * as validator from 'validator';
+import validator from 'validator';
 import { setupData } from '$lib/server/data/setup.js';
 
-const FirstRunOptions = object({
+const FirstRunOptionsStruct = object({
   username: string(),
   password: string(),
   repoUrl: optional(string()),
   branch: optional(string()),
 });
 
-// FIXME: Make this accept a username and password
+export type FirstRunOptions = Infer<typeof FirstRunOptionsStruct>;
+
 export async function POST({ request, cookies }) {
-  const options = await applyStruct(await request.json(), FirstRunOptions);
+  const options = await applyStruct(await request.json(), FirstRunOptionsStruct);
 
   if (await serverIsSetUp()) {
     error(403);

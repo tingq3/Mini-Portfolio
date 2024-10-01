@@ -23,6 +23,7 @@ export async function getAuthSecret(): Promise<string> {
 
 /** Generate and store a new auth secret, returning its value */
 export async function generateAuthSecret(): Promise<string> {
+  await fs.mkdir(getPrivateDataDir()).catch(() => { });
   const secret = nanoid();
   authSecret = secret;
   await fs.writeFile(getAuthSecretPath(), secret, { encoding: 'utf-8' });
@@ -30,9 +31,8 @@ export async function generateAuthSecret(): Promise<string> {
 }
 
 /**
- * Destroy the auth secret, removing it from memory and from the file system.
+ * Invalidate the in-memory copy of the auth secret.
  */
-export async function destroyAuthSecret() {
+export function invalidateAuthSecret() {
   authSecret = undefined;
-  await fs.unlink(getAuthSecretPath());
 }

@@ -9,7 +9,7 @@ import { getDataDir } from '$lib/server/data/dataDir';
 /** Set up the server, returning (amongst other things) an API client */
 export async function setup(repoUrl?: string, branch?: string) {
   const credentials
-    = (await api(undefined).admin.firstrun(repoUrl ?? null, branch ?? null))
+    = (await api(undefined).admin.firstrun('admin', 'abc123ABC!', repoUrl, branch))
       .credentials;
   return {
     api: api(credentials.token),
