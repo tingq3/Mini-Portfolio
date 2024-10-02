@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 
 /** Regex for matching ID strings */
-const idValidatorRegex = /^[a-z0-9-.]+$/;
+export const idValidatorRegex = /^[a-z0-9-.]+$/;
 
 /** Ensure that the given ID string is valid */
 export function validateId(type: string, id: string): string {
