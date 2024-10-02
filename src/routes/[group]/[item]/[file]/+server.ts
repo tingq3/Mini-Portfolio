@@ -2,7 +2,7 @@ import sanitize from 'sanitize-filename';
 import fs from 'fs/promises';
 import { error } from '@sveltejs/kit';
 import mime from 'mime-types';
-import { getDataDir } from '$lib/server/data/dataDir.js';
+import { getDataDir } from '$lib/server/data/dataDir';
 
 export async function GET({ params, setHeaders }) {
   const { group, item, file } = params;

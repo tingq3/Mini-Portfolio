@@ -1,28 +1,33 @@
 <script lang="ts">
   import { dev } from "$app/environment";
-  import type { FirstRunCredentials } from "$lib/server/auth";
   import api from "$endpoints";
   import Paper from "$components/Paper.svelte";
   import Background from "$components/Background.svelte";
   import Spinner from "$components/modals/Spinner.svelte";
   import Error from "$components/modals/Error.svelte";
-  import Modal from "$components/modals/Modal.svelte";
   import { goto } from "$app/navigation";
   import Navbar from "$components/navbar";
   import blankConfig from "$lib/blankConfig";
-  import CopyButton from "$components/CopyButton.svelte";
   import consts from "$lib/consts";
+  import { idValidatorRegex } from "$lib/validators";
 
-  // In dev mode, use my portfolio data by default
+  // Default values are auto-filled in dev mode
+  let username = dev ? "admin" : "";
+  let password = dev ? "abc123ABC!" : "";
+  let repeatPassword = dev ? "abc123ABC!" : "";
   let repoUrl = dev ? "git@github.com:MaddyGuthridge/portfolio-data.git" : "";
   let repoBranch = "";
-  let credentials: FirstRunCredentials | undefined;
 
   async function submitMain() {
     showLoading = true;
     try {
-      const res = await api().admin.firstrun(repoUrl, repoBranch || null);
-      credentials = res.credentials;
+      await api().admin.firstrun(
+        username,
+        password,
+        repoUrl,
+        repoBranch || undefined,
+      );
+      await goto("/");
     } catch (e) {
       errorText = `${e}`;
       showLoading = false;
@@ -31,14 +36,19 @@
 
   async function submitNoGit() {
     try {
-      const res = await api().admin.firstrun(null, null);
-      credentials = res.credentials;
+      await api().admin.firstrun(username, password);
+      await goto("/");
     } catch (e) {
       errorText = `${e}`;
     }
   }
 
   async function onSubmit(e: SubmitEvent) {
+    // Validate passwords match
+    if (password !== repeatPassword) {
+      errorText = "Passwords must match";
+      return;
+    }
     const submitter = e.submitter?.id;
     switch (submitter) {
       case "submit-main":
@@ -49,6 +59,7 @@
         break;
       default:
         console.error("Submitter not recognised!");
+        return;
     }
   }
 
@@ -82,16 +93,42 @@
           Welcome to your fancy new portfolio website!
         </h1>
         <h2>Let's get set up!</h2>
+        {#if dev}
+          <p>Values are auto-filled in dev mode.</p>
+        {/if}
       </div>
 
       <form on:submit={onSubmit}>
-        <h3>Data repository URL</h3>
+        <h3>Login information</h3>
+        <p>
+          Create a username. It may only use lowercase alphanumeric characters,
+          dots, dashes and underscores.
+        </p>
         <input
           type="text"
-          id="repo-url"
-          bind:value={repoUrl}
-          placeholder="git@github.com:MaddyGuthridge/portfolio-data.git"
+          id="username"
+          pattern={idValidatorRegex.source}
+          title="Username contains illegal characters"
+          bind:value={username}
+          placeholder="username"
         />
+
+        <p>Create a strong and unique password.</p>
+        <input
+          type="password"
+          id="password"
+          bind:value={password}
+          placeholder="A strong and unique password"
+        />
+        <p>Repeat your password.</p>
+        <input
+          type="password"
+          id="repeatPassword"
+          bind:value={repeatPassword}
+          placeholder="Repeat your password"
+        />
+
+        <h3>Data repository URL</h3>
         <p>
           It's a good idea to set up a repository to back up your portfolio
           data.
@@ -102,15 +139,21 @@
           and enter the clone URL here. If you want to import existing data, enter
           your existing repository URL here.
         </p>
+        <input
+          type="text"
+          id="repo-url"
+          bind:value={repoUrl}
+          placeholder="git@github.com:MaddyGuthridge/portfolio-data.git"
+        />
 
         <h3>Repository branch</h3>
+        <p>If you want to use a specific branch, you can enter it here.</p>
         <input
           type="text"
           id="repo-branch"
           bind:value={repoBranch}
           placeholder="main"
         />
-        <p>If you want to use a specific branch, you can enter it above.</p>
 
         <h3>Ready to get started?</h3>
         <input type="submit" id="submit-main" value="Let's go!" />
@@ -148,23 +191,6 @@
   }}
 />
 
-{#if credentials}
-  <Modal show={true} on:close={() => goto("/")}>
-    <h1 slot="header">Your data is set up!</h1>
-    <p>This is your login information. Please ensure you do not lose it.</p>
-    <!-- TODO: Add copy buttons for convenience -->
-    <p>
-      Username: <b>{credentials.username}</b>
-    </p>
-    <div class="horizontal">
-      Password: <b>{credentials.password}</b>
-      <CopyButton text={credentials.password} hint="Copy password"
-        >Copy</CopyButton
-      >
-    </div>
-  </Modal>
-{/if}
-
 <style>
   .center {
     display: flex;
@@ -190,11 +216,5 @@
   form input[type="submit"] {
     font-size: 1rem;
     font-weight: bold;
-  }
-
-  .horizontal {
-    display: flex;
-    align-items: center;
-    gap: 5px;
   }
 </style>

@@ -8,7 +8,7 @@ import { listGroups, setGroupInfo, type GroupInfo } from '../group';
 import { unsafeLoadGroupInfo } from './unsafeLoad';
 import migrateV030 from './v0.3.0';
 
-export default async function migrate(dataDir: string) {
+export default async function migrate(dataDir: string, privateDataDir: string) {
   console.log(`Migrate from v0.2.x -> ${version}`);
 
   // For each group
@@ -22,5 +22,5 @@ export default async function migrate(dataDir: string) {
   }
 
   // Also perform v0.3.0 migration
-  await migrateV030(dataDir);
+  await migrateV030(dataDir, privateDataDir);
 }

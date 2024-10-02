@@ -1,8 +1,8 @@
 import { redirect } from '@sveltejs/kit';
-import { dataDirIsInit } from '$lib/server/data/dataDir.js';
+import { serverIsSetUp } from '$lib/server/data/dataDir';
 
 export async function load() {
-  if (await dataDirIsInit()) {
+  if (await serverIsSetUp()) {
     redirect(303, '/');
   }
   return {};

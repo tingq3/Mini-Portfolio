@@ -1,34 +1,30 @@
 import { version } from '$app/environment';
-import { getConfig, setConfig } from '../config';
-import { getDataDir } from '../dataDir';
-import { getLocalConfig, setLocalConfig } from '../localConfig';
-import migrateV010 from './v0.1.0';
-import migrateV020 from './v0.2.0';
-import migrateV030 from './v0.3.0';
+import { getDataDir, getPrivateDataDir } from '../dataDir';
+import { updateConfigVersions } from './shared';
+import migrateFromV010 from './v0.1.0';
+import migrateFromV020 from './v0.2.0';
+import migrateFromV030 from './v0.3.0';
+import migrateFromV050 from './v0.5.0';
 import semver from 'semver';
 
-export type MigrationFunction = (dataDir: string) => Promise<void>;
+
+export type MigrationFunction = (
+  dataDir: string,
+  privateDataDir: string,
+) => Promise<void>;
 
 /** Lookup table of migrations */
 const migrations: Record<string, MigrationFunction> = {
-  '~0.1.0': migrateV010,
-  '~0.2.0': migrateV020,
-  '~0.3.0': migrateV030,
-  // No major changes to data format this release
-  '~0.4.0': updateConfigVersions,
+  '~0.1.0': migrateFromV010,
+  '~0.2.0': migrateFromV020,
+  '~0.3.0': migrateFromV030,
+  // No major changes to data format between 0.4 and 0.5, so just use the 0.5
+  // function
+  '~0.4.0': migrateFromV050,
+  '~0.5.0': migrateFromV050,
   // Pre-empt future releases
-  '~0.5.0': updateConfigVersions,
+  '~0.6.0': updateConfigVersions,
 };
-
-/** Update config versions (only for minor, non-breaking changes to config.json) */
-export async function updateConfigVersions(_dataDir: string) {
-  const config = await getConfig();
-  config.version = version;
-  await setConfig(config);
-  const configLocal = await getLocalConfig();
-  configLocal.version = version;
-  await setLocalConfig(configLocal);
-}
 
 /** Perform a migration from the given version */
 export default async function migrate(oldVersion: string) {
@@ -44,7 +40,7 @@ export default async function migrate(oldVersion: string) {
       // calls getConfig and getLocalConfig without specifying the desired
       // directory to load from).
       try {
-        await migrateFunction(getDataDir());
+        await migrateFunction(getDataDir(), getPrivateDataDir());
         console.log('Migration success');
         return;
       } catch (e) {

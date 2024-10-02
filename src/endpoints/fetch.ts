@@ -131,7 +131,7 @@ export async function json(response: Promise<Response>): Promise<object> {
   }
 
   if ([400, 401, 403].includes(res.status)) {
-    // All 400 and 403 errors have an error message
+    // All 400, 401 and 403 errors have an error message
     const message = (json as { message: string }).message;
     throw new ApiError(res.status, message);
   }

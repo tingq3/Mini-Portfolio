@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { getPortfolioGlobals } from '$lib/server';
-import { isRequestAuthorized } from '$lib/server/auth.js';
+import { isRequestAuthorized } from '$lib/server/auth/tokens';
 
 export async function load(req) {
   const globals = await getPortfolioGlobals();

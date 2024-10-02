@@ -6,6 +6,11 @@ export async function unsafeLoadConfig(dataDir: string): Promise<object> {
   return JSON.parse(await fs.readFile(`${dataDir}/config.json`, { encoding: 'utf-8' }));
 }
 
+/** Load old config.local.json */
+export async function unsafeLoadLocalConfig(privateDataDir: string): Promise<object> {
+  return JSON.parse(await fs.readFile(`${privateDataDir}/config.local.json`, { encoding: 'utf-8' }));
+}
+
 /** Load item info in old format */
 export async function unsafeLoadItemInfo(dataDir: string, groupId: string, itemId: string): Promise<object> {
   return JSON.parse(await fs.readFile(`${dataDir}/${groupId}/${itemId}/info.json`, { encoding: 'utf-8' }));

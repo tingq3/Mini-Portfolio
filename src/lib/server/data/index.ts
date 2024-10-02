@@ -17,6 +17,7 @@ import { getItemData, listItems, type ItemData } from './item';
 import { invalidateLocalConfigCache } from './localConfig';
 import migrate from './migrations';
 import { getReadme } from './readme';
+import { invalidateAuthSecret } from '../auth/secret';
 
 /** Public global data for the portfolio */
 export interface PortfolioGlobals {
@@ -97,5 +98,6 @@ export async function getPortfolioGlobals(): Promise<PortfolioGlobals> {
 export function invalidatePortfolioGlobals() {
   portfolioGlobals = undefined;
   invalidateLocalConfigCache();
+  invalidateAuthSecret();
   // console.log('Data invalidated');
 }

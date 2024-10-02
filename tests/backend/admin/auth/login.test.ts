@@ -6,12 +6,11 @@
 import { it, expect, beforeEach } from 'vitest';
 import { setup } from '../../helpers';
 import api from '$endpoints';
-import type { FirstRunCredentials } from '$lib/server/auth';
 
-let credentials: FirstRunCredentials;
+let credentials: Awaited<ReturnType<typeof setup>>;
 
 beforeEach(async () => {
-  credentials = (await setup()).credentials;
+  credentials = (await setup());
 });
 
 it("Gives an error when the server isn't setup", async () => {
@@ -27,12 +26,12 @@ it('Returns a token when correct credentials are provided', async () => {
 
 it('Blocks logins with non-existent usernames', async () => {
   await expect(api().admin.auth.login(credentials.username + 'hi', credentials.password))
-    .rejects.toMatchObject({ code: 401 });
+    .rejects.toMatchObject({ code: 403 });
 });
 
 it('Blocks logins with incorrect passwords', async () => {
   await expect(api().admin.auth.login(credentials.username, credentials.password + 'hi'))
-    .rejects.toMatchObject({ code: 401 });
+    .rejects.toMatchObject({ code: 403 });
 });
 
 /**

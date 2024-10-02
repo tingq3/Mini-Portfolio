@@ -1,5 +1,5 @@
-import { validateTokenFromRequest } from '$lib/server/auth.js';
-import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/index.js';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/index';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ request, cookies }) {

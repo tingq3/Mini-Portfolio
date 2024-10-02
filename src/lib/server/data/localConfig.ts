@@ -1,21 +1,20 @@
 import { readFile, writeFile } from 'fs/promises';
-import { nullable, number, object, record, string, validate, type Infer } from 'superstruct';
-import { getDataDir } from './dataDir';
+import { number, object, record, string, validate, type Infer } from 'superstruct';
+import { getPrivateDataDir } from './dataDir';
 
 /** Path to config.local.json */
-const CONFIG_LOCAL_JSON = () => `${getDataDir()}/config.local.json`;
+const CONFIG_LOCAL_JSON = () => `${getPrivateDataDir()}/config.local.json`;
 
 /**
  * Validator for config.local.json file
  */
 export const ConfigLocalJsonStruct = object({
   /**
-   * Authentication data.
-   *
-   * If null, then authentication is disabled, and logging in is not allowed.
+   * Authentication data, as a record between user IDs and their
+   * authentication info.
    */
-  auth: nullable(object({
-    /** Username of account */
+  auth: record(string(), object({
+    /** The user's username, used for logging in */
     username: string(),
     /** Information about the user's password */
     password: object({
@@ -58,7 +57,7 @@ export type ConfigLocalJson = Infer<typeof ConfigLocalJsonStruct>;
 /** Cache of the local config to speed up operations */
 let localConfigCache: ConfigLocalJson | undefined;
 
-/** Return the local configuration, stored in `/data/config.local.json` */
+/** Return the local configuration, stored in `/private-data/config.local.json` */
 export async function getLocalConfig(): Promise<ConfigLocalJson> {
   if (localConfigCache) {
     return localConfigCache;

@@ -1,46 +1,15 @@
-import { generateToken, hashAndSalt } from '$lib/server/auth.js';
-import { getPortfolioGlobals } from '$lib/server/data/index.js';
-import { getLocalConfig } from '$lib/server/data/localConfig.js';
+import { validateCredentials } from '$lib/server/auth/passwords';
+import { generateToken } from '$lib/server/auth/tokens';
+import { getPortfolioGlobals } from '$lib/server/data/index';
 import { error, json } from '@sveltejs/kit';
 
-const FAIL_DURATION = 50;
-
-/**
- * Promise that resolves in a random amount of time, used to get some timing
- * invariance.
- */
-const sleepRandom = () => new Promise<void>((r) => setTimeout(r, Math.random() * FAIL_DURATION));
-
-/**
- * Throw a 401 after a random (small) amount of time, so that timing attacks
- * cannot be used reliably.
- */
-async function fail(timer: Promise<void>) {
-  await timer;
-  return error(401, 'The username or password is incorrect');
-}
 
 export async function POST({ request, cookies }) {
   await getPortfolioGlobals().catch(e => error(400, e));
 
-  const local = await getLocalConfig();
-
-  if (!local.auth) {
-    error(403, 'Logging in has been disabled by the administrator');
-  }
-
   const { username, password } = await request.json();
 
-  const failTimer = sleepRandom();
+  const uid = await validateCredentials(username, password);
 
-  if (username !== local.auth.username) {
-    return fail(failTimer);
-  }
-
-  if (hashAndSalt(local.auth.password.salt, password) !== local.auth.password.hash) {
-    return fail(failTimer);
-  }
-
-  const token = generateToken(cookies);
-  return json({ token }, { status: 200 });
+  return json({ token: await generateToken(uid, cookies) }, { status: 200 });
 }
