@@ -11,7 +11,7 @@ const defaultPrivateKeyFile = () => `${getPrivateDataDir()}/id_${DEFAULT_KEY_TYP
 
 const publicKeyFile = (privateKeyFile: string) => `${privateKeyFile}.pub`;
 
-let publicKey: string | undefined;
+let publicKey: string | null | undefined;
 
 /** Returns the server's SSH public key */
 export async function getPublicKey(): Promise<string | null> {
@@ -23,6 +23,7 @@ export async function getPublicKey(): Promise<string | null> {
   const keyPath = await getLocalConfig().then(c => c.keyFile);
 
   if (!keyPath) {
+    publicKey = null;
     return null;
   }
 
@@ -45,7 +46,7 @@ export async function setKeyFile(keyFile: string) {
 
 /** Disable the server's SSH authentication */
 export async function disableKey() {
-  publicKey = undefined;
+  publicKey = null;
   const cfg = await getLocalConfig();
   cfg.keyFile = null;
   await setLocalConfig(cfg);
