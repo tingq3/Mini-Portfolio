@@ -3,43 +3,76 @@ import fs from 'fs/promises';
 import { getPrivateDataDir } from './data/dataDir';
 import { spawn } from 'child-process-promise';
 import { APP_NAME } from '$lib/consts';
+import { getLocalConfig, setLocalConfig } from './data/localConfig';
 
-const KEY_TYPE = 'ed25519';
+const DEFAULT_KEY_TYPE = 'ed25519';
 
-const publicKeyFile = () => `${getPrivateDataDir()}/id_${KEY_TYPE}.pub`;
-const privateKeyFile = () => `${getPrivateDataDir()}/id_${KEY_TYPE}`;
+const defaultPrivateKeyFile = () => `${getPrivateDataDir()}/id_${DEFAULT_KEY_TYPE}`;
+
+const publicKeyFile = (privateKeyFile: string) => `${privateKeyFile}.pub`;
 
 let publicKey: string | undefined;
 
 /** Returns the server's SSH public key */
-export async function getPublicKey(): Promise<string> {
+export async function getPublicKey(): Promise<string | null> {
   if (publicKey) {
     return publicKey;
   }
+
+  // Determine public key location
+  const keyPath = await getLocalConfig().then(c => c.keyFile);
+
+  if (!keyPath) {
+    return null;
+  }
+
   // Read the key from the disk
-  const key = await fs.readFile(publicKeyFile(), { encoding: 'utf-8' })
-    // If it fails, generate a new public key
-    .catch(regenerateKey)
+  const key = await fs.readFile(publicKeyFile(keyPath), { encoding: 'utf-8' })
     .then(k => k.trim());
   publicKey = key;
   return key;
 }
 
-/** Regenerate the SSH key pair for the server */
-export async function regenerateKey(): Promise<string> {
+/**
+ * Set the path to the program's SSH key file.
+ */
+export async function setKeyFile(keyFile: string) {
   publicKey = undefined;
-  // Discard errors, since they mean the file already exists
-  await fs.unlink(privateKeyFile()).catch(() => { });
-  await fs.unlink(publicKeyFile()).catch(() => { });
+  const cfg = await getLocalConfig();
+  cfg.keyFile = keyFile;
+  await setLocalConfig(cfg);
+}
+
+/** Disable the server's SSH authentication */
+export async function disableKey() {
+  publicKey = undefined;
+  const cfg = await getLocalConfig();
+  cfg.keyFile = null;
+  await setLocalConfig(cfg);
+}
+
+/** Generate an SSH key pair for the server */
+export async function generateKey(): Promise<string> {
+  publicKey = undefined;
+  // Remove keys from default location if they exist
+  await fs.unlink(defaultPrivateKeyFile()).catch(() => { });
+  await fs.unlink(publicKeyFile(defaultPrivateKeyFile())).catch(() => { });
   // Also need to create private data dir if it was removed
   await fs.mkdir(getPrivateDataDir()).catch(() => { });
+
+  // Change configuration to use default SSH key location
+  const cfg = await getLocalConfig();
+  cfg.keyFile = defaultPrivateKeyFile();
+  await setLocalConfig(cfg);
+
+  // ssh-keygen -t $DEFAULT_KEY_TYPE -f ${defaultPrivateKeyFile()} -N '' -c "Minifolio SSH key"
   await spawn(
     'ssh-keygen',
     [
       '-t',
-      KEY_TYPE,
+      DEFAULT_KEY_TYPE,
       '-f',
-      privateKeyFile(),
+      defaultPrivateKeyFile(),
       '-N',
       '',
       '-C',
@@ -47,5 +80,6 @@ export async function regenerateKey(): Promise<string> {
     ],
     { capture: ['stdout', 'stderr'] }
   );
-  return getPublicKey();
+  // Public key is definitely not null now
+  return getPublicKey() as Promise<string>;
 }
