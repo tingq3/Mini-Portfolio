@@ -19,7 +19,7 @@ export async function POST({ request, cookies }) {
     error(400, `${err}`);
   }
 
-  commit(options.message);
+  await commit(options.message);
 
   return json(await getRepoStatus(), { status: 200 });
 }

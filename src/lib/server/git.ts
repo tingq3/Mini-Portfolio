@@ -86,8 +86,8 @@ export async function runSshKeyscan(url: string) {
 
   const process = await spawn('ssh-keyscan', [host], { capture: ['stdout'] });
 
-  console.log(process.stdout);
-  console.log(typeof process.stdout);
+  // console.log(process.stdout);
+  // console.log(typeof process.stdout);
 
   // Now add to known hosts file
   await fs.appendFile(knownHostsFile(), process.stdout, { encoding: 'utf-8' });
