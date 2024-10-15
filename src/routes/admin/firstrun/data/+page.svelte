@@ -10,6 +10,9 @@
   import blankConfig from '$lib/blankConfig';
   import consts from '$lib/consts';
 
+  // TODO: Show info about the public key
+  // export let data;
+
   // Default values are auto-filled in dev mode
   let repoUrl = dev ? 'git@github.com:MaddyGuthridge/portfolio-data.git' : '';
   let repoBranch = '';
