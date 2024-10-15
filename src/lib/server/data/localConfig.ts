@@ -53,6 +53,9 @@ export const ConfigLocalJsonStruct = object({
    *
    * The public key file is expected to be the same as the private key, with a
    * `.pub` suffix.
+   *
+   * If this is `null`, then the `ssh` executable will be free to choose an
+   * appropriate SSH key to use.
    */
   keyFile: nullable(string()),
   /** Version of server that last accessed the config.local.json */
