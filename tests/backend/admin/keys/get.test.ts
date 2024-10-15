@@ -7,31 +7,27 @@ import { beforeEach, describe, expect, test } from 'vitest';
 import { setup } from '../../helpers';
 import genTokenTests from '../../tokenCase';
 
-
-/**
- * These first two tests fail due to the config.local.json not being generated
- * until first-run.
- *
- * TODO: Fix this when splitting the setup process into stages.
- */
-
-test('Public key is `null` before it is generated', { fails: true }, async () => {
-  await expect(api().admin.keys.get())
-    .resolves.toStrictEqual({ publicKey: null });
+test('Public key is `null` before it is generated', async () => {
+  const { api } = await setup();
+  await expect(api.admin.keys.get())
+    .resolves.toStrictEqual({ publicKey: null, keyPath: null });
 });
 
-
-test('Public key can be requested without token when server is not set up', { fails: true }, async () => {
-  await api().admin.keys.generate();
-  await expect(api().admin.keys.get())
-    .resolves.toStrictEqual({ publicKey: expect.any(String), keyPath: expect.any(String) });
-});
-
-test('Public key can be requested with token when server is set up', async () => {
+test('Public key has value after it is generated', async () => {
   const { api } = await setup();
   await api.admin.keys.generate();
   await expect(api.admin.keys.get())
     .resolves.toStrictEqual({ publicKey: expect.any(String), keyPath: expect.any(String) });
+});
+
+test('Public key can be requested before data is set up', async () => {
+  const { token } = await api().admin.firstrun.account('admin', 'abc123ABC$');
+  await expect(api(token).admin.keys.get()).toResolve();
+});
+
+test('Endpoint gives a 400 before account is set up', async () => {
+  await expect(api().admin.keys.get())
+    .rejects.toMatchObject({ code: 400 });
 });
 
 describe('Token tests', () => {

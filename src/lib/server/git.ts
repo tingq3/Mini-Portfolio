@@ -6,14 +6,14 @@ import { rimraf } from 'rimraf';
 import { spawn } from 'child-process-promise';
 import { fileExists } from '.';
 import path from 'path';
-import { defaultKeysDirectory, getPrivateKeyFile } from './keys';
+import { defaultKeysDirectory, getPrivateKeyPath } from './keys';
 
 /** Path to the SSH known hosts file */
 const knownHostsFile = () => path.join(defaultKeysDirectory(), 'known_hosts');
 
 export const gitClient = async () => {
   let git = simpleGit(getDataDir());
-  if (await getPrivateKeyFile()) {
+  if (await getPrivateKeyPath()) {
     // Specify known_hosts file with -o (https://stackoverflow.com/a/62725161/6335363)
     git = git.env(
       'GIT_SSH_COMMAND',
@@ -21,7 +21,7 @@ export const gitClient = async () => {
         'ssh',
         // Specify private key with -i (https://stackoverflow.com/a/29754018/6335363)
         '-i',
-        await getPrivateKeyFile(),
+        await getPrivateKeyPath(),
         // Only use specified identity file
         '-o',
         'IdentitiesOnly=yes',

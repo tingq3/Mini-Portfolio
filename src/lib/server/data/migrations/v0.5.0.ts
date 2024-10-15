@@ -25,7 +25,7 @@ async function updateLocalConfig(privateDataDir: string) {
   // Too lazy to make this type-safe
   const config = await unsafeLoadLocalConfig(privateDataDir) as any;
 
-  config.keyFile = null;
+  config.keyPath = null;
 
   const userInfo = config.auth;
 

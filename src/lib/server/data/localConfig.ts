@@ -57,7 +57,7 @@ export const ConfigLocalJsonStruct = object({
    * If this is `null`, then the `ssh` executable will be free to choose an
    * appropriate SSH key to use.
    */
-  keyFile: nullable(string()),
+  keyPath: nullable(string()),
   /** Version of server that last accessed the config.local.json */
   version: string(),
 });

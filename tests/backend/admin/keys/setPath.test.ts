@@ -4,7 +4,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import api, { type ApiClient } from '$endpoints';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, test } from 'vitest';
 import { setup } from '../../helpers';
 import genTokenTests from '../../tokenCase';
 import { getPrivateDataDir } from '$lib/server/data/dataDir';
@@ -17,45 +17,57 @@ const DUMMY_PRIVATE_KEY = 'DUMMY PRIVATE KEY';
  */
 async function generateDummyKeypair(): Promise<[string, string]> {
   const privateData = getPrivateDataDir();
-  const privateKeyFile = path.join(privateData, 'keys', 'dummyKey');
-  const publicKeyFile = privateKeyFile + '.pub';
+  const privateKeyPath = path.join(privateData, 'keys', 'dummyKey');
+  const publicKeyPath = privateKeyPath + '.pub';
   await fs.mkdir(path.join(privateData, 'keys'), { recursive: true });
-  await fs.writeFile(privateKeyFile, DUMMY_PRIVATE_KEY);
-  await fs.writeFile(publicKeyFile, DUMMY_PUBLIC_KEY);
+  await fs.writeFile(privateKeyPath, DUMMY_PRIVATE_KEY);
+  await fs.writeFile(publicKeyPath, DUMMY_PUBLIC_KEY);
 
-  return [privateKeyFile, publicKeyFile];
+  return [privateKeyPath, publicKeyPath];
 }
 
 it('Allows users to set an explicit path to an SSH key-pair', async () => {
   const { api } = await setup();
-  const [privateKeyFile] = await generateDummyKeypair();
-  await expect(api.admin.keys.setKeyPath(privateKeyFile))
+  const [privateKeyPath] = await generateDummyKeypair();
+  await expect(api.admin.keys.setKeyPath(privateKeyPath))
     .resolves.toStrictEqual({
-      keyPath: privateKeyFile,
+      keyPath: privateKeyPath,
       publicKey: DUMMY_PUBLIC_KEY,
     });
 });
 
-// Fails due to current setup process being single-step
+test('Endpoint gives a 400 before account is set up', async () => {
+  const [privateKeyPath] = await generateDummyKeypair();
+  await expect(api().admin.keys.setKeyPath(privateKeyPath))
+    .rejects.toMatchObject({ code: 400 });
+});
+
+
+it('Key path can be set before data is set up', async () => {
+  const { token } = await api().admin.firstrun.account('admin', 'abc123ABC$');
+  const [privateKeyPath] = await generateDummyKeypair();
+  await expect(api(token).admin.keys.setKeyPath(privateKeyPath)).toResolve();
+});
+
 it("Doesn't require a token when the server hasn't been set up", { fails: true }, async () => {
-  const [privateKeyFile] = await generateDummyKeypair();
-  await expect(api().admin.keys.setKeyPath(privateKeyFile))
+  const [privateKeyPath] = await generateDummyKeypair();
+  await expect(api().admin.keys.setKeyPath(privateKeyPath))
     .toResolve();
 });
 
 it('Rejects SSH key-pair paths where the private key file does not exist', async () => {
   const { api } = await setup();
-  const [privateKeyFile] = await generateDummyKeypair();
-  await fs.unlink(privateKeyFile);
-  await expect(api.admin.keys.setKeyPath(privateKeyFile))
+  const [privateKeyPath] = await generateDummyKeypair();
+  await fs.unlink(privateKeyPath);
+  await expect(api.admin.keys.setKeyPath(privateKeyPath))
     .rejects.toMatchObject({ code: 400 });
 });
 
 it('Rejects SSH key-pair paths where the public key file does not exist', async () => {
   const { api } = await setup();
-  const [privateKeyFile, publicKeyFile] = await generateDummyKeypair();
-  await fs.unlink(publicKeyFile);
-  await expect(api.admin.keys.setKeyPath(privateKeyFile))
+  const [privateKeyPath, publicKeyPath] = await generateDummyKeypair();
+  await fs.unlink(publicKeyPath);
+  await expect(api.admin.keys.setKeyPath(privateKeyPath))
     .rejects.toMatchObject({ code: 400 });
 });
 

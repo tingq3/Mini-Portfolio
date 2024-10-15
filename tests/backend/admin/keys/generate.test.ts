@@ -7,15 +7,20 @@ import { setup } from '../../helpers';
 import genTokenTests from '../../tokenCase';
 import { getPrivateDataDir } from '$lib/server/data/dataDir';
 
-// Fails due to broken setup workflow
-test('key can be generated before server is set up', { fails: true }, async () => {
-  await expect(api().admin.keys.generate()).toResolve();
-});
-
 test('Key is generated when requested', async () => {
   const { api } = await setup();
   await expect(api.admin.keys.generate()).resolves
     .toStrictEqual({ publicKey: expect.any(String), keyPath: expect.any(String) });
+});
+
+test('Key can be generated before data is set up', async () => {
+  const { token } = await api().admin.firstrun.account('admin', 'abc123ABC$');
+  await expect(api(token).admin.keys.generate()).toResolve();
+});
+
+test('Endpoint gives a 400 before account is set up', async () => {
+  await expect(api().admin.keys.generate())
+    .rejects.toMatchObject({ code: 400 });
 });
 
 test('Generated keys are stored within the private data directory', async () => {

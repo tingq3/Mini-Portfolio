@@ -50,7 +50,7 @@ export async function authSetup(
         }
       },
     },
-    keyFile: null,
+    keyPath: null,
     version,
   };
   await setLocalConfig(config);

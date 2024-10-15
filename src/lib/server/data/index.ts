@@ -18,6 +18,7 @@ import { invalidateLocalConfigCache } from './localConfig';
 import migrate from './migrations';
 import { getReadme } from './readme';
 import { invalidateAuthSecret } from '../auth/secret';
+import { invalidatePublicKey } from '../keys';
 
 /** Public global data for the portfolio */
 export interface PortfolioGlobals {
@@ -99,5 +100,6 @@ export function invalidatePortfolioGlobals() {
   portfolioGlobals = undefined;
   invalidateLocalConfigCache();
   invalidateAuthSecret();
+  invalidatePublicKey();
   // console.log('Data invalidated');
 }

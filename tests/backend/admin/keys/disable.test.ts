@@ -1,7 +1,7 @@
 /**
  * Test cases for disabling key-based authentication for git operations.
  */
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, test } from 'vitest';
 import { setup } from '../../helpers';
 import genTokenTests from '../../tokenCase';
 import api, { type ApiClient } from '$endpoints';
@@ -17,9 +17,14 @@ it('Allows key-based authentication to be disabled', async () => {
   });
 });
 
-// Fails due to setup process, which will be fixed soon
-it('Allows token-less usage before server is set up', { fails: true }, async () => {
-  await expect(api().admin.keys.disable()).resolves.toStrictEqual({});
+test('Endpoint gives a 400 before account is set up', async () => {
+  await expect(api().admin.keys.disable())
+    .rejects.toMatchObject({ code: 400 });
+});
+
+test('Endpoint can be used before data is set up', async () => {
+  const { token } = await api().admin.firstrun.account('admin', 'abc123ABC$');
+  await expect(api(token).admin.keys.disable()).toResolve();
 });
 
 describe('Token tests', () => {
