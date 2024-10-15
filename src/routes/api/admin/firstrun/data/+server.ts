@@ -12,7 +12,7 @@ const FirstRunDataOptionsStruct = object({
 
 export type FirstRunDataOptions = Infer<typeof FirstRunDataOptionsStruct>;
 
-export async function POST({ request, cookies }: import('../$types.js').RequestEvent) {
+export async function POST({ request, cookies }: import('./$types.js').RequestEvent) {
   if (await dataIsSetUp()) {
     error(403, 'Data directory is already set up');
   }
