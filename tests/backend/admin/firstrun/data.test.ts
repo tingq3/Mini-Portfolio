@@ -1,14 +1,14 @@
 /**
  * Test cases for POST /api/admin/repo
  */
-import api from '$endpoints';
-import gitRepos from '../gitRepos';
-import { it, describe, expect, vi } from 'vitest';
+import api, { type ApiClient } from '$endpoints';
+import gitRepos from '../../gitRepos';
+import { it, describe, expect, vi, beforeEach } from 'vitest';
 import simpleGit, { CheckRepoActions } from 'simple-git';
 // Yucky import
-import type { FirstRunOptions } from '../../../src/routes/api/admin/firstrun/+server';
-import { invalidIds, validIds } from '../consts';
+import type { FirstRunDataOptions } from '../../../../src/routes/api/admin/firstrun/data/+server';
 import { getDataDir } from '$lib/server/data/dataDir';
+import genTokenTests from '../../tokenCase';
 
 // Git clone takes a while, increase the test timeout
 vi.setConfig({ testTimeout: 15_000 });
@@ -18,47 +18,31 @@ const REPO_PATH = getDataDir();
 /** Make a simpleGit for the repo */
 const repo = () => simpleGit(REPO_PATH);
 
+async function accountSetup() {
+  const { token } = await api().admin.firstrun.account('admin', 'abc123ABC$');
+  return token;
+}
+
 /** Helper function for firstrun testing */
-async function firstrun(options: Partial<FirstRunOptions> = {}) {
-  const defaults: FirstRunOptions = {
-    username: 'admin',
-    password: 'abc123ABC!',
+async function firstrunData(token: string, options: Partial<FirstRunDataOptions> = {}) {
+  const defaults: FirstRunDataOptions = {
     repoUrl: undefined,
     branch: undefined,
   };
 
   const combined = { ...defaults, ...options };
 
-  return api().admin.firstrun(
-    combined.username,
-    combined.password,
+
+  return api(token).admin.firstrun.data(
     combined.repoUrl,
     combined.branch,
   );
 }
 
-describe('username', () => {
-  // Only ID characters are allowed as usernames
-  it.each(invalidIds)('Rejects invalid usernames ($case)', async ({ id }) => {
-    await expect(firstrun({ username: id }))
-      .rejects.toMatchObject({ code: 400 });
-  });
-
-  it.each(validIds)('Accepts valid usernames ($case)', async ({ id }) => {
-    await expect(firstrun({ username: id })).toResolve();
-  });
-});
-
-describe('password', () => {
-  it('Rejects insecure passwords', async () => {
-    await expect(firstrun({ password: 'insecure' }))
-      .rejects.toMatchObject({ code: 400 });
-  });
-});
-
 describe('git', () => {
   it('Clones repo to the default branch when URL is provided', async () => {
-    await firstrun({ repoUrl: gitRepos.TEST_REPO_RW });
+    const token = await accountSetup();
+    await firstrunData(token, { repoUrl: gitRepos.TEST_REPO_RW });
     await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT))
       .resolves.toStrictEqual(true);
     // Default branch for this repo is 'main'
@@ -66,42 +50,55 @@ describe('git', () => {
   });
 
   it("Gives an error if the repo doesn't contain a config.json, but isn't empty", async () => {
-    await expect(firstrun({ repoUrl: gitRepos.NON_PORTFOLIO }))
+    const token = await accountSetup();
+    await expect(firstrunData(token, { repoUrl: gitRepos.NON_PORTFOLIO }))
       .rejects.toMatchObject({ code: 400 });
   }, 10000);
 
   it("Doesn't give an error if the repository is entirely empty", async () => {
-    await firstrun({ repoUrl: gitRepos.EMPTY });
+    const token = await accountSetup();
+    await firstrunData(token, { repoUrl: gitRepos.EMPTY });
     await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT))
       .resolves.toStrictEqual(true);
   });
 
   it('Checks out a branch when one is given', async () => {
-    await firstrun({ repoUrl: gitRepos.TEST_REPO_RW, branch: 'example' });
+    const token = await accountSetup();
+    await firstrunData(token, { repoUrl: gitRepos.TEST_REPO_RW, branch: 'example' });
     // Check branch name matches
     await expect(repo().status()).resolves.toMatchObject({ current: 'example' });
   });
 
   it('Gives an error if the repo URL cannot be cloned', async () => {
-    await expect(firstrun({ repoUrl: gitRepos.INVALID }))
+    const token = await accountSetup();
+    await expect(firstrunData(token, { repoUrl: gitRepos.INVALID }))
       .rejects.toMatchObject({ code: 400 });
   });
 });
 
-it('Gives a token on success', async () => {
-  await expect(firstrun())
-    .resolves.toMatchObject({
-      token: expect.any(String)
-    });
-});
-
 it('Blocks access if data is already set up', async () => {
-  await firstrun();
-  await expect(firstrun()).rejects.toMatchObject({ code: 403 });
+  const token = await accountSetup();
+  await firstrunData(token);
+  await expect(firstrunData(token)).rejects.toMatchObject({ code: 403 });
 });
 
 it("Doesn't clone repo when no URL provided", async () => {
-  await firstrun();
+  const token = await accountSetup();
+  await firstrunData(token);
   await expect(repo().checkIsRepo(CheckRepoActions.IS_REPO_ROOT))
     .resolves.toStrictEqual(false);
+});
+
+describe('token cases', () => {
+  let client: ApiClient;
+
+  beforeEach(async () => {
+    const token = await accountSetup();
+    client = api(token);
+  });
+
+  genTokenTests(
+    () => client,
+    api => api.admin.firstrun.data(),
+  );
 });

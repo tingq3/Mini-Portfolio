@@ -21,7 +21,7 @@ it('Lists existing groups', async () => {
 });
 
 it('Ignores the .git directory', { timeout: 15_000 }, async () => {
-  await api().admin.firstrun('admin', 'abc123ABC!', gitRepos.EMPTY);
+  await setup(gitRepos.EMPTY);
   await expect(api().group.all()).resolves.toStrictEqual({});
 });
 

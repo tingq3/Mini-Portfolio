@@ -4,7 +4,7 @@
 
 import { mkdir } from 'fs/promises';
 import { runSshKeyscan, setupGitRepo, urlRequiresSsh } from '../git';
-import { dataDirContainsData, getDataDir } from './dataDir';
+import { dataIsSetUp, getDataDir } from './dataDir';
 import { initConfig } from './config';
 import { initReadme } from './readme';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '.';
@@ -39,7 +39,7 @@ export async function setupData(repoUrl?: string, branch?: string): Promise<bool
   let firstTime = false;
 
   // If data dir is empty, set up default configuration
-  if (!await dataDirContainsData()) {
+  if (!await dataIsSetUp()) {
     firstTime = true;
     await initConfig();
     // Also set up a default README

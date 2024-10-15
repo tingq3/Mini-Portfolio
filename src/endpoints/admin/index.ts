@@ -16,7 +16,7 @@ export default function admin(token: string | undefined) {
     config: config(token),
     git: git(token),
     keys: keys(token),
-    firstrun,
+    firstrun: firstrun(token),
     data: {
       /** Refresh the data store */
       refresh: () => refresh(token),

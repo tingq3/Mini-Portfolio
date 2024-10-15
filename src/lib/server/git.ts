@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { dataDirContainsData, serverIsSetUp, getDataDir } from './data/dataDir';
+import { dataIsSetUp, getDataDir } from './data/dataDir';
 import simpleGit, { type FileStatusResult } from 'simple-git';
 import fs from 'fs/promises';
 import { rimraf } from 'rimraf';
@@ -119,7 +119,7 @@ export async function getRepoStatus(): Promise<RepoStatus> {
 /** Set up the data dir given a git repo URL and branch name */
 export async function setupGitRepo(repo: string, branch?: string | null) {
   // Check whether the data repo is set up
-  if (await serverIsSetUp()) {
+  if (await dataIsSetUp()) {
     error(403, 'Data repo is already set up');
   }
 
@@ -141,7 +141,7 @@ export async function setupGitRepo(repo: string, branch?: string | null) {
   // portfolio data repo.
   // Ignore .git, since it is included in empty repos too.
   if ((await fs.readdir(getDataDir())).find(f => f !== '.git')) {
-    if (!await dataDirContainsData()) {
+    if (!await dataIsSetUp()) {
       // Clean up and delete repo before giving error
       await rimraf(getDataDir());
       error(

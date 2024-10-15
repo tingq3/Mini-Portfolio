@@ -1,11 +1,11 @@
 import { validateCredentials } from '$lib/server/auth/passwords';
 import { generateToken } from '$lib/server/auth/tokens';
-import { getPortfolioGlobals } from '$lib/server/data/index';
+import { authIsSetUp } from '$lib/server/data/dataDir.js';
 import { error, json } from '@sveltejs/kit';
 
 
 export async function POST({ request, cookies }: import('./$types.js').RequestEvent) {
-  await getPortfolioGlobals().catch(e => error(400, e));
+  if (!await authIsSetUp()) error(400, 'Auth is not set up yet');
 
   const { username, password } = await request.json();
 

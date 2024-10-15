@@ -1,5 +1,5 @@
 import { validateTokenFromRequest } from '$lib/server/auth/tokens';
-import { serverIsSetUp } from '$lib/server/data/dataDir';
+import { authIsSetUp } from '$lib/server/data/dataDir';
 import { getLocalConfig } from '$lib/server/data/localConfig.js';
 import { fileExists } from '$lib/server/index.js';
 import { disableKey, getPublicKey, setKeyFile } from '$lib/server/keys.js';
@@ -8,7 +8,7 @@ import { error, json } from '@sveltejs/kit';
 /** Return the current public key */
 export async function GET(req: import('./$types.js').RequestEvent) {
   // Auth needed when set up, but otherwise not
-  if (await serverIsSetUp()) {
+  if (await authIsSetUp()) {
     await validateTokenFromRequest(req);
   }
 
@@ -21,7 +21,7 @@ export async function GET(req: import('./$types.js').RequestEvent) {
 /** Set the path to the key */
 export async function POST(req: import('./$types.js').RequestEvent) {
   // Auth needed when set up, but otherwise not
-  if (await serverIsSetUp()) {
+  if (await authIsSetUp()) {
     await validateTokenFromRequest(req);
   }
 
@@ -46,7 +46,7 @@ export async function POST(req: import('./$types.js').RequestEvent) {
 /** Disable SSH key-based authentication */
 export async function DELETE(req: import('./$types.js').RequestEvent) {
   // Auth needed when set up, but otherwise not
-  if (await serverIsSetUp()) {
+  if (await authIsSetUp()) {
     await validateTokenFromRequest(req);
   }
 
