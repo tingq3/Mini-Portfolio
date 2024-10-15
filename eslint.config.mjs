@@ -2,11 +2,13 @@
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import svelte from 'eslint-plugin-svelte';
+import svelteParser from 'svelte-eslint-parser';
 import globals from 'globals';
 
 export default ts.config(
   js.configs.recommended,
-  ...ts.configs.recommended,
+  ...ts.configs.recommendedTypeChecked,
+  ...ts.configs.stylisticTypeChecked,
   ...svelte.configs['flat/recommended'],
   {
     languageOptions: {
@@ -19,13 +21,24 @@ export default ts.config(
     }
   },
   {
-    files: ['**/*.svelte', '**/*.ts'],
     languageOptions: {
+      parser: ts.parser,
+      parserOptions: {
+        // ...
+        project: true,
+        extraFileExtensions: [".svelte"], // This is a required setting in `@typescript-eslint/parser` v4.24.0.
+      },
+    },
+  },
+  {
+    files: ["**/*.svelte", "*.svelte"],
+    languageOptions: {
+      parser: svelteParser,
+      // Parse the `<script>` in `.svelte` as TypeScript by adding the following configuration.
       parserOptions: {
         parser: ts.parser,
-        projectService: true,
-      }
-    }
+      },
+    },
   },
   {
     rules: {
