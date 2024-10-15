@@ -27,9 +27,12 @@ export async function POST(req) {
 
   const { keyPath } = await req.request.json();
 
-  // Ensure file exists
+  // Ensure private and public key files exist
   if (! await fileExists(keyPath)) {
-    error(400, 'Key file must exist');
+    error(400, 'Private key file must exist');
+  }
+  if (! await fileExists(keyPath + '.pub')) {
+    error(400, 'Public key file must exist');
   }
 
   await setKeyFile(keyPath);
