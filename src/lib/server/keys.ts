@@ -4,14 +4,20 @@ import { getPrivateDataDir } from './data/dataDir';
 import { spawn } from 'child-process-promise';
 import { APP_NAME } from '$lib/consts';
 import { getLocalConfig, setLocalConfig } from './data/localConfig';
+import path from 'path';
 
 const DEFAULT_KEY_TYPE = 'ed25519';
 
-const defaultPrivateKeyFile = () => `${getPrivateDataDir()}/id_${DEFAULT_KEY_TYPE}`;
+export const defaultKeysDirectory = () => path.join(getPrivateDataDir(), 'keys');
+const defaultPrivateKeyFile = () => path.join(defaultKeysDirectory(), `id_${DEFAULT_KEY_TYPE}`);
 
 const publicKeyFile = (privateKeyFile: string) => `${privateKeyFile}.pub`;
 
 let publicKey: string | null | undefined;
+
+export async function getPrivateKeyFile(): Promise<string | null> {
+  return await getLocalConfig().then(c => c.keyFile)
+}
 
 /** Returns the server's SSH public key */
 export async function getPublicKey(): Promise<string | null> {
@@ -19,8 +25,8 @@ export async function getPublicKey(): Promise<string | null> {
     return publicKey;
   }
 
-  // Determine public key location
-  const keyPath = await getLocalConfig().then(c => c.keyFile);
+  // Determine public key location;
+  const keyPath = await getPrivateKeyFile();
 
   if (!keyPath) {
     publicKey = null;
@@ -55,11 +61,10 @@ export async function disableKey() {
 /** Generate an SSH key pair for the server */
 export async function generateKey(): Promise<string> {
   publicKey = undefined;
-  // Remove keys from default location if they exist
+  // Unlink default keys if they already exist, then recreate their directory
   await fs.unlink(defaultPrivateKeyFile()).catch(() => { });
   await fs.unlink(publicKeyFile(defaultPrivateKeyFile())).catch(() => { });
-  // Also need to create private data dir if it was removed
-  await fs.mkdir(getPrivateDataDir(), { recursive: true }).catch(() => { });
+  await fs.mkdir(defaultKeysDirectory(), { recursive: true }).catch(() => { });
 
   // Change configuration to use default SSH key location
   const cfg = await getLocalConfig();
