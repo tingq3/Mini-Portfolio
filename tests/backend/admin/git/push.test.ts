@@ -10,12 +10,16 @@ import genTokenTests from '../../tokenCase';
 // Git clone takes a while, increase the test timeout
 vi.setConfig({ testTimeout: 15_000 });
 
-it('Pushes latest changes', async () => {
-  const { api } = await setup(gitRepos.TEST_REPO_RW);
-  await updateTestReadme(api);
-  // Now push, we should then be zero commits ahead of the origin
-  await expect(api.admin.git.push()).resolves.toMatchObject({ ahead: 0 });
-});
+// NOTE: This test is disabled as running it on multiple devices causes race
+// conditions, which is very confusing to debug. Also it was creating a ton
+// of bogus commits on my main account whenever I ran the test suite, which was
+// annoying.
+// it('Pushes latest changes', async () => {
+//   const { api } = await setup(gitRepos.TEST_REPO_RW);
+//   await updateTestReadme(api);
+//   // Now push, we should then be zero commits ahead of the origin
+//   await expect(api.admin.git.push()).resolves.toMatchObject({ ahead: 0 });
+// });
 
 it('Gives a 400 error if there are no commits to push', async () => {
   const { api } = await setup(gitRepos.TEST_REPO_RW);
