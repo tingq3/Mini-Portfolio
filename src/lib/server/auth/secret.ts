@@ -23,7 +23,7 @@ export async function getAuthSecret(): Promise<string> {
 
 /** Generate and store a new auth secret, returning its value */
 export async function generateAuthSecret(): Promise<string> {
-  await fs.mkdir(getPrivateDataDir()).catch(() => { });
+  await fs.mkdir(getPrivateDataDir(), { recursive: true }).catch(() => { });
   const secret = nanoid();
   authSecret = secret;
   await fs.writeFile(getAuthSecretPath(), secret, { encoding: 'utf-8' });

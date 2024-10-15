@@ -26,7 +26,7 @@ export async function setupData(repoUrl?: string, branch?: string): Promise<bool
   } else {
     // Otherwise, just create the data dir empty
     // Discard errors for this, as the dir may already exist
-    await mkdir(getDataDir()).catch(() => { });
+    await mkdir(getDataDir(), { recursive: true }).catch(() => { });
     // Currently, gitignore is not needed, since private data is now stored
     // separately
     // await setupGitignore();

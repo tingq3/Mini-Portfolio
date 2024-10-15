@@ -59,7 +59,7 @@ export async function generateKey(): Promise<string> {
   await fs.unlink(defaultPrivateKeyFile()).catch(() => { });
   await fs.unlink(publicKeyFile(defaultPrivateKeyFile())).catch(() => { });
   // Also need to create private data dir if it was removed
-  await fs.mkdir(getPrivateDataDir()).catch(() => { });
+  await fs.mkdir(getPrivateDataDir(), { recursive: true }).catch(() => { });
 
   // Change configuration to use default SSH key location
   const cfg = await getLocalConfig();
