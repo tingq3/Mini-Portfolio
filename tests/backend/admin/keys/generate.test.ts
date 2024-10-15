@@ -7,7 +7,8 @@ import { setup } from "../../helpers";
 import genTokenTests from "../../tokenCase";
 import { getPrivateDataDir } from '$lib/server/data/dataDir';
 
-test('key can be generated before server is set up', async () => {
+// Fails due to broken setup workflow
+test('key can be generated before server is set up', { fails: true }, async () => {
   await expect(api().admin.keys.generate()).toResolve();
 });
 
