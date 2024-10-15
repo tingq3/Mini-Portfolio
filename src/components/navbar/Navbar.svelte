@@ -26,7 +26,7 @@
   /** Clear all data, and take the user to the firstrun page */
   async function clear() {
     await api().debug.clear();
-    await goto('/admin/firstrun');
+    await goto('/admin/firstrun/account');
   }
 
   // This function needs to accept `path` as an input, otherwise the links

@@ -9,24 +9,15 @@
   import Navbar from '$components/navbar';
   import blankConfig from '$lib/blankConfig';
   import consts from '$lib/consts';
-  import { idValidatorRegex } from '$lib/validators';
 
   // Default values are auto-filled in dev mode
-  let username = dev ? 'admin' : '';
-  let password = dev ? 'abc123ABC!' : '';
-  let repeatPassword = dev ? 'abc123ABC!' : '';
   let repoUrl = dev ? 'git@github.com:MaddyGuthridge/portfolio-data.git' : '';
   let repoBranch = '';
 
   async function submitMain() {
     showLoading = true;
     try {
-      await api().admin.firstrun(
-        username,
-        password,
-        repoUrl,
-        repoBranch || undefined,
-      );
+      await api().admin.firstrun.data(repoUrl, repoBranch || undefined);
       await goto('/');
     } catch (e) {
       errorText = `${e}`;
@@ -36,7 +27,7 @@
 
   async function submitNoGit() {
     try {
-      await api().admin.firstrun(username, password);
+      await api().admin.firstrun.data();
       await goto('/');
     } catch (e) {
       errorText = `${e}`;
@@ -44,11 +35,6 @@
   }
 
   async function onSubmit(e: SubmitEvent) {
-    // Validate passwords match
-    if (password !== repeatPassword) {
-      errorText = 'Passwords must match';
-      return;
-    }
     const submitter = e.submitter?.id;
     switch (submitter) {
       case 'submit-main':
@@ -99,35 +85,6 @@
       </div>
 
       <form on:submit={onSubmit}>
-        <h3>Login information</h3>
-        <p>
-          Create a username. It may only use lowercase alphanumeric characters,
-          dots, dashes and underscores.
-        </p>
-        <input
-          type="text"
-          id="username"
-          pattern={idValidatorRegex.source}
-          title="Username contains illegal characters"
-          bind:value={username}
-          placeholder="username"
-        />
-
-        <p>Create a strong and unique password.</p>
-        <input
-          type="password"
-          id="password"
-          bind:value={password}
-          placeholder="A strong and unique password"
-        />
-        <p>Repeat your password.</p>
-        <input
-          type="password"
-          id="repeatPassword"
-          bind:value={repeatPassword}
-          placeholder="Repeat your password"
-        />
-
         <h3>Data repository URL</h3>
         <p>
           It's a good idea to set up a repository to back up your portfolio
@@ -213,7 +170,7 @@
     border-style: solid;
   }
 
-  form input[type="submit"] {
+  form input[type='submit'] {
     font-size: 1rem;
     font-weight: bold;
   }
