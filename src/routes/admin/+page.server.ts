@@ -3,7 +3,7 @@ import { redirectOnInvalidToken } from '$lib/server/auth/tokens';
 import { dataDirUsesGit } from '$lib/server/data/dataDir';
 import { getRepoStatus } from '$lib/server/git';
 
-export async function load(req) {
+export async function load(req: import('./$types.js').RequestEvent) {
   const globals = await getPortfolioGlobals();
   await redirectOnInvalidToken(req, '/admin/login');
   const repo = await dataDirUsesGit() ? await getRepoStatus() : null;

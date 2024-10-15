@@ -37,7 +37,7 @@ it('Gives a 400 if the upstream repo does not exist', async () => {
   });
 });
 
-describe('token tests', async () => {
+describe('token tests', () => {
   let api: ApiClient;
 
   beforeEach(async () => {

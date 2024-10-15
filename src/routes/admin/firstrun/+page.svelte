@@ -1,22 +1,22 @@
 <script lang="ts">
-  import { dev } from "$app/environment";
-  import api from "$endpoints";
-  import Paper from "$components/Paper.svelte";
-  import Background from "$components/Background.svelte";
-  import Spinner from "$components/modals/Spinner.svelte";
-  import Error from "$components/modals/Error.svelte";
-  import { goto } from "$app/navigation";
-  import Navbar from "$components/navbar";
-  import blankConfig from "$lib/blankConfig";
-  import consts from "$lib/consts";
-  import { idValidatorRegex } from "$lib/validators";
+  import { dev } from '$app/environment';
+  import api from '$endpoints';
+  import Paper from '$components/Paper.svelte';
+  import Background from '$components/Background.svelte';
+  import Spinner from '$components/modals/Spinner.svelte';
+  import Error from '$components/modals/Error.svelte';
+  import { goto } from '$app/navigation';
+  import Navbar from '$components/navbar';
+  import blankConfig from '$lib/blankConfig';
+  import consts from '$lib/consts';
+  import { idValidatorRegex } from '$lib/validators';
 
   // Default values are auto-filled in dev mode
-  let username = dev ? "admin" : "";
-  let password = dev ? "abc123ABC!" : "";
-  let repeatPassword = dev ? "abc123ABC!" : "";
-  let repoUrl = dev ? "git@github.com:MaddyGuthridge/portfolio-data.git" : "";
-  let repoBranch = "";
+  let username = dev ? 'admin' : '';
+  let password = dev ? 'abc123ABC!' : '';
+  let repeatPassword = dev ? 'abc123ABC!' : '';
+  let repoUrl = dev ? 'git@github.com:MaddyGuthridge/portfolio-data.git' : '';
+  let repoBranch = '';
 
   async function submitMain() {
     showLoading = true;
@@ -27,7 +27,7 @@
         repoUrl,
         repoBranch || undefined,
       );
-      await goto("/");
+      await goto('/');
     } catch (e) {
       errorText = `${e}`;
       showLoading = false;
@@ -37,7 +37,7 @@
   async function submitNoGit() {
     try {
       await api().admin.firstrun(username, password);
-      await goto("/");
+      await goto('/');
     } catch (e) {
       errorText = `${e}`;
     }
@@ -46,26 +46,26 @@
   async function onSubmit(e: SubmitEvent) {
     // Validate passwords match
     if (password !== repeatPassword) {
-      errorText = "Passwords must match";
+      errorText = 'Passwords must match';
       return;
     }
     const submitter = e.submitter?.id;
     switch (submitter) {
-      case "submit-main":
+      case 'submit-main':
         await submitMain();
         break;
-      case "submit-no-git":
+      case 'submit-no-git':
         await submitNoGit();
         break;
       default:
-        console.error("Submitter not recognised!");
+        console.error('Submitter not recognised!');
         return;
     }
   }
 
   let showLoading = false;
 
-  let errorText = "";
+  let errorText = '';
 </script>
 
 <svelte:head>
@@ -183,11 +183,11 @@
 
 <!-- Error shows if error occurs with setup -->
 <Error
-  show={errorText !== ""}
+  show={errorText !== ''}
   header="Oh no!"
   text={errorText}
   on:close={() => {
-    errorText = "";
+    errorText = '';
   }}
 />
 

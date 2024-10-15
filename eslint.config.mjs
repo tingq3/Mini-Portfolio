@@ -26,12 +26,12 @@ export default ts.config(
       parserOptions: {
         // ...
         project: true,
-        extraFileExtensions: [".svelte"], // This is a required setting in `@typescript-eslint/parser` v4.24.0.
+        extraFileExtensions: ['.svelte'], // This is a required setting in `@typescript-eslint/parser` v4.24.0.
       },
     },
   },
   {
-    files: ["**/*.svelte", "*.svelte"],
+    files: ['**/*.svelte', '*.svelte'],
     languageOptions: {
       parser: svelteParser,
       // Parse the `<script>` in `.svelte` as TypeScript by adding the following configuration.
@@ -50,8 +50,20 @@ export default ts.config(
       }],
       // Disallow floating promises to avoid random crashes
       '@typescript-eslint/no-floating-promises': 'error',
-      //
+      // Single quotes where possible
       quotes: ['error', 'single', { 'avoidEscape': true, 'allowTemplateLiterals': false }],
+      // Allow some `any` expressions since otherwise they seriously mess with tests, or enforce
+      // strictness in areas where it really doesn't matter (eg error handling)
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      // Also disable template expression checks, since they're also error handling stuff
+      // TODO: Enable them at some point when I get around to actually tidying things up
+      '@typescript-eslint/no-base-to-string': 'off',
+      '@typescript-eslint/restrict-template-expressions': 'off',
+      // FIXME: When I get around to hardening the request body validation, enable this rule again
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      // Allow empty functions, as they are useful to silence promise errors
+      '@typescript-eslint/no-empty-function': 'off',
     },
   },
   {

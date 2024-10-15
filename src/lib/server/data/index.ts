@@ -58,7 +58,7 @@ async function loadPortfolioGlobals(): Promise<PortfolioGlobals> {
   // Yucky nesting, but it should be somewhat parallel at least
   // Basically, this is a nested version of the code for loading all group data
   const items: Record<string, Record<string, ItemData>> = Object.fromEntries(await Promise.all(
-    groupIds.map(async (g) => [
+    groupIds.map(async (g): Promise<[string, Record<string, ItemData>]> => [
       g,
       Object.fromEntries(await Promise.all(
         (await listItems(g)).map(async i => [i, await getItemData(g, i)])

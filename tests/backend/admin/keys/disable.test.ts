@@ -1,10 +1,10 @@
 /**
  * Test cases for disabling key-based authentication for git operations.
  */
-import { beforeEach, describe, expect, it } from "vitest";
-import { setup } from "../../helpers";
-import genTokenTests from "../../tokenCase";
-import api, { type ApiClient } from "$endpoints";
+import { beforeEach, describe, expect, it } from 'vitest';
+import { setup } from '../../helpers';
+import genTokenTests from '../../tokenCase';
+import api, { type ApiClient } from '$endpoints';
 
 
 it('Allows key-based authentication to be disabled', async () => {

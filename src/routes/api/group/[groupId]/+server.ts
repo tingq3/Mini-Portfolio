@@ -7,7 +7,7 @@ import { validateId, validateName } from '$lib/validators';
 import { removeAllLinksToItem } from '$lib/server/links';
 import { setConfig } from '$lib/server/data/config';
 
-export async function GET({ params }) {
+export async function GET({ params }: import('./$types.js').RequestEvent) {
   const groupId = params.groupId;
 
   const data = await getPortfolioGlobals().catch(e => error(400, e));
@@ -20,7 +20,7 @@ export async function GET({ params }) {
   }
 }
 
-export async function POST({ params, request, cookies }) {
+export async function POST({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
@@ -46,7 +46,7 @@ export async function POST({ params, request, cookies }) {
   return json({}, { status: 200 });
 }
 
-export async function PUT({ params, request, cookies }) {
+export async function PUT({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
@@ -80,7 +80,7 @@ export async function PUT({ params, request, cookies }) {
   return json({}, { status: 200 });
 }
 
-export async function DELETE({ params, request, cookies }) {
+export async function DELETE({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 

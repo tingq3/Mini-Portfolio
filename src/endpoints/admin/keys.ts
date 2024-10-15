@@ -1,4 +1,4 @@
-import { apiFetch, json } from "$endpoints/fetch"
+import { apiFetch, json } from '$endpoints/fetch'
 
 export default function keys(token: string | undefined) {
   const get = async () => {

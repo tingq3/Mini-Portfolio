@@ -1,16 +1,16 @@
 <script lang="ts">
-  import api from "$endpoints";
+  import api from '$endpoints';
 
   export let username: string;
-  let originalPassword = "";
-  let newPassword = "";
-  let repeatNewPassword = "";
+  let originalPassword = '';
+  let newPassword = '';
+  let repeatNewPassword = '';
 
   async function submitChangePassword() {
     await api().admin.auth.change(username, originalPassword, newPassword);
-    originalPassword = "";
-    newPassword = "";
-    repeatNewPassword = "";
+    originalPassword = '';
+    newPassword = '';
+    repeatNewPassword = '';
   }
 </script>
 

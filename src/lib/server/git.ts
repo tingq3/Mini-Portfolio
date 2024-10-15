@@ -120,7 +120,7 @@ export async function getRepoStatus(): Promise<RepoStatus> {
 export async function setupGitRepo(repo: string, branch?: string | null) {
   // Check whether the data repo is set up
   if (await serverIsSetUp()) {
-    throw error(403, 'Data repo is already set up');
+    error(403, 'Data repo is already set up');
   }
 
   const dir = getDataDir();
@@ -134,7 +134,7 @@ export async function setupGitRepo(repo: string, branch?: string | null) {
     await simpleGit().clone(repo, dir, options);
   } catch (e: any) {
     console.log(e);
-    throw error(400, `${e}`);
+    error(400, `${e}`);
   }
 
   // If there are files in the repo, we should validate that it is a proper
@@ -144,7 +144,7 @@ export async function setupGitRepo(repo: string, branch?: string | null) {
     if (!await dataDirContainsData()) {
       // Clean up and delete repo before giving error
       await rimraf(getDataDir());
-      throw error(
+      error(
         400,
         'The repo directory is non-empty, but does not contain a config.json file'
       );

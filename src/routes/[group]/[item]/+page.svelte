@@ -1,32 +1,32 @@
 <script lang="ts">
-  import { Navbar } from "$components";
+  import { Navbar } from '$components';
   import {
     IconCard,
     RepoCard,
     PackageCard,
     CardList,
     ItemCardGrid,
-  } from "$components/card";
-  import { ItemChipList } from "$components/chip";
-  import Background from "$components/Background.svelte";
-  import EditableMarkdown from "$components/markdown";
-  import api from "$endpoints";
-  import consts from "$lib/consts";
-  import { generateKeywords } from "$lib/seo";
-  import EditControls from "$components/EditControls.svelte";
+  } from '$components/card';
+  import { ItemChipList } from '$components/chip';
+  import Background from '$components/Background.svelte';
+  import EditableMarkdown from '$components/markdown';
+  import api from '$endpoints';
+  import consts from '$lib/consts';
+  import { generateKeywords } from '$lib/seo';
+  import EditControls from '$components/EditControls.svelte';
   // import AsciinemaPlayer from "$components";
 
-  export let data: import("./$types").PageData;
+  export let data: import('./$types').PageData;
 
   let groupData = data.globals.groups[data.groupId];
   let itemData = data.globals.items[data.groupId][data.itemId];
 
   let editing = false;
 
-  let readme = "";
+  let readme = '';
 
-  let chipLinks = itemData.info.links.filter(([l]) => l.style === "chip");
-  let cardLinks = itemData.info.links.filter(([l]) => l.style === "card");
+  let chipLinks = itemData.info.links.filter(([l]) => l.style === 'chip');
+  let cardLinks = itemData.info.links.filter(([l]) => l.style === 'card');
 
   function beginEditing() {
     editing = true;
@@ -55,8 +55,8 @@
     groupData = data.globals.groups[groupId];
     itemData = data.globals.items[groupId][itemId];
     readme = itemData.readme;
-    chipLinks = itemData.info.links.filter(([l]) => l.style === "chip");
-    cardLinks = itemData.info.links.filter(([l]) => l.style === "card");
+    chipLinks = itemData.info.links.filter(([l]) => l.style === 'chip');
+    cardLinks = itemData.info.links.filter(([l]) => l.style === 'card');
   }
 
   function changeLinkTitle(linkedGroup: string, newTitle: string) {

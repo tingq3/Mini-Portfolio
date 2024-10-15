@@ -14,7 +14,7 @@ const NewCredentials = object({
   newPassword: string(),
 });
 
-export async function POST({ request, cookies }) {
+export async function POST({ request, cookies }: import('./$types.js').RequestEvent) {
   await getPortfolioGlobals().catch(e => error(400, e));
   const uid = await validateTokenFromRequest({ request, cookies });
 
@@ -25,7 +25,7 @@ export async function POST({ request, cookies }) {
   }
 
   const { newUsername, oldPassword, newPassword }
-    = await applyStruct(await request.json(), NewCredentials);
+    = applyStruct(await request.json(), NewCredentials);
 
   if (!newUsername) {
     return error(400, 'New username is empty');

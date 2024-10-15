@@ -80,7 +80,7 @@ function formatCompletedRequest(startTime: number, method: string, path: string,
  *
  * Adapted from: https://www.reddit.com/r/sveltejs/comments/xtbkpb
  */
-export const devLogger: Handle = async ({ event, resolve }) => {
+export const devLogger: Handle = async (req) => {
   // Only use spinners if connected to a tty to avoid creating a needlessly
   // long log file
   const isTty = process.stdout.isTTY;
@@ -93,13 +93,13 @@ export const devLogger: Handle = async ({ event, resolve }) => {
 
   if (isTty) {
     spinners.add(requestId, {
-      text: formatPartialRequest(requestStartTime, event.request.method, event.url.pathname),
+      text: formatPartialRequest(requestStartTime, req.event.request.method, req.event.url.pathname),
     });
   }
 
-  const response = await resolve(event);
+  const response = await req.resolve(req.event);
 
-  const responseString = formatCompletedRequest(requestStartTime, event.request.method, event.url.pathname, response.status);
+  const responseString = formatCompletedRequest(requestStartTime, req.event.request.method, req.event.url.pathname, response.status);
 
   if (isTty) {
     if (response.status < 500) {
@@ -114,13 +114,13 @@ export const devLogger: Handle = async ({ event, resolve }) => {
 };
 
 
-export const productionLogger: Handle = async ({ event, resolve }) => {
+export const productionLogger: Handle = async (req) => {
   const requestStartTime = Date.now();
-  const response = await resolve(event);
+  const response = await req.resolve(req.event);
   const responseString = [
     new Date(requestStartTime).toISOString(),
-    event.request.method,
-    `${event.url.pathname}:`,
+    req.event.request.method,
+    `${req.event.url.pathname}:`,
     response.status,
     `(${Date.now() - requestStartTime} ms)`
   ].join(' ');

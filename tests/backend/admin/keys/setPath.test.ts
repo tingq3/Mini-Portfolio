@@ -3,10 +3,10 @@
  */
 import fs from 'fs/promises';
 import path from 'path';
-import api, { type ApiClient } from "$endpoints";
-import { beforeEach, describe, expect, it } from "vitest";
-import { setup } from "../../helpers";
-import genTokenTests from "../../tokenCase";
+import api, { type ApiClient } from '$endpoints';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { setup } from '../../helpers';
+import genTokenTests from '../../tokenCase';
 import { getPrivateDataDir } from '$lib/server/data/dataDir';
 
 const DUMMY_PUBLIC_KEY = 'DUMMY PUBLIC KEY';

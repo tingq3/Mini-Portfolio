@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from 'svelte';
 
   /** Whether edit mode is currently enabled */
   export let editing: boolean;
@@ -15,10 +15,10 @@
 {#if loggedIn}
   <div class="edit-buttons">
     {#if editing}
-      <button on:click={() => dispatch("finishEdits", false)}>Cancel</button>
-      <button on:click={() => dispatch("finishEdits", true)}>Done</button>
+      <button on:click={() => dispatch('finishEdits', false)}>Cancel</button>
+      <button on:click={() => dispatch('finishEdits', true)}>Done</button>
     {:else}
-      <button on:click={() => dispatch("beginEdits")}>Edit</button>
+      <button on:click={() => dispatch('beginEdits')}>Edit</button>
     {/if}
   </div>
 {/if}

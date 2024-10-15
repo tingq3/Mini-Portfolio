@@ -2,10 +2,10 @@
  * Test cases for public key requests
  */
 
-import api, { type ApiClient } from "$endpoints";
-import { beforeEach, describe, expect, test } from "vitest";
-import { setup } from "../../helpers";
-import genTokenTests from "../../tokenCase";
+import api, { type ApiClient } from '$endpoints';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { setup } from '../../helpers';
+import genTokenTests from '../../tokenCase';
 
 
 /**

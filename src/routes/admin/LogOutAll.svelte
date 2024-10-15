@@ -1,10 +1,10 @@
-<script lang="ts">
-  import { goto } from "$app/navigation";
-  import api from "$endpoints";
+<script lang='ts'>
+  import { goto } from '$app/navigation';
+  import api from '$endpoints';
 
   async function logOut() {
     await api().admin.auth.revoke();
-    goto("/admin/login");
+    await goto('/admin/login');
   }
 </script>
 

@@ -4,7 +4,7 @@ import { getPortfolioGlobals } from '$lib/server/data/index';
 import { error, json } from '@sveltejs/kit';
 
 
-export async function POST({ request, cookies }) {
+export async function POST({ request, cookies }: import('./$types.js').RequestEvent) {
   await getPortfolioGlobals().catch(e => error(400, e));
 
   const { username, password } = await request.json();

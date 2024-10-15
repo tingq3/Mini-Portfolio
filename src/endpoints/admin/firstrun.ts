@@ -10,8 +10,8 @@ import { apiFetch, json } from '../fetch';
 export default async function (
   username: string,
   password: string,
-  repoUrl?: string | undefined,
-  branch?: string | undefined,
+  repoUrl?: string  ,
+  branch?: string  ,
 ) {
   return json(apiFetch(
     'POST',

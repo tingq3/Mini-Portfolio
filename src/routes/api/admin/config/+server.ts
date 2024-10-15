@@ -7,14 +7,14 @@ import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/dat
 import fs from 'fs/promises';
 import { getDataDir } from '$lib/server/data/dataDir';
 
-export async function GET({ request, cookies }) {
+export async function GET({ request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
   return json(data.config, { status: 200 });
 }
 
-export async function PUT({ request, cookies }) {
+export async function PUT({ request, cookies }: import('./$types.js').RequestEvent) {
   const globals = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 

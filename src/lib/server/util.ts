@@ -1,5 +1,5 @@
-import { error } from "@sveltejs/kit";
-import { create, type Struct } from "superstruct";
+import { error } from '@sveltejs/kit';
+import { create, type Struct } from 'superstruct';
 
 /**
  * A wrapper around superstruct's assert, making it async to make error
@@ -7,11 +7,11 @@ import { create, type Struct } from "superstruct";
  *
  * By default this throws an error 400.
  */
-export async function applyStruct<T, S>(
+export function applyStruct<T, S>(
   value: unknown,
   struct: Struct<T, S>,
   message?: string,
-): Promise<T> {
+): T {
   try {
     return create(value, struct, message);
   } catch (e) {

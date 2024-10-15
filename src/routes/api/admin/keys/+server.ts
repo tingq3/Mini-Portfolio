@@ -6,7 +6,7 @@ import { disableKey, getPublicKey, setKeyFile } from '$lib/server/keys.js';
 import { error, json } from '@sveltejs/kit';
 
 /** Return the current public key */
-export async function GET(req) {
+export async function GET(req: import('./$types.js').RequestEvent) {
   // Auth needed when set up, but otherwise not
   if (await serverIsSetUp()) {
     await validateTokenFromRequest(req);
@@ -19,7 +19,7 @@ export async function GET(req) {
 }
 
 /** Set the path to the key */
-export async function POST(req) {
+export async function POST(req: import('./$types.js').RequestEvent) {
   // Auth needed when set up, but otherwise not
   if (await serverIsSetUp()) {
     await validateTokenFromRequest(req);
@@ -44,7 +44,7 @@ export async function POST(req) {
 }
 
 /** Disable SSH key-based authentication */
-export async function DELETE(req) {
+export async function DELETE(req: import('./$types.js').RequestEvent) {
   // Auth needed when set up, but otherwise not
   if (await serverIsSetUp()) {
     await validateTokenFromRequest(req);

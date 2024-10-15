@@ -5,7 +5,7 @@ import { generateKey } from '$lib/server/keys.js';
 import { json } from '@sveltejs/kit';
 
 /** Generate an SSH key */
-export async function POST(req) {
+export async function POST(req: import('./$types.js').RequestEvent) {
   // Auth needed when set up, but otherwise not
   if (await serverIsSetUp()) {
     await validateTokenFromRequest(req);

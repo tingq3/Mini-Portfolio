@@ -2,7 +2,7 @@ import { getTokenFromRequest, revokeSession } from '$lib/server/auth/tokens';
 import { getPortfolioGlobals } from '$lib/server/data/index';
 import { error, json } from '@sveltejs/kit';
 
-export async function POST(req) {
+export async function POST(req: import('./$types.js').RequestEvent) {
   await getPortfolioGlobals().catch(e => error(400, e));
 
   const token = getTokenFromRequest(req);

@@ -1,10 +1,10 @@
 /**
  * Test cases for generating a public key.
  */
-import api, { type ApiClient } from "$endpoints";
-import { beforeEach, describe, expect, test } from "vitest";
-import { setup } from "../../helpers";
-import genTokenTests from "../../tokenCase";
+import api, { type ApiClient } from '$endpoints';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { setup } from '../../helpers';
+import genTokenTests from '../../tokenCase';
 import { getPrivateDataDir } from '$lib/server/data/dataDir';
 
 // Fails due to broken setup workflow

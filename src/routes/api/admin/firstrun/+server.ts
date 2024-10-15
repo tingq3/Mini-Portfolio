@@ -16,8 +16,8 @@ const FirstRunOptionsStruct = object({
 
 export type FirstRunOptions = Infer<typeof FirstRunOptionsStruct>;
 
-export async function POST({ request, cookies }) {
-  const options = await applyStruct(await request.json(), FirstRunOptionsStruct);
+export async function POST({ request, cookies }: import('./$types.js').RequestEvent) {
+  const options = applyStruct(await request.json(), FirstRunOptionsStruct);
 
   if (await serverIsSetUp()) {
     error(403);

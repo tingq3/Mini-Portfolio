@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import { onMount } from 'svelte';
   import 'asciinema-player/dist/bundle/asciinema-player.css';
   // @ts-expect-error -- asciinema doesn't have a types module
@@ -17,4 +17,4 @@
 </script>
 
 <div id="asciinema-player">
-</div>
+</div> -->

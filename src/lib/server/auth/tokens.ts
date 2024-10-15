@@ -104,7 +104,7 @@ export function getTokenFromRequest(req: { request: Request, cookies: Cookies })
   const tokenFromHeader = req.request.headers.get('Authorization');
   const tokenFromCookie = req.cookies.get('token');
 
-  return tokenFromHeader || tokenFromCookie;
+  return tokenFromHeader ?? tokenFromCookie;
 }
 
 /** Revoke the session of the given token */
@@ -134,7 +134,7 @@ export async function revokeSession(token: string): Promise<void> {
 export async function validateTokenFromRequest(req: { request: Request, cookies: Cookies }): Promise<string> {
   const token = getTokenFromRequest(req);
   if (!token) {
-    throw error(401, 'A token is required to access this endpoint');
+    error(401, 'A token is required to access this endpoint');
   }
   const data = await validateToken(token).catch(e => {
     // Remove token from cookies, as it is invalid

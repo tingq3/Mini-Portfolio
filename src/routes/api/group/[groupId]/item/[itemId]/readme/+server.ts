@@ -4,7 +4,7 @@ import { assert, string } from 'superstruct';
 import { getItemInfo, setItemReadme } from '$lib/server/data/item';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 
-export async function GET({ params }) {
+export async function GET({ params }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   const { groupId, itemId } = params;
@@ -16,7 +16,7 @@ export async function GET({ params }) {
   }
 }
 
-export async function PUT({ params, request, cookies }) {
+export async function PUT({ params, request, cookies }: import('./$types.js').RequestEvent) {
   await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 

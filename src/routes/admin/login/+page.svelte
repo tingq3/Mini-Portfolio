@@ -1,25 +1,25 @@
 <script lang="ts">
-  import api from "$endpoints";
-  import Background from "$components/Background.svelte";
-  import Navbar from "$components/navbar/Navbar.svelte";
-  import Paper from "$components/Paper.svelte";
-  import { goto } from "$app/navigation";
-  import consts from "$lib/consts";
-  import { onMount } from "svelte";
+  import api from '$endpoints';
+  import Background from '$components/Background.svelte';
+  import Navbar from '$components/navbar/Navbar.svelte';
+  import Paper from '$components/Paper.svelte';
+  import { goto } from '$app/navigation';
+  import consts from '$lib/consts';
+  import { onMount } from 'svelte';
 
-  export let data: import("./$types").PageData;
+  export let data: import('./$types').PageData;
 
   let previousPage: string;
 
-  let username = "";
-  let password = "";
+  let username = '';
+  let password = '';
 
   onMount(() => {
     previousPage =
-      new URLSearchParams(window.location.search).get("from") || "/";
+      new URLSearchParams(window.location.search).get('from') ?? '/';
     // Avoid circular redirects
-    if (previousPage.endsWith("/admin/login")) {
-      previousPage = "/";
+    if (previousPage.endsWith('/admin/login')) {
+      previousPage = '/';
     }
   });
 
@@ -44,8 +44,8 @@
   config={data.globals.config}
   loggedIn={false}
   path={[
-    { txt: "Admin", url: "admin" },
-    { txt: "Login", url: "login" },
+    { txt: 'Admin', url: 'admin' },
+    { txt: 'Login', url: 'login' },
   ]}
 />
 

@@ -4,7 +4,7 @@ import mime from 'mime-types';
 import { getDataDir } from '$lib/server/data/dataDir';
 import { getPortfolioGlobals } from '$lib/server/index';
 
-export async function GET({ setHeaders }) {
+export async function GET(req: import('./$types.js').RequestEvent) {
   const globals = await getPortfolioGlobals();
 
   const siteIcon = globals.config.siteIcon;
@@ -24,7 +24,7 @@ export async function GET({ setHeaders }) {
     mimeType = 'text/plain';
   }
 
-  setHeaders({
+  req.setHeaders({
     'Content-Type': mimeType,
     'Content-Length': content.length.toString(),
   });
