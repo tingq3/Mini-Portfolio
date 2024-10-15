@@ -22,7 +22,14 @@ test('Generated keys are stored within the private data directory', async () => 
   const { api } = await setup();
   const keyPath = await api.admin.keys.generate().then(res => res.keyPath);
   // Path to key file should be entirely contained within private data dir
-  expect(keyPath.startsWith(getPrivateDataDir())).toBeTrue();
+  expect(
+    keyPath.startsWith(
+      // Intentionally remove leading `./` as it is not included
+      // This would be better with path checking, but I honestly cannot be
+      // bothered at the moment.
+      getPrivateDataDir().replace('./', '')
+    )
+  ).toBeTrue();
 });
 
 describe('Token tests', () => {
