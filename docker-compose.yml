@@ -3,41 +3,37 @@
 #
 # Usage:
 # * The data directory will be set up inside `./data` on the host system
+# * The private_data directory will be set up inside `./private_data` on the
+#   host system.
 # * You should create a `.env` file to contain the `AUTH_SECRET` environment
 #   variable. Perhaps you could generate this using the command here:
 #   https://unix.stackexchange.com/a/476125/161355
-# * TODO: To forward SSH host, some modification may be required (I will investigate
-#   this soon)
 #
 # It is not necessary to set up other environment variables
 services:
   minifolio:
-    # Uncomment these lines to build from the local repository, rather than the
-    # latest published version
+    # To build from the local repo, rather than the latest published version:
+    # Comment out this line
+    image: maddyguthridge/minifolio
+    # And uncomment these lines
     # build:
     #   context: .
     #   ssh:
     #     - default
-    # And comment out this line
-    image: maddyguthridge/minifolio
+
     hostname: minifolio
     restart: always
     ports:
       - 127.0.0.1:3000:3000/tcp
     volumes:
       - "./data:/data:rw"
-        # Forward local machine SSH key to docker
-        # Note: this may need changes on MacOS
-        # Source: https://stackoverflow.com/a/36648428/6335363
-      - $SSH_AUTH_SOCK:/ssh-agent
-      - "ssh_dir:/home/node/.ssh:rw"
+      - "./private_data:/private_data:rw"
 
     environment:
       DATA_REPO_PATH: "/data"
+      PRIVATE_DATA_PATH: "/data"
       HOST: 0.0.0.0
       PORT: 3000
-      # Tell the container where to find the SSH auth socket
-      SSH_AUTH_SOCK: /ssh-agent
     # Set up `AUTH_SECRET` variable within `.env`
     env_file: ".env"
 volumes:

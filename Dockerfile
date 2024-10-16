@@ -1,10 +1,13 @@
 FROM node:20
 
 # Make volumes be owned by the node user
-RUN mkdir /home/node/.ssh
-RUN chown node:node /home/node/.ssh
 RUN mkdir /data
 RUN chown node:node /data
+RUN mkdir /private_data
+RUN chown node:node /private_data
+
+# Install Git and SSH
+RUN apt install -y ssh git
 
 USER node
 
