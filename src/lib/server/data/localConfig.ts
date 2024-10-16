@@ -48,11 +48,20 @@ export const ConfigLocalJsonStruct = object({
     })
   })),
   /**
+   * Whether to enable fail2ban, where IP addresses that fail to log in are
+   * banned.
+   *
+   * If this is set to `true`, the server will store an array of timestamps for
+   * login fails for incoming IP addresses, and if that IP has a login failure
+   * too often, it will be banned from attempting to log in temporarily.
+   */
+  enableFail2ban: boolean(),
+  /**
    * A mapping of IP addresses to the array of their most recent login fail
    * timestamps, or a boolean indicating whether they are permanently banned
    * (`true`) or must never be banned (`false`).
    */
-  fail2banIps: record(string(), union([array(number()), boolean()])),
+  bannedIps: record(string(), union([array(number()), boolean()])),
   /**
    * Path to the private key file which the server should use when connecting
    * to git repos.

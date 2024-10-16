@@ -50,7 +50,8 @@ export async function authSetup(
         }
       },
     },
-    fail2banIps: {},
+    enableFail2ban: false,
+    bannedIps: {},
     keyPath: null,
     version,
   };
