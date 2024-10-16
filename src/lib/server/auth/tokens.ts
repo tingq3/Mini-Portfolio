@@ -88,6 +88,12 @@ export async function validateToken(token: string): Promise<Infer<typeof JwtPayl
     // Token data format is incorrect
     throw Error('Token data is in incorrect format');
   }
+  // Ensure the user ID exists
+  if (!(data.uid in config.auth)) {
+    // console.log(config.auth);
+    // console.log(data);
+    throw Error('This session does not map to a valid user');
+  }
   // Ensure that the session isn't in our revoked list
   if (data.sessionId in config.auth[data.uid].sessions.revokedSessions) {
     throw Error('This session has been revoked');
@@ -137,6 +143,7 @@ export async function validateTokenFromRequest(req: { request: Request, cookies:
     error(401, 'A token is required to access this endpoint');
   }
   const data = await validateToken(token).catch(e => {
+    console.log(e);
     // Remove token from cookies, as it is invalid
     req.cookies.delete('token', { path: '/' });
     error(401, `${e}`);
