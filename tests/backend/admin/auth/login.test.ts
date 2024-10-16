@@ -17,6 +17,7 @@
 import { it, expect, beforeEach } from 'vitest';
 import { setup } from '../../helpers';
 import api from '$endpoints';
+import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig';
 
 let credentials: Awaited<ReturnType<typeof setup>>;
 
@@ -51,10 +52,16 @@ it('Blocks logins with incorrect passwords', async () => {
 });
 
 it('Blocks all logins after 25 failed login requests', async () => {
+  // Manually enable fail2ban
+  const config = await getLocalConfig();
+  config.enableFail2ban = true;
+  await setLocalConfig(config);
+  // Manually refresh data
+  await api().debug.dataRefresh();
   for (let i = 0; i < 25; i++) {
     await api().admin.auth.login(credentials.username, 'incorrect')
       // Discard error
-      .catch(() => {});
+      .catch(() => { });
   }
   // User has been banned because of login failure happening too many times
   await expect(api().admin.auth.login(credentials.username, credentials.password))
