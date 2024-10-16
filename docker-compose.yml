@@ -26,6 +26,6 @@ services:
 
     environment:
       DATA_REPO_PATH: "/data"
-      PRIVATE_DATA_PATH: "/data"
+      PRIVATE_DATA_PATH: "/private_data"
       HOST: 0.0.0.0
       PORT: 3000
