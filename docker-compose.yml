@@ -36,5 +36,3 @@ services:
       PORT: 3000
     # Set up `AUTH_SECRET` variable within `.env`
     env_file: ".env"
-volumes:
-  ssh_dir:

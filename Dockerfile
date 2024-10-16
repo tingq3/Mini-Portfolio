@@ -7,7 +7,7 @@ RUN mkdir /private_data
 RUN chown node:node /private_data
 
 # Install Git and SSH
-RUN apt install -y ssh git
+RUN apt install -y openssh-client git
 
 USER node
 
