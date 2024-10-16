@@ -3,7 +3,12 @@ import { getLocalConfig } from '$lib/server/data/localConfig';
 import { error, type Handle } from '@sveltejs/kit';
 
 const banMiddleware: Handle = async (req) => {
-  if (!await authIsSetUp()) {
+  if (
+    // Allow all requests if server isn't set up
+    !await authIsSetUp()
+    // Allow all requests to debug endpoints
+    || req.event.url.pathname.startsWith('/api/debug')
+  ) {
     return req.resolve(req.event);
   }
   const config = await getLocalConfig();
