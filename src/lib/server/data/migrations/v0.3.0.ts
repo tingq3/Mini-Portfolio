@@ -1,11 +1,10 @@
 /** Migration from 0.3.0 -> current */
 
-import { updateConfigVersions } from './shared';
 import { setConfig, type ConfigJson } from '../config';
 import { listGroups, setGroupInfo, type GroupInfo } from '../group';
 import { listItems, setItemInfo, type ItemInfoFull } from '../item';
-import { moveLocalConfig } from './shared';
 import { unsafeLoadConfig, unsafeLoadGroupInfo, unsafeLoadItemInfo } from './unsafeLoad';
+import migrateV050 from './v0.5.0';
 
 export default async function migrate(dataDir: string, privateDataDir: string) {
   await migrateConfig(dataDir);
@@ -16,8 +15,7 @@ export default async function migrate(dataDir: string, privateDataDir: string) {
     }
   }
 
-  await moveLocalConfig(dataDir, privateDataDir);
-  await updateConfigVersions();
+  await migrateV050(dataDir, privateDataDir);
 }
 
 async function migrateConfig(dataDir: string) {
