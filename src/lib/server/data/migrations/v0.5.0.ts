@@ -5,6 +5,7 @@
  *
  * * Move `config.local.json` to the new private data directory.
  * * Re-structure user auth info to support multiple users in the future
+ * * Add more properties for banning IPs and user-agents
  */
 
 import { nanoid } from 'nanoid';
