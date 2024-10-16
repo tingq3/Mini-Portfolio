@@ -1,10 +1,10 @@
 import { version } from '$app/environment';
 import { getDataDir, getPrivateDataDir } from '../dataDir';
 import { updateConfigVersions } from './shared';
-import migrateFromV010 from './v0.1.0';
-import migrateFromV020 from './v0.2.0';
-import migrateFromV030 from './v0.3.0';
-import migrateFromV050 from './v0.5.0';
+import migrateToV020 from './v0.2.0';
+import migrateToV030 from './v0.3.0';
+import migrateToV040 from './v0.4.0';
+import migrateToV060 from './v0.6.0';
 import semver from 'semver';
 
 
@@ -15,13 +15,13 @@ export type MigrationFunction = (
 
 /** Lookup table of migrations */
 const migrations: Record<string, MigrationFunction> = {
-  '~0.1.0': migrateFromV010,
-  '~0.2.0': migrateFromV020,
-  '~0.3.0': migrateFromV030,
+  '~0.1.0': migrateToV020,
+  '~0.2.0': migrateToV030,
+  '~0.3.0': migrateToV040,
   // No major changes to data format between 0.4 and 0.5, so just use the 0.5
   // function
-  '~0.4.0': migrateFromV050,
-  '~0.5.0': migrateFromV050,
+  '~0.4.0': migrateToV060,
+  '~0.5.0': migrateToV060,
   // Pre-empt future releases
   '~0.6.0': updateConfigVersions,
 };

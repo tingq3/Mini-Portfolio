@@ -1,45 +1,26 @@
-/** Migration from 0.3.0 -> current */
-
-import { setConfig, type ConfigJson } from '../config';
+/**
+ * Migration from 0.2.0 to 0.3.0.
+ *
+ * Adds missing `filterItems` property to groups.
+ */
+import { version } from '$app/environment';
 import { listGroups, setGroupInfo, type GroupInfo } from '../group';
-import { listItems, setItemInfo, type ItemInfoFull } from '../item';
-import { unsafeLoadConfig, unsafeLoadGroupInfo, unsafeLoadItemInfo } from './unsafeLoad';
-import migrateV050 from './v0.5.0';
+import { unsafeLoadGroupInfo } from './unsafeLoad';
+import migrateV040 from './v0.4.0';
 
 export default async function migrate(dataDir: string, privateDataDir: string) {
-  await migrateConfig(dataDir);
+  console.log(`Migrate from v0.2.x -> ${version}`);
+
+  // For each group
   for (const groupId of await listGroups()) {
-    await migrateGroup(dataDir, groupId);
-    for (const itemId of await listItems(groupId)) {
-      await migrateItem(dataDir, groupId, itemId);
-    }
+    console.log(`  ${groupId}`);
+    // Technically the `filterItems` property doesn't exist, but it's close
+    // enough since we add it immediately
+    const info = await unsafeLoadGroupInfo(dataDir, groupId) as GroupInfo;
+    info.filterItems = info.listedItems;
+    await setGroupInfo(groupId, info);
   }
 
-  await migrateV050(dataDir, privateDataDir);
-}
-
-async function migrateConfig(dataDir: string) {
-  const config = await unsafeLoadConfig(dataDir) as ConfigJson;
-  // Add missing properties
-  config.siteShortName = config.siteName;
-  config.siteDescription = '';
-  config.siteKeywords = ['Portfolio'];
-  config.siteIcon = null;
-  await setConfig(config);
-}
-
-async function migrateGroup(dataDir: string, groupId: string) {
-  const info = await unsafeLoadGroupInfo(dataDir, groupId) as GroupInfo;
-  // Add missing properties
-  info.pageDescription = '';
-  info.keywords = [info.name];
-  await setGroupInfo(groupId, info);
-}
-
-async function migrateItem(dataDir: string, groupId: string, itemId: string) {
-  const info = await unsafeLoadItemInfo(dataDir, groupId, itemId) as ItemInfoFull;
-  // Add missing properties
-  info.pageDescription = '';
-  info.keywords = [info.name];
-  await setItemInfo(groupId, itemId, info);
+  // Also perform v0.3.0 migration
+  await migrateV040(dataDir, privateDataDir);
 }
