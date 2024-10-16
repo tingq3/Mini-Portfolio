@@ -19,6 +19,14 @@ export default function debug(token: string | undefined) {
     )) as Promise<Record<string, never>>;
   };
 
+  const dataRefresh = async () => {
+    return json(apiFetch(
+      'POST',
+      '/api/debug/data/refresh',
+      token,
+    )) as Promise<Record<string, never>>;
+  };
+
   return {
     /**
      * Reset the app to its default state.
@@ -28,5 +36,9 @@ export default function debug(token: string | undefined) {
      * Echo text to the server's console
      */
     echo,
+    /**
+     * Invalidate cached data
+     */
+    dataRefresh,
   };
 }
