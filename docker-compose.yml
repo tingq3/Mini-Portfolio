@@ -5,11 +5,6 @@
 # * The data directory will be set up inside `./data` on the host system
 # * The private_data directory will be set up inside `./private_data` on the
 #   host system.
-# * You should create a `.env` file to contain the `AUTH_SECRET` environment
-#   variable. Perhaps you could generate this using the command here:
-#   https://unix.stackexchange.com/a/476125/161355
-#
-# It is not necessary to set up other environment variables
 services:
   minifolio:
     # To build from the local repo, rather than the latest published version:
@@ -34,5 +29,3 @@ services:
       PRIVATE_DATA_PATH: "/data"
       HOST: 0.0.0.0
       PORT: 3000
-    # Set up `AUTH_SECRET` variable within `.env`
-    env_file: ".env"
