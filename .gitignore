@@ -6,6 +6,8 @@
 
 # Data directory
 /data/
+# Private data directory
+/private_data/
 
 # Server logs
 *.log

@@ -1,12 +1,11 @@
-import { validateTokenFromRequest } from '$lib/server/auth.js';
-import { dataDirUsesGit, getDataDir } from '$lib/server/data/dataDir.js';
-import { getRepoStatus } from '$lib/server/git.js';
-import { getPortfolioGlobals } from '$lib/server/index.js';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { dataDirUsesGit } from '$lib/server/data/dataDir';
+import { commit, getRepoStatus } from '$lib/server/git';
+import { getPortfolioGlobals } from '$lib/server/index';
 import { error, json } from '@sveltejs/kit';
-import simpleGit from 'simple-git';
 import { object, string, validate } from 'superstruct';
 
-export async function POST({ request, cookies }) {
+export async function POST({ request, cookies }: import('./$types.js').RequestEvent) {
   await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
@@ -20,16 +19,7 @@ export async function POST({ request, cookies }) {
     error(400, `${err}`);
   }
 
-  const git = simpleGit(getDataDir());
-
-  const changes = await git.status();
-  if (!changes.files.length) {
-    error(400, 'No changes present');
-  }
-
-  // Add all changes
-  await git.add('.');
-  await git.commit(options.message);
+  await commit(options.message);
 
   return json(await getRepoStatus(), { status: 200 });
 }

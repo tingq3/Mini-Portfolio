@@ -1,11 +1,11 @@
 import { error, json } from '@sveltejs/kit';
-import { validateTokenFromRequest } from '$lib/server/auth';
-import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 import { object, string, validate } from 'superstruct';
-import { LinkStyleStruct } from '$lib/server/data/item.js';
-import { changeLinkStyle, createLink, removeLinkFromItem } from '$lib/server/links.js';
+import { LinkStyleStruct } from '$lib/server/data/item';
+import { changeLinkStyle, createLink, removeLinkFromItem } from '$lib/server/links';
 
-export async function POST({ params, request, cookies }) {
+export async function POST({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
@@ -45,7 +45,7 @@ export async function POST({ params, request, cookies }) {
   return json({}, { status: 200 });
 }
 
-export async function PUT({ params, request, cookies }) {
+export async function PUT({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
@@ -74,7 +74,7 @@ export async function PUT({ params, request, cookies }) {
   return json({}, { status: 200 });
 }
 
-export async function DELETE(req) {
+export async function DELETE(req: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest(req);
 

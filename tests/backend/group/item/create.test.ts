@@ -23,7 +23,7 @@ describe('Generated test cases', () => {
   );
 });
 
-describe('Sets up basic item properties', async () => {
+describe('Sets up basic item properties', () => {
   let api: ApiClient;
   const groupId = 'group';
 
@@ -51,7 +51,7 @@ describe('Sets up basic item properties', async () => {
   });
 });
 
-describe('Other test cases', async () => {
+describe('Other test cases', () => {
   let api: ApiClient;
   const groupId = 'group';
 

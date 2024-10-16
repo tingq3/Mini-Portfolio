@@ -21,7 +21,7 @@ describe('Generated test cases', () => {
   );
 });
 
-describe('Sets up basic group properties', async () => {
+describe('Sets up basic group properties', () => {
   let api: ApiClient;
   const groupId = 'my-group';
   let info: GroupInfo;

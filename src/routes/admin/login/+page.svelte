@@ -5,25 +5,37 @@
   import Paper from '$components/Paper.svelte';
   import { goto } from '$app/navigation';
   import consts from '$lib/consts';
+  import { onMount } from 'svelte';
 
   export let data: import('./$types').PageData;
+
+  let previousPage: string;
 
   let username = '';
   let password = '';
 
+  onMount(() => {
+    previousPage =
+      new URLSearchParams(window.location.search).get('from') ?? '/';
+    // Avoid circular redirects
+    if (previousPage.endsWith('/admin/login')) {
+      previousPage = '/';
+    }
+  });
+
   async function doLogin() {
     await api().admin.auth.login(username, password);
     // TODO: Cleanly handle and display errors
-    await goto('/admin');
+    await goto(previousPage);
   }
 </script>
 
 <svelte:head>
   <title>login - {data.globals.config.siteName}</title>
-  <meta name="generator" content="{consts.APP_NAME}">
-  <meta name="theme-color" content="{data.globals.config.color}">
+  <meta name="generator" content={consts.APP_NAME} />
+  <meta name="theme-color" content={data.globals.config.color} />
   <!-- Prevent web crawlers from indexing the admin page -->
-  <meta name="robots" content="noindex">
+  <meta name="robots" content="noindex" />
 </svelte:head>
 
 <Background color={data.globals.config.color}></Background>
@@ -41,17 +53,32 @@
   <Paper>
     <main>
       <div class="center">
-        <h1 style="font-size: 3rem"> Login </h1>
+        <h1 style="font-size: 3rem">Login</h1>
       </div>
 
       <form>
         <h3>Username</h3>
-        <input type="text" id="username" bind:value={username} placeholder="Username" />
+        <input
+          type="text"
+          id="username"
+          bind:value={username}
+          placeholder="Username"
+        />
 
         <h3>Password</h3>
-        <input type="password" id="password" bind:value={password} placeholder="Your complex and secure password" />
+        <input
+          type="password"
+          id="password"
+          bind:value={password}
+          placeholder="Your complex and secure password"
+        />
         <p></p>
-        <input type="submit" id="submit-main" value="Log in" on:click={doLogin} />
+        <input
+          type="submit"
+          id="submit-main"
+          value="Log in"
+          on:click={doLogin}
+        />
       </form>
     </main>
   </Paper>

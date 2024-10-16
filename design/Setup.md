@@ -1,12 +1,20 @@
 # Setup process
 
-1. User specifies a data repository URL, which is then cloned.
-2. If the repo is empty, some default data is configured:
-    * `config.json` with the site's default configuration
-    * `.gitignore` with a simple gitignore to ignore the local configuration
-3. Otherwise, the `.gitignore` is checked to ensure that `config.local.json`
-   will be ignored (lest auth information be leaked).
-4. A secure password is generated, and stored securely in `config.local.json`.
-   It is shown to the user once, and they are prompted to take note of it.
+## 1. Account creation
 
-The site is then fully configured.
+The user creates the initial account, which triggers the private data setup.
+
+## 2. Data initialization
+
+The user then chooses how to initialize the repo:
+
+* From a `git` repo. The repo is cloned.
+* Empty, meaning a new blank repository is created.
+
+The user is also given the options to control how the server uses SSH keys.
+Allowed options are:
+
+* Generate an SSH key-pair, stored within the private data.
+* Use an existing private key given its path.
+* Use the default SSH identity, which works best if the app is running on an
+  account with existing SSH access.

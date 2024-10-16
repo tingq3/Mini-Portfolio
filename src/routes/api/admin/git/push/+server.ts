@@ -1,11 +1,10 @@
-import { validateTokenFromRequest } from '$lib/server/auth.js';
-import { dataDirUsesGit, getDataDir } from '$lib/server/data/dataDir.js';
-import { getRepoStatus } from '$lib/server/git.js';
-import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/index.js';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { dataDirUsesGit } from '$lib/server/data/dataDir';
+import { getRepoStatus, push } from '$lib/server/git.js';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/index';
 import { error, json } from '@sveltejs/kit';
-import simpleGit from 'simple-git';
 
-export async function POST({ request, cookies }) {
+export async function POST({ request, cookies }: import('./$types.js').RequestEvent) {
   await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
@@ -13,17 +12,8 @@ export async function POST({ request, cookies }) {
     error(400, 'Data dir is not a git repo');
   }
 
-  const git = simpleGit(getDataDir());
-
-  const { ahead } = await getRepoStatus();
-
-  if (ahead === 0) {
-    error(400, 'No changes to push');
-  }
-
-  await git.push().catch(e => error(400, `${e}`));
-  const status = await getRepoStatus();
+  await push();
 
   invalidatePortfolioGlobals();
-  return json(status, { status: 200 });
+  return json(await getRepoStatus(), { status: 200 });
 }

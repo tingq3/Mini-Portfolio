@@ -5,8 +5,8 @@ import { it, expect } from 'vitest';
 import { setup } from '../../helpers';
 
 it('Disables authentication', async () => {
-  const { api, credentials: { username, password } } = await setup();
-  await expect(api.admin.auth.disable(password)).resolves.toStrictEqual({});
+  const { api, username, password } = await setup();
+  await expect(api.admin.auth.disable(username, password)).resolves.toStrictEqual({});
   // Logging in should fail
   await expect(api.admin.auth.login(username, password))
     .rejects.toMatchObject({ code: 403 });
@@ -17,20 +17,20 @@ it('Disables authentication', async () => {
 });
 
 it('Errors for invalid tokens', async () => {
-  const { api, credentials: { password } } = await setup();
-  await expect(api.withToken('invalid').admin.auth.disable(password))
+  const { api, username, password } = await setup();
+  await expect(api.withToken('invalid').admin.auth.disable(username, password))
     .rejects.toMatchObject({ code: 401 });
 });
 
 it('Errors for incorrect passwords', async () => {
-  const { api } = await setup();
-  await expect(api.admin.auth.disable('incorrect'))
+  const { api, username } = await setup();
+  await expect(api.admin.auth.disable(username, 'incorrect'))
     .rejects.toMatchObject({ code: 403 });
 });
 
 it('Errors if the data is not set up', async () => {
-  const { api, credentials: { password } } = await setup();
+  const { api, username, password } = await setup();
   await api.debug.clear();
-  await expect(api.admin.auth.disable(password))
+  await expect(api.admin.auth.disable(username, password))
     .rejects.toMatchObject({ code: 400 });
 });

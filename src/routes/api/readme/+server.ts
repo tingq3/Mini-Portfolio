@@ -1,10 +1,10 @@
 /** Endpoint for get/setting the README */
 
 import { error, json } from '@sveltejs/kit';
-import { validateTokenFromRequest } from '$lib/server/auth.js';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
 import { object, string, validate } from 'superstruct';
-import { setReadme } from '$lib/server/data/readme.js';
-import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
+import { setReadme } from '$lib/server/data/readme';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 
 export async function GET() {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
@@ -12,7 +12,7 @@ export async function GET() {
   return json({ readme: data.readme }, { status: 200 });
 }
 
-export async function PUT(req) {
+export async function PUT(req: import('./$types.js').RequestEvent) {
   await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest(req);
 

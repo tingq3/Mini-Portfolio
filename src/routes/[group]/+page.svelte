@@ -54,6 +54,7 @@
   async function finishEditing(save: boolean) {
     if (save) {
       // Update readme
+      console.log(readme);
       groupData.readme = readme;
       await api().group.withId(data.groupId).readme.set(readme);
       groupData.info.listedItems = [...shownItems];
@@ -111,13 +112,14 @@
 <main>
   <EditControls
     {editing}
+    loggedIn={data.loggedIn}
     on:beginEdits={beginEditing}
     on:finishEdits={e => finishEditing(e.detail)}
   />
   <div id="readme">
     <div id="info-container">
       <EditableMarkdown
-        source={groupData.readme}
+        bind:source={readme}
         editing={editing}
       />
     </div>

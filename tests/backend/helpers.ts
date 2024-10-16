@@ -8,12 +8,15 @@ import { getDataDir } from '$lib/server/data/dataDir';
 
 /** Set up the server, returning (amongst other things) an API client */
 export async function setup(repoUrl?: string, branch?: string) {
-  const credentials
-    = (await api(undefined).admin.firstrun(repoUrl ?? null, branch ?? null))
-      .credentials;
+  const username = 'admin';
+  const password = 'abc123ABC!';
+  const { token } = await api().admin.firstrun.account(username, password);
+  await api(token).admin.firstrun.data(repoUrl, branch);
   return {
-    api: api(credentials.token),
-    credentials,
+    api: api(token),
+    token,
+    username,
+    password,
   };
 }
 
@@ -85,11 +88,12 @@ export function makeItemInfo(options: Partial<ItemInfoFull> = {}): ItemInfoFull 
 
 /** Rewind the data repo's git repo to an earlier commit */
 export async function forceRewindDataRepoGit(api: ApiClient) {
+  // A commit hash within MaddyGuthridge/portfolio-data
   const OLD_COMMIT_HASH = 'd7ef6fd7ef9bac4c24f5634e6b1e76d201507498';
   // Forcefully move back a number of commits, then invalidate the data
   const git = simpleGit(getDataDir());
   await git.reset(['--hard', OLD_COMMIT_HASH]);
   await api.admin.data.refresh();
   // Attempt to make a commit just in case of data migrations
-  await api.admin.git.commit('Migrate data').catch(e => {void e});
+  await api.admin.git.commit('Migrate data').catch(e => { void e });
 }

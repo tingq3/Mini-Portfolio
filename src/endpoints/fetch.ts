@@ -13,8 +13,8 @@ function getUrl() {
     // Running in node
     dotenv.config();
 
-    const PORT = process.env.PORT as string;
-    const HOST = process.env.HOST as string;
+    const PORT = process.env.PORT!;
+    const HOST = process.env.HOST!;
     return `http://${HOST}:${PORT}`;
   }
 }
@@ -60,7 +60,7 @@ export async function apiFetch(
     // GET and DELETE use params
     url
       = `${URL}${route}?`
-      + new URLSearchParams(bodyParams as Record<string, string>);
+      + new URLSearchParams(bodyParams as Record<string, string>).toString();
     body = null;
   }
 
@@ -131,7 +131,7 @@ export async function json(response: Promise<Response>): Promise<object> {
   }
 
   if ([400, 401, 403].includes(res.status)) {
-    // All 400 and 403 errors have an error message
+    // All 400, 401 and 403 errors have an error message
     const message = (json as { message: string }).message;
     throw new ApiError(res.status, message);
   }

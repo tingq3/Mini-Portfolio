@@ -1,9 +1,11 @@
-import { hashAndSalt, validateTokenFromRequest } from '$lib/server/auth';
-import { getPortfolioGlobals } from '$lib/server/data/index.js';
-import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig.js';
+import { hashAndSalt } from '$lib/server/auth/passwords.js';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
+import { authIsSetUp } from '$lib/server/data/dataDir.js';
+import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig';
+import { applyStruct } from '$lib/server/util.js';
 import { error, json } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
-import { object, string, validate } from 'superstruct';
+import { object, string } from 'superstruct';
 import validator from 'validator';
 
 const NewCredentials = object({
@@ -12,9 +14,9 @@ const NewCredentials = object({
   newPassword: string(),
 });
 
-export async function POST({ request, cookies }) {
-  await getPortfolioGlobals().catch(e => error(400, e));
-  await validateTokenFromRequest({ request, cookies });
+export async function POST({ request, cookies }: import('./$types.js').RequestEvent) {
+  if (!await authIsSetUp()) error(400, 'Auth is not set up yet');
+  const uid = await validateTokenFromRequest({ request, cookies });
 
   const local = await getLocalConfig();
 
@@ -22,20 +24,14 @@ export async function POST({ request, cookies }) {
     throw Error('Unreachable');
   }
 
-  const [err, newCredentials]
-    = validate(await request.json(), NewCredentials);
-
-  if (err) {
-    return error(400, `${err}`);
-  }
-
-  const { newUsername, oldPassword, newPassword } = newCredentials;
+  const { newUsername, oldPassword, newPassword }
+    = applyStruct(await request.json(), NewCredentials);
 
   if (!newUsername) {
     return error(400, 'New username is empty');
   }
 
-  if (hashAndSalt(local.auth.password.salt, oldPassword) !== local.auth.password.hash) {
+  if (hashAndSalt(local.auth[uid].password.salt, oldPassword) !== local.auth[uid].password.hash) {
     return error(403, 'Old password is incorrect');
   }
 
@@ -46,12 +42,12 @@ export async function POST({ request, cookies }) {
   // Hash and salt new password
   const salt = nanoid();
   const hash = hashAndSalt(salt, newPassword);
-  local.auth.password = {
+  local.auth[uid].password = {
     hash,
     salt,
   };
   // Change the username
-  local.auth.username = newUsername;
+  local.auth[uid].username = newUsername;
   await setLocalConfig(local);
 
   return json({}, { status: 200 });

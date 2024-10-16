@@ -1,13 +1,13 @@
 import { error, json } from '@sveltejs/kit';
 import { createGroup, deleteGroup, GroupInfoStruct, setGroupInfo } from '$lib/server/data/group';
-import { validateTokenFromRequest } from '$lib/server/auth';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
 import { object, string, validate } from 'superstruct';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
 import { validateId, validateName } from '$lib/validators';
-import { removeAllLinksToItem } from '$lib/server/links.js';
-import { setConfig } from '$lib/server/data/config.js';
+import { removeAllLinksToItem } from '$lib/server/links';
+import { setConfig } from '$lib/server/data/config';
 
-export async function GET({ params }) {
+export async function GET({ params }: import('./$types.js').RequestEvent) {
   const groupId = params.groupId;
 
   const data = await getPortfolioGlobals().catch(e => error(400, e));
@@ -20,12 +20,12 @@ export async function GET({ params }) {
   }
 }
 
-export async function POST({ params, request, cookies }) {
+export async function POST({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
   // Validate group ID
-  const groupId = validateId(params.groupId);
+  const groupId = validateId('Group ID', params.groupId);
 
   const [err, body] = validate(await request.json(), object({ name: string(), description: string() }));
   if (err) {
@@ -46,7 +46,7 @@ export async function POST({ params, request, cookies }) {
   return json({}, { status: 200 });
 }
 
-export async function PUT({ params, request, cookies }) {
+export async function PUT({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
@@ -80,7 +80,7 @@ export async function PUT({ params, request, cookies }) {
   return json({}, { status: 200 });
 }
 
-export async function DELETE({ params, request, cookies }) {
+export async function DELETE({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 

@@ -1,14 +1,14 @@
 import { getPortfolioGlobals } from '$lib/server';
-import { isRequestAuthorized } from '$lib/server/auth.js';
-import blankConfig from '$lib/blankConfig.js';
-import type { ConfigJson } from '$lib/server/data/config.js';
+import { isRequestAuthorized } from '$lib/server/auth/tokens';
+import blankConfig from '$lib/blankConfig';
+import type { ConfigJson } from '$lib/server/data/config';
 import { version } from '$app/environment';
 // import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 // import { VERSION as SVELTEKIT_VERSION } from '@sveltejs/kit';
 // import { version as VITE_VERSION } from 'vite';
 import os from 'os';
 
-export async function load(req) {
+export async function load(req: import('./$types.js').RequestEvent) {
   // If config fails to load (eg firstrun), just give a blank config
   let config: ConfigJson;
   let isInit = true;

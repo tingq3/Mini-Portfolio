@@ -1,13 +1,13 @@
 import { error, json } from '@sveltejs/kit';
 import { getGroupInfo, setGroupInfo } from '$lib/server/data/group';
-import { validateTokenFromRequest } from '$lib/server/auth';
+import { validateTokenFromRequest } from '$lib/server/auth/tokens';
 import { object, string, validate } from 'superstruct';
-import { createItem, setItemInfo, ItemInfoFullStruct, deleteItem } from '$lib/server/data/item.js';
-import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index.js';
-import { validateId, validateName } from '$lib/validators.js';
-import { removeAllLinksToItem } from '$lib/server/links.js';
+import { createItem, setItemInfo, ItemInfoFullStruct, deleteItem } from '$lib/server/data/item';
+import { getPortfolioGlobals, invalidatePortfolioGlobals } from '$lib/server/data/index';
+import { validateId, validateName } from '$lib/validators';
+import { removeAllLinksToItem } from '$lib/server/links';
 
-export async function GET({ params }) {
+export async function GET({ params }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
 
   const { groupId, itemId } = params;
@@ -19,7 +19,7 @@ export async function GET({ params }) {
   }
 }
 
-export async function POST({ params, request, cookies }) {
+export async function POST({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
@@ -29,7 +29,7 @@ export async function POST({ params, request, cookies }) {
   // Ensure group exists
   await getGroupInfo(groupId).catch(e => error(404, e));
 
-  validateId(itemId);
+  validateId('Item ID', itemId);
 
   const [err, body] = validate(await request.json(), object({ name: string(), description: string() }));
   if (err) {
@@ -40,7 +40,7 @@ export async function POST({ params, request, cookies }) {
   // Validate name
   validateName(name);
 
-  if (data.items[groupId] && data.items[groupId][itemId]) {
+  if (data.items[groupId]?.[itemId]) {
     return error(400, `Group with ID ${groupId} already exists`);
   }
 
@@ -55,7 +55,7 @@ export async function POST({ params, request, cookies }) {
   return json({}, { status: 200 });
 }
 
-export async function PUT({ params, request, cookies }) {
+export async function PUT({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 
@@ -84,7 +84,7 @@ export async function PUT({ params, request, cookies }) {
   return json({}, { status: 200 });
 }
 
-export async function DELETE({ params, request, cookies }) {
+export async function DELETE({ params, request, cookies }: import('./$types.js').RequestEvent) {
   const data = await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 

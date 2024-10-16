@@ -7,13 +7,13 @@ import { it, expect } from 'vitest';
 import { setup } from '../../helpers';
 
 it('Blocks unauthorized users', async () => {
-  const { api, credentials: { password } } = await setup();
+  const { api, password } = await setup();
   await expect(api.withToken(undefined).admin.auth.change('foo', password, 'abc123ABC$'))
     .rejects.toMatchObject({ code: 401 });
 });
 
 it('Allows users to reset their password', async () => {
-  const { api, credentials: { password } } = await setup();
+  const { api, password } = await setup();
   const newPassword = 'abc123ABC$';
   await expect(api.admin.auth.change('foo', password, newPassword))
     .resolves.toStrictEqual({});
@@ -30,19 +30,19 @@ it('Rejects incorrect previous passwords', async () => {
 });
 
 it('Rejects insecure new passwords', async () => {
-  const { api, credentials: { password } } = await setup();
+  const { api, password } = await setup();
   await expect(api.admin.auth.change('foo', password, 'insecure'))
     .rejects.toMatchObject({ code: 400 });
 });
 
 it('Rejects empty new usernames', async () => {
-  const { api, credentials: { password } } = await setup();
+  const { api, password } = await setup();
   await expect(api.admin.auth.change('', password, 'abc123ABC$'))
     .rejects.toMatchObject({ code: 400 });
 });
 
 it('Errors if the data is not set up', async () => {
-  const { api, credentials: { password } } = await setup();
+  const { api, password } = await setup();
   await api.debug.clear();
   await expect(api.admin.auth.change('foo', password, 'abc123ABC$'))
     .rejects.toMatchObject({ code: 400 });

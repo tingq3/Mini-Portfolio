@@ -27,7 +27,6 @@ import type { PackageInfo } from '../itemPackage';
 import { LinksArray, listItems, setItemInfo } from '../item';
 import type { Infer } from 'superstruct';
 import { version } from '$app/environment';
-import { setupGitignore } from '../../git';
 import { capitalize } from '$lib/util';
 import { unsafeLoadConfig, unsafeLoadGroupInfo, unsafeLoadItemInfo } from './unsafeLoad';
 
@@ -106,9 +105,9 @@ export default async function migrate(dataDir: string) {
 
   await migrateConfig(dataDir);
   await migrateReadme(dataDir);
-  // Set up gitignore
-  console.log('  .gitignore');
-  await setupGitignore();
+  // // Set up gitignore
+  // console.log('  .gitignore');
+  // await setupGitignore();
   console.log('Data migration complete!');
 }
 
@@ -229,7 +228,7 @@ function groupLinkPropertyOr<T extends keyof GroupLinkDisplayOptions>(
   property: T,
   fallback: GroupLinkDisplayOptions[T],
 ): GroupLinkDisplayOptions[T] {
-  return group.associations && group.associations[linkedGroup]
+  return group.associations?.[linkedGroup]
     ? group.associations[linkedGroup][property]
     : fallback;
 }
@@ -269,7 +268,7 @@ async function migrateGroupInfo(globals: OldGlobals, groupId: string) {
     filterGroups: Object.keys(globals.groups).filter(g => g !== groupId),
     // List all items, and sort them based on the given sort value
     listedItems: Object.keys(globals.items[groupId]).toSorted(
-      (i1, i2) => (globals.items[groupId][i1].sort || 0) - (globals.items[groupId][i2].sort || 0)
+      (i1, i2) => (globals.items[groupId][i1].sort ?? 0) - (globals.items[groupId][i2].sort ?? 0)
     ).toReversed(),
     // Use all items for filtering where the visibility setting isn't "filtered"
     filterItems: Object.keys(globals.items[groupId]).filter(i => globals.items[groupId][i].visibility !== 'filtered'),

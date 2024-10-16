@@ -5,7 +5,7 @@
   import type { ConfigJson } from '$lib/server/data/config';
   import Separator from '$components/Separator.svelte';
 
-  export let path: { url: string, txt: string }[];
+  export let path: { url: string; txt: string }[];
   export let config: ConfigJson;
   /** Whether the user is logged in. Set to undefined if auth is disabled */
   export let loggedIn: boolean | undefined;
@@ -16,16 +16,26 @@
     location.reload();
   }
 
+  /**
+   * Go to the login page, with the from parameter determining the origin page.
+   */
+  async function gotoLogin() {
+    await goto(`/admin/login?from=${window.location.pathname}`);
+  }
+
   /** Clear all data, and take the user to the firstrun page */
   async function clear() {
     await api().debug.clear();
-    await goto('/admin/firstrun');
+    await goto('/admin/firstrun/account');
   }
 
   // This function needs to accept `path` as an input, otherwise the links
   // stop being reactive due to cacheing or something
-  function pathTo(path: { url: string, txt: string }[], i: number) {
-    return path.slice(0, i + 1).map(p => p.url).join('/');
+  function pathTo(path: { url: string; txt: string }[], i: number) {
+    return path
+      .slice(0, i + 1)
+      .map((p) => p.url)
+      .join('/');
   }
 </script>
 
@@ -52,7 +62,7 @@
       <button on:click={logOut}> Log out </button>
     {:else if loggedIn !== undefined}
       <!-- Only include a login button if logging in is enabled -->
-      <button on:click={() => goto('/admin/login')}> Log in </button>
+      <button on:click={gotoLogin}> Log in </button>
     {/if}
     <!-- About button navigates to about page -->
     <button on:click={() => goto('/about')}> About </button>
