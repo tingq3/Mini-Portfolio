@@ -63,6 +63,16 @@ export const ConfigLocalJsonStruct = object({
    */
   loginBannedIps: record(string(), union([array(number()), boolean()])),
   /**
+   * Array of banned IP addresses. All requests from these IP addresses will
+   * be blocked.
+   */
+  bannedIps: array(string()),
+  /**
+   * Array of regular expressions matching user-agent strings which should be
+   * blocked.
+   */
+  bannedUserAgents: array(string()),
+  /**
    * Path to the private key file which the server should use when connecting
    * to git repos.
    *
