@@ -6,7 +6,8 @@
   import GitSettings from './GitSettings.svelte';
   import ChangePassword from './ChangePassword.svelte';
   import ReloadData from './ReloadData.svelte';
-    import LogOutAll from './LogOutAll.svelte';
+  import LogOutAll from './LogOutAll.svelte';
+  import KeySettings from './KeySettings.svelte';
 
   export let data: import('./$types').PageData;
 </script>
@@ -32,6 +33,10 @@
     <Paper>
       <div id="contents">
         <GitSettings {data} />
+        <KeySettings
+          publicKey={data.keys.publicKey}
+          privateKeyPath={data.keys.keyPath}
+        />
         <ChangePassword username={'admin'} />
         <LogOutAll />
         <ReloadData />

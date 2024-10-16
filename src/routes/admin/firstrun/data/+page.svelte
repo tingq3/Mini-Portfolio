@@ -9,9 +9,9 @@
   import Navbar from '$components/navbar';
   import blankConfig from '$lib/blankConfig';
   import consts from '$lib/consts';
+  import KeySettings from '../../KeySettings.svelte';
 
-  // TODO: Show info about the public key
-  // export let data;
+  export let data;
 
   // Default values are auto-filled in dev mode
   let repoUrl = dev ? 'git@github.com:MaddyGuthridge/portfolio-data.git' : '';
@@ -87,49 +87,53 @@
         {/if}
       </div>
 
-      <form on:submit={onSubmit}>
-        <h3>Data repository URL</h3>
-        <p>
-          It's a good idea to set up a repository to back up your portfolio
-          data.
-          <a
-            href="https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository"
-            target="_blank">Create an empty git repository</a
-          >
-          and enter the clone URL here. If you want to import existing data, enter
-          your existing repository URL here.
-        </p>
-        <input
-          type="text"
-          id="repo-url"
-          bind:value={repoUrl}
-          placeholder="git@github.com:MaddyGuthridge/portfolio-data.git"
-        />
+      <div class="main-content">
+        <KeySettings publicKey={data.publicKey} privateKeyPath={data.keyPath} />
 
-        <h3>Repository branch</h3>
-        <p>If you want to use a specific branch, you can enter it here.</p>
-        <input
-          type="text"
-          id="repo-branch"
-          bind:value={repoBranch}
-          placeholder="main"
-        />
+        <form on:submit={onSubmit}>
+          <h3>Data repository URL</h3>
+          <p>
+            It's a good idea to set up a repository to back up your portfolio
+            data.
+            <a
+              href="https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository"
+              target="_blank">Create an empty git repository</a
+            >
+            and enter the clone URL here. If you want to import existing data, enter
+            your existing repository URL here.
+          </p>
+          <input
+            type="text"
+            id="repo-url"
+            bind:value={repoUrl}
+            placeholder="git@github.com:MaddyGuthridge/portfolio-data.git"
+          />
 
-        <h3>Ready to get started?</h3>
-        <input type="submit" id="submit-main" value="Let's go!" />
+          <h3>Repository branch</h3>
+          <p>If you want to use a specific branch, you can enter it here.</p>
+          <input
+            type="text"
+            id="repo-branch"
+            bind:value={repoBranch}
+            placeholder="main"
+          />
 
-        <h3>Don't want to use a git repo?</h3>
-        <p>
-          Using a git repo is a great idea if you want your data to be safely
-          backed up. But if you're just testing {consts.APP_NAME}, it's much
-          quicker to get started without a git repo.
-        </p>
-        <input
-          type="submit"
-          id="submit-no-git"
-          value="I don't want to use git"
-        />
-      </form>
+          <h3>Ready to get started?</h3>
+          <input type="submit" id="submit-main" value="Let's go!" />
+
+          <h3>Don't want to use a git repo?</h3>
+          <p>
+            Using a git repo is a great idea if you want your data to be safely
+            backed up. But if you're just testing {consts.APP_NAME}, it's much
+            quicker to get started without a git repo.
+          </p>
+          <input
+            type="submit"
+            id="submit-no-git"
+            value="I don't want to use git"
+          />
+        </form>
+      </div>
     </main>
   </Paper>
 </div>
@@ -162,7 +166,7 @@
     margin: 20px;
   }
 
-  form {
+  .main-content {
     margin: 0 10%;
   }
 
