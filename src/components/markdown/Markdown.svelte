@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { marked } from "marked";
-  import hljs from "highlight.js";
-  import "highlight.js/styles/stackoverflow-light.css";
+  import { marked } from 'marked';
+  import hljs from 'highlight.js';
+  import 'highlight.js/styles/stackoverflow-light.css';
 
   export let source: string;
 
@@ -9,7 +9,7 @@
   const renderer = {
     link(href: string, title: string | null | undefined, text: string) {
       const link = marked.Renderer.prototype.link.call(this, href, title, text);
-      return link.replace("<a", "<a target='_blank' rel='noreferrer' ");
+      return link.replace('<a', "<a target='_blank' rel='noreferrer' ");
     },
   };
   marked.use({ renderer });
@@ -31,7 +31,7 @@
     // function when we just subscribe to what their contents are supposed to
     // be
     setTimeout(() => {
-      renderElement.querySelectorAll("pre code").forEach((el) => {
+      renderElement.querySelectorAll('pre code').forEach((el) => {
         hljs.highlightElement(el as HTMLElement);
       });
     });

@@ -4,7 +4,7 @@ import { validateTokenFromRequest } from '$lib/server/auth/tokens';
 import { getPortfolioGlobals } from '$lib/server/data/index';
 import { getRepoStatus } from '$lib/server/git';
 
-export async function GET({ request, cookies }) {
+export async function GET({ request, cookies }: import('./$types.js').RequestEvent) {
   await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest({ request, cookies });
 

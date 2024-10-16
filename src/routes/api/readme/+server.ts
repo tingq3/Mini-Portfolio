@@ -12,7 +12,7 @@ export async function GET() {
   return json({ readme: data.readme }, { status: 200 });
 }
 
-export async function PUT(req) {
+export async function PUT(req: import('./$types.js').RequestEvent) {
   await getPortfolioGlobals().catch(e => error(400, e));
   await validateTokenFromRequest(req);
 

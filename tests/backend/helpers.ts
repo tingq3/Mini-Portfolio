@@ -10,9 +10,8 @@ import { getDataDir } from '$lib/server/data/dataDir';
 export async function setup(repoUrl?: string, branch?: string) {
   const username = 'admin';
   const password = 'abc123ABC!';
-  const token
-    = (await api(undefined).admin.firstrun(username, password, repoUrl, branch))
-      .token;
+  const { token } = await api().admin.firstrun.account(username, password);
+  await api(token).admin.firstrun.data(repoUrl, branch);
   return {
     api: api(token),
     token,

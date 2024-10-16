@@ -1,5 +1,5 @@
 <script>
-  import api from "$endpoints";
+  import api from '$endpoints';
 </script>
 
 <div>

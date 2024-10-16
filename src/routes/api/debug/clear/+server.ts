@@ -4,8 +4,8 @@ import { invalidatePortfolioGlobals } from '$lib/server/data/index';
 import { error, json } from '@sveltejs/kit';
 import { rimraf } from 'rimraf';
 
-export async function DELETE({ cookies }) {
-  if (!dev) throw error(404);
+export async function DELETE({ cookies }: import('./$types.js').RequestEvent) {
+  if (!dev) error(404);
   // Delete data directory
   await rimraf(getDataDir());
   await rimraf(getPrivateDataDir());

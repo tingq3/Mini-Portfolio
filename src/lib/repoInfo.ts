@@ -32,7 +32,7 @@ export const repoProviders: Record<RepoProvider, RepoProviderInfo> = {
       // https://github.com/orgs/community/discussions/31111#discussioncomment-3492603
       const res = await fetch(`https://api.github.com/repos/${repo}`);
       const json = await res.json();
-      return json.stargazers_count;
+      return json.stargazers_count as number;
     },
   },
   // GitLab

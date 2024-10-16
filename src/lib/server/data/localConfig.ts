@@ -1,5 +1,5 @@
 import { readFile, writeFile } from 'fs/promises';
-import { number, object, record, string, validate, type Infer } from 'superstruct';
+import { nullable, number, object, record, string, validate, type Infer } from 'superstruct';
 import { getPrivateDataDir } from './dataDir';
 
 /** Path to config.local.json */
@@ -47,6 +47,17 @@ export const ConfigLocalJsonStruct = object({
       revokedSessions: record(string(), number()),
     })
   })),
+  /**
+   * Path to the private key file which the server should use when connecting
+   * to git repos.
+   *
+   * The public key file is expected to be the same as the private key, with a
+   * `.pub` suffix.
+   *
+   * If this is `null`, then the `ssh` executable will be free to choose an
+   * appropriate SSH key to use.
+   */
+  keyPath: nullable(string()),
   /** Version of server that last accessed the config.local.json */
   version: string(),
 });

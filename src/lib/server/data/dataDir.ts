@@ -33,7 +33,7 @@ export function getPrivateDataDir(): string {
  * Currently, this checks for the existence of a config.json, but in the future
  * I may force it to check more thoroughly for data validity.
  */
-export async function dataDirContainsData(): Promise<boolean> {
+export async function dataIsSetUp(): Promise<boolean> {
   const repoPath = getDataDir();
   return await fileExists(path.join(repoPath, 'config.json'));
 }
@@ -50,7 +50,7 @@ export async function dataDirUsesGit(): Promise<boolean> {
  *
  * This checks for the existence of a config.local.json.
  */
-export async function serverIsSetUp(): Promise<boolean> {
+export async function authIsSetUp(): Promise<boolean> {
   const repoPath = getPrivateDataDir();
   return await fileExists(path.join(repoPath, 'config.local.json'));
 }

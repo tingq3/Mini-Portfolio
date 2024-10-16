@@ -5,7 +5,7 @@ import { dev, version } from '$app/environment';
 import fs from 'fs/promises';
 import { getConfig, setConfig } from '../config';
 import { getLocalConfig, setLocalConfig } from '../localConfig';
-import { serverIsSetUp } from '../dataDir';
+import { authIsSetUp } from '../dataDir';
 
 /** Update config versions (only for minor, non-breaking changes to config.json) */
 export async function updateConfigVersions() {
@@ -13,7 +13,7 @@ export async function updateConfigVersions() {
   config.version = version;
   await setConfig(config);
   // Only migrate local config if it is created
-  if (await serverIsSetUp()) {
+  if (await authIsSetUp()) {
     const configLocal = await getLocalConfig();
     configLocal.version = version;
     await setLocalConfig(configLocal);

@@ -21,7 +21,7 @@ export const TEST_REPO_RW = 'git@github.com:MadGutsBot/Portfolio-Test-Repo.git';
 /** Remove all commits from the test repo */
 export async function resetTestRepo() {
   await api().debug.clear();
-  await fs.mkdir(getDataDir());
+  await fs.mkdir(getDataDir(), { recursive: true });
   const git = simpleGit(getDataDir());
   await git.init()
     .checkoutLocalBranch('main')

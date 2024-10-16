@@ -1,14 +1,15 @@
 <script lang="ts">
-  import Background from "$components/Background.svelte";
-  import Navbar from "$components/navbar";
-  import Paper from "$components/Paper.svelte";
-  import consts from "$lib/consts";
-  import GitSettings from "./GitSettings.svelte";
-  import ChangePassword from "./ChangePassword.svelte";
-  import ReloadData from "./ReloadData.svelte";
-    import LogOutAll from "./LogOutAll.svelte";
+  import Background from '$components/Background.svelte';
+  import Navbar from '$components/navbar';
+  import Paper from '$components/Paper.svelte';
+  import consts from '$lib/consts';
+  import GitSettings from './GitSettings.svelte';
+  import ChangePassword from './ChangePassword.svelte';
+  import ReloadData from './ReloadData.svelte';
+  import LogOutAll from './LogOutAll.svelte';
+  import KeySettings from './KeySettings.svelte';
 
-  export let data: import("./$types").PageData;
+  export let data: import('./$types').PageData;
 </script>
 
 <svelte:head>
@@ -20,7 +21,7 @@
 </svelte:head>
 
 <Navbar
-  path={[{ txt: "Admin", url: "admin" }]}
+  path={[{ txt: 'Admin', url: 'admin' }]}
   config={data.globals.config}
   loggedIn={true}
 />
@@ -32,7 +33,11 @@
     <Paper>
       <div id="contents">
         <GitSettings {data} />
-        <ChangePassword username={"admin"} />
+        <KeySettings
+          publicKey={data.keys.publicKey}
+          privateKeyPath={data.keys.keyPath}
+        />
+        <ChangePassword username={'admin'} />
         <LogOutAll />
         <ReloadData />
       </div>

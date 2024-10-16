@@ -4,7 +4,7 @@
 
 import { mkdir } from 'fs/promises';
 import { runSshKeyscan, setupGitRepo, urlRequiresSsh } from '../git';
-import { dataDirContainsData, getDataDir } from './dataDir';
+import { dataIsSetUp, getDataDir } from './dataDir';
 import { initConfig } from './config';
 import { initReadme } from './readme';
 import { getPortfolioGlobals, invalidatePortfolioGlobals } from '.';
@@ -26,7 +26,7 @@ export async function setupData(repoUrl?: string, branch?: string): Promise<bool
   } else {
     // Otherwise, just create the data dir empty
     // Discard errors for this, as the dir may already exist
-    await mkdir(getDataDir()).catch(() => { });
+    await mkdir(getDataDir(), { recursive: true }).catch(() => { });
     // Currently, gitignore is not needed, since private data is now stored
     // separately
     // await setupGitignore();
@@ -39,7 +39,7 @@ export async function setupData(repoUrl?: string, branch?: string): Promise<bool
   let firstTime = false;
 
   // If data dir is empty, set up default configuration
-  if (!await dataDirContainsData()) {
+  if (!await dataIsSetUp()) {
     firstTime = true;
     await initConfig();
     // Also set up a default README

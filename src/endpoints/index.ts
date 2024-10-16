@@ -5,7 +5,7 @@ import group from './group';
 import readme from './readme';
 
 /** Create an instance of the API client with the given token */
-export default function api(token?: string | undefined) {
+export default function api(token?: string  ) {
   return {
     admin: admin(token),
     debug: debug(token),

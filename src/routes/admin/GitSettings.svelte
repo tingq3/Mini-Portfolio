@@ -1,17 +1,17 @@
 <script lang="ts">
-  import api from "$endpoints";
+  import api from '$endpoints';
 
-  export let data: import("./$types").PageData;
+  export let data: import('./$types').PageData;
 
   // Git setup
-  let gitUrl = "";
+  let gitUrl = '';
 
   async function submitSwitchToGit() {
     await api().admin.git.init(gitUrl);
   }
 
   // Git controls
-  let commitMessage = "";
+  let commitMessage = '';
 
   async function gitCommit() {
     await api().admin.git.commit(commitMessage);
@@ -50,9 +50,9 @@
         {#each data.repo.changes as change}
           {#if change.from}
             <li>Rename {change.from} to ({change.path})</li>
-          {:else if change.index === "?"}
+          {:else if change.index === '?'}
             <li>Create {change.path}</li>
-          {:else if change.index === "D"}
+          {:else if change.index === 'D'}
             <li>Delete {change.path}</li>
           {:else}
             <li>Update {change.path}</li>
