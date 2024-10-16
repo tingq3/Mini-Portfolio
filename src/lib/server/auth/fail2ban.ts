@@ -105,3 +105,16 @@ export async function allowIp(ip: string) {
   config.loginBannedIps[ip] = false;
   await setLocalConfig(config);
 }
+
+/** Get whether fail2ban is enabled */
+export async function isFail2banEnabled() {
+  const config = await getLocalConfig();
+  return config.enableFail2ban;
+}
+
+/** Set whether fail2ban is enabled */
+export async function setFail2Ban(newState: boolean) {
+  const config = await getLocalConfig();
+  config.enableFail2ban = newState;
+  await setLocalConfig(config);
+}
