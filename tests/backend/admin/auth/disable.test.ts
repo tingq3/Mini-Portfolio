@@ -9,7 +9,9 @@ it('Disables authentication', async () => {
   await expect(api.admin.auth.disable(username, password)).resolves.toStrictEqual({});
   // Logging in should fail
   await expect(api.admin.auth.login(username, password))
-    .rejects.toMatchObject({ code: 403 });
+    // This is a 401 because we are partially migrated to a multi-user setup,
+    // so this is equivalent to an incorrect username
+    .rejects.toMatchObject({ code: 401 });
   // And any operation using the token should also fail
   // Technically, this should be a 403, since no value can ever be successful,
   // but I don't want to add another code path

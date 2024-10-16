@@ -1,5 +1,5 @@
 import { readFile, writeFile } from 'fs/promises';
-import { nullable, number, object, record, string, validate, type Infer } from 'superstruct';
+import { array, boolean, nullable, number, object, record, string, union, validate, type Infer } from 'superstruct';
 import { getPrivateDataDir } from './dataDir';
 
 /** Path to config.local.json */
@@ -47,6 +47,12 @@ export const ConfigLocalJsonStruct = object({
       revokedSessions: record(string(), number()),
     })
   })),
+  /**
+   * A mapping of IP addresses to the array of their most recent login fail
+   * timestamps, or a boolean indicating whether they are permanently banned
+   * (`true`) or must never be banned (`false`).
+   */
+  fail2banIps: record(string(), union([array(number()), boolean()])),
   /**
    * Path to the private key file which the server should use when connecting
    * to git repos.

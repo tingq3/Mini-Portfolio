@@ -50,10 +50,9 @@ it('Blocks logins with incorrect passwords', async () => {
     .rejects.toMatchObject({ code: 401 });
 });
 
-// This test fails, because I haven't implemented the feature yet
-it('Blocks all logins after 25 failed login requests', { fails: true }, async () => {
+it('Blocks all logins after 25 failed login requests', async () => {
   for (let i = 0; i < 25; i++) {
-    await api().admin.auth.login(credentials.username + 'hi', credentials.password)
+    await api().admin.auth.login(credentials.username, 'incorrect')
       // Discard error
       .catch(() => {});
   }
@@ -75,7 +74,7 @@ it('Has random variance in the timing for failed passwords', async () => {
   // ban is reduced
   // and perhaps find a way to get vitest to retry it a number of times if it
   // fails
-  for (let i = 0; i < 25; i++) {
+  for (let i = 0; i < 10; i++) {
     const start = Date.now();
     try {
       await api().admin.auth.login(credentials.username + 'hi', credentials.password);
