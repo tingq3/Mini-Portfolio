@@ -11,10 +11,14 @@ import { defaultKeysDirectory, getPrivateKeyPath } from './keys';
 /** Path to the SSH known hosts file */
 const knownHostsFile = () => path.join(defaultKeysDirectory(), 'known_hosts');
 
-export const gitClient = async () => {
-  let git = simpleGit(getDataDir());
+/**
+ * Create a git client in the given directory.
+ *
+ * This configures `simpleGit` to use the configured SSH keys.
+ */
+export const gitClient = async (baseDir: string | undefined) => {
+  let git = simpleGit(baseDir);
   if (await getPrivateKeyPath()) {
-    // Specify known_hosts file with -o (https://stackoverflow.com/a/62725161/6335363)
     git = git.env(
       'GIT_SSH_COMMAND',
       [
@@ -25,9 +29,9 @@ export const gitClient = async () => {
         // Only use specified identity file
         '-o',
         'IdentitiesOnly=yes',
-        // Specify known hosts file
+        // Specify known_hosts file with -o (https://stackoverflow.com/a/62725161/6335363)
         '-o',
-        knownHostsFile(),
+        `UserKnownHostsFile=${knownHostsFile()}`,
       ].join(' '),
     );
   }
@@ -95,18 +99,18 @@ export async function runSshKeyscan(url: string) {
 
 /** Return status info for repo */
 export async function getRepoStatus(): Promise<RepoStatus> {
-  const repo = await gitClient();
-  const status = await repo.status();
+  const git = await gitClient(getDataDir());
+  const status = await git.status();
 
   // Workaround for issue with simple-git
   // https://github.com/steveukx/git-js/issues/1020
   const branch = status.current !== 'No' ? status.current : null;
 
   return {
-    url: (await repo.remote(['get-url', 'origin']) || '').trim(),
+    url: (await git.remote(['get-url', 'origin']) || '').trim(),
     branch,
     // If command fails, no commit has been made
-    commit: await repo.revparse(['--short', 'HEAD']).catch(() => null),
+    commit: await git.revparse(['--short', 'HEAD']).catch(() => null),
     clean: status.isClean(),
     ahead: status.ahead,
     behind: status.behind,
@@ -131,7 +135,7 @@ export async function setupGitRepo(repo: string, branch?: string | null) {
   const options: Record<string, string> = branch ? { '--branch': branch } : {};
 
   try {
-    await simpleGit().clone(repo, dir, options);
+    await gitClient(undefined).then(git => git.clone(repo, dir, options));
   } catch (e: any) {
     console.log(e);
     error(400, `${e}`);
@@ -156,7 +160,7 @@ export async function setupGitRepo(repo: string, branch?: string | null) {
 
 /** Initialize a git repo with the given remote URL */
 export async function initRepo(url: string) {
-  const git = await gitClient();
+  const git = await gitClient(getDataDir());
   await git.init().addRemote('origin', url);
 
   // For SSH URLs, we may need to add the URL as a known host
@@ -178,7 +182,7 @@ export async function initRepo(url: string) {
  * later.
  */
 export async function commit(message: string) {
-  const git = await gitClient();
+  const git = await gitClient(getDataDir());
 
   const changes = await git.status();
   if (!changes.files.length) {
@@ -192,7 +196,7 @@ export async function commit(message: string) {
 
 /** Perform a `git pull` operation */
 export async function pull() {
-  const git = await gitClient();
+  const git = await gitClient(getDataDir());
 
   const { commit: prevCommit } = await getRepoStatus();
 
@@ -207,7 +211,7 @@ export async function pull() {
 
 /** Perform a `git push` operation */
 export async function push() {
-  const git = await gitClient();
+  const git = await gitClient(getDataDir());
 
   const { ahead } = await getRepoStatus();
 
