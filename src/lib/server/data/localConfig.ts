@@ -1,5 +1,5 @@
 import { readFile, writeFile } from 'fs/promises';
-import { nullable, number, object, record, string, validate, type Infer } from 'superstruct';
+import { array, boolean, nullable, number, object, record, string, union, validate, type Infer } from 'superstruct';
 import { getPrivateDataDir } from './dataDir';
 
 /** Path to config.local.json */
@@ -47,6 +47,31 @@ export const ConfigLocalJsonStruct = object({
       revokedSessions: record(string(), number()),
     })
   })),
+  /**
+   * Whether to enable fail2ban, where IP addresses that fail to log in are
+   * banned.
+   *
+   * If this is set to `true`, the server will store an array of timestamps for
+   * login fails for incoming IP addresses, and if that IP has a login failure
+   * too often, it will be banned from attempting to log in temporarily.
+   */
+  enableFail2ban: boolean(),
+  /**
+   * A mapping of IP addresses to the array of their most recent login fail
+   * timestamps, or a boolean indicating whether they are permanently banned
+   * (`true`) or must never be banned (`false`).
+   */
+  loginBannedIps: record(string(), union([array(number()), boolean()])),
+  /**
+   * Array of banned IP addresses. All requests from these IP addresses will
+   * be blocked.
+   */
+  bannedIps: array(string()),
+  /**
+   * Array of regular expressions matching user-agent strings which should be
+   * blocked.
+   */
+  bannedUserAgents: array(string()),
   /**
    * Path to the private key file which the server should use when connecting
    * to git repos.

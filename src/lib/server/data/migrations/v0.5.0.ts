@@ -5,6 +5,7 @@
  *
  * * Move `config.local.json` to the new private data directory.
  * * Re-structure user auth info to support multiple users in the future
+ * * Add more properties for banning IPs and user-agents
  */
 
 import { nanoid } from 'nanoid';
@@ -31,6 +32,13 @@ async function updateLocalConfig(privateDataDir: string) {
     return;
   }
 
+  // Add IP/user-agent ban fields
+  config.enableFail2ban = true;
+  config.loginBannedIps = {};
+  config.bannedIps = [];
+  config.bannedUserAgents = [];
+
+  // Add SSH key path field
   config.keyPath = null;
 
   const userInfo = config.auth;

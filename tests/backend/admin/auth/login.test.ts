@@ -2,10 +2,22 @@
  * Tests for POST /api/admin/auth/login
  *
  * Allows users to log into the site, enabling editing of the data.
+ *
+ * # Errors
+ * - Invalid username
+ * - Invalid password
+ * - After repeated failed logins, all requests are rejected
+ *
+ * # Success
+ * - Lets user log in if they give the correct credentials
+ *
+ * # Edge cases
+ * - Empty form fields
  */
-import { it, expect, beforeEach } from 'vitest';
+import { it, expect, beforeEach, describe } from 'vitest';
 import { setup } from '../../helpers';
 import api from '$endpoints';
+import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig';
 
 let credentials: Awaited<ReturnType<typeof setup>>;
 
@@ -25,13 +37,18 @@ it('Returns a token when correct credentials are provided', async () => {
 });
 
 it('Blocks logins with non-existent usernames', async () => {
-  await expect(api().admin.auth.login(credentials.username + 'hi', credentials.password))
-    .rejects.toMatchObject({ code: 403 });
+  await expect(api().admin.auth.login('invalid user', credentials.password))
+    .rejects.toMatchObject({ code: 401 });
+});
+
+it('Errors if fields are empty', async () => {
+  await expect(api().admin.auth.login('', ''))
+    .rejects.toMatchObject({ code: 401 });
 });
 
 it('Blocks logins with incorrect passwords', async () => {
-  await expect(api().admin.auth.login(credentials.username, credentials.password + 'hi'))
-    .rejects.toMatchObject({ code: 403 });
+  await expect(api().admin.auth.login(credentials.username, 'incorrect password'))
+    .rejects.toMatchObject({ code: 401 });
 });
 
 /**
@@ -43,7 +60,11 @@ it('Has random variance in the timing for failed passwords', async () => {
   let slowest = -1;
   // Run many logins, and check that there is more than 10ms difference between the
   // fastest and slowest
-  for (let i = 0; i < 25; i++) {
+  // FIXME: Reduce this number so that the number of unsuccessful logins before a
+  // ban is reduced
+  // and perhaps find a way to get vitest to retry it a number of times if it
+  // fails
+  for (let i = 0; i < 10; i++) {
     const start = Date.now();
     try {
       await api().admin.auth.login(credentials.username + 'hi', credentials.password);
@@ -60,4 +81,30 @@ it('Has random variance in the timing for failed passwords', async () => {
 
   // Now make sure that the difference is big enough
   expect(slowest - fastest).toBeGreaterThanOrEqual(10);
+});
+
+describe('fail2ban', () => {
+  beforeEach(async () => {
+    // Manually enable fail2ban, because the API isn't added yet
+    const config = await getLocalConfig();
+    config.enableFail2ban = true;
+    await setLocalConfig(config);
+    // Manually refresh data
+    await api().debug.dataRefresh();
+  });
+
+  it('Blocks all logins after 25 failed login requests', async () => {
+    for (let i = 0; i < 25; i++) {
+      await api().admin.auth.login(credentials.username, 'incorrect')
+        // Discard error
+        .catch(() => { });
+    }
+    // User has been banned because of login failure happening too many times
+    await expect(api().admin.auth.login(credentials.username, credentials.password))
+      .rejects.toMatchObject({ code: 403 });
+  });
+
+  it.todo('IPs are un-banned after 24 hours');
+
+  it.todo('Other IPs are not banned from logging in');
 });

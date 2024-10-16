@@ -43,7 +43,7 @@ export function hashAndSalt(salt: string, password: string): string {
 export async function validateCredentials(
   username: string,
   password: string,
-  code = 403,
+  code = 401,
 ): Promise<string> {
   const local = await getLocalConfig();
 

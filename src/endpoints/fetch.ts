@@ -5,7 +5,7 @@ import { browser } from '$app/environment';
 
 export type HttpVerb = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-function getUrl() {
+export function getUrl() {
   if (browser) {
     // Running in browser (request to whatever origin we are running in)
     return '';

@@ -143,7 +143,7 @@ export async function validateTokenFromRequest(req: { request: Request, cookies:
     error(401, 'A token is required to access this endpoint');
   }
   const data = await validateToken(token).catch(e => {
-    console.log(e);
+    // console.log(e);
     // Remove token from cookies, as it is invalid
     req.cookies.delete('token', { path: '/' });
     error(401, `${e}`);
