@@ -14,7 +14,7 @@
  * # Edge cases
  * - Empty form fields
  */
-import { it, expect, beforeEach } from 'vitest';
+import { it, expect, beforeEach, describe } from 'vitest';
 import { setup } from '../../helpers';
 import api from '$endpoints';
 import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig';
@@ -51,23 +51,6 @@ it('Blocks logins with incorrect passwords', async () => {
     .rejects.toMatchObject({ code: 401 });
 });
 
-it('Blocks all logins after 25 failed login requests', async () => {
-  // Manually enable fail2ban
-  const config = await getLocalConfig();
-  config.enableFail2ban = true;
-  await setLocalConfig(config);
-  // Manually refresh data
-  await api().debug.dataRefresh();
-  for (let i = 0; i < 25; i++) {
-    await api().admin.auth.login(credentials.username, 'incorrect')
-      // Discard error
-      .catch(() => { });
-  }
-  // User has been banned because of login failure happening too many times
-  await expect(api().admin.auth.login(credentials.username, credentials.password))
-    .rejects.toMatchObject({ code: 403 });
-});
-
 /**
  * Run many failed login attempts, and ensure that there is a significant
  * difference between the times on average.
@@ -98,4 +81,30 @@ it('Has random variance in the timing for failed passwords', async () => {
 
   // Now make sure that the difference is big enough
   expect(slowest - fastest).toBeGreaterThanOrEqual(10);
+});
+
+describe('fail2ban', () => {
+  beforeEach(async () => {
+    // Manually enable fail2ban, because the API isn't added yet
+    const config = await getLocalConfig();
+    config.enableFail2ban = true;
+    await setLocalConfig(config);
+    // Manually refresh data
+    await api().debug.dataRefresh();
+  });
+
+  it('Blocks all logins after 25 failed login requests', async () => {
+    for (let i = 0; i < 25; i++) {
+      await api().admin.auth.login(credentials.username, 'incorrect')
+        // Discard error
+        .catch(() => { });
+    }
+    // User has been banned because of login failure happening too many times
+    await expect(api().admin.auth.login(credentials.username, credentials.password))
+      .rejects.toMatchObject({ code: 403 });
+  });
+
+  it.todo('IPs are un-banned after 24 hours');
+
+  it.todo('Other IPs are not banned from logging in');
 });
