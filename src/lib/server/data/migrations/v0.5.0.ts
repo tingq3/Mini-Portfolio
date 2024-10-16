@@ -31,6 +31,13 @@ async function updateLocalConfig(privateDataDir: string) {
     return;
   }
 
+  // Add IP/user-agent ban fields
+  config.enableFail2ban = true;
+  config.loginBannedIps = {};
+  config.bannedIps = [];
+  config.bannedUserAgents = [];
+
+  // Add SSH key path field
   config.keyPath = null;
 
   const userInfo = config.auth;
