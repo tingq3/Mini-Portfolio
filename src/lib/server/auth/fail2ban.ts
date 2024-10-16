@@ -27,13 +27,13 @@ function filterExpiredLogs(failTimestamps: number[]): number[] {
 /** Returns whether the given IP address is banned from attempting logins */
 export async function isIpBanned(ip: string) {
   const config = await getLocalConfig();
-  if (!(ip in config.bannedIps)) {
+  if (!(ip in config.loginBannedIps)) {
     // By default, IP addresses are not banned
     return false;
   }
   // Check for explicit bans
-  if (typeof config.bannedIps[ip] === 'boolean') {
-    return config.bannedIps[ip];
+  if (typeof config.loginBannedIps[ip] === 'boolean') {
+    return config.loginBannedIps[ip];
   }
 
   // If fail2ban is disabled, skip this logic
@@ -41,7 +41,7 @@ export async function isIpBanned(ip: string) {
     return false;
   }
 
-  const failTimestamps = config.bannedIps[ip];
+  const failTimestamps = config.loginBannedIps[ip];
   // IP has failed to log in too many times
   if (failTimestamps.length >= FAILS_UNTIL_BAN) {
     // Ban is still active if last failed login is longer than BAN_DURATIOn ago
@@ -49,7 +49,7 @@ export async function isIpBanned(ip: string) {
       return true;
     }
     // Otherwise, reset the expired logins, since the ban has finished
-    delete config.bannedIps[ip];
+    delete config.loginBannedIps[ip];
     await setLocalConfig(config);
   }
   // IP is not banned, hasn't failed enough times
@@ -61,7 +61,7 @@ export async function notifyFailedLogin(ip: string) {
   const config = await getLocalConfig();
 
   // Explicitly banned/allowed IPs require no action
-  if (typeof config.bannedIps[ip] === 'boolean') {
+  if (typeof config.loginBannedIps[ip] === 'boolean') {
     return;
   }
 
@@ -71,11 +71,11 @@ export async function notifyFailedLogin(ip: string) {
   }
 
   // Filter expired login failures from the list
-  const failTimestamps = filterExpiredLogs(config.bannedIps[ip] ?? []);
+  const failTimestamps = filterExpiredLogs(config.loginBannedIps[ip] ?? []);
   // Then push the new failure time to the end
   failTimestamps.push(unixTime());
 
-  config.bannedIps[ip] = failTimestamps;
+  config.loginBannedIps[ip] = failTimestamps;
   await setLocalConfig(config);
 }
 
@@ -83,11 +83,11 @@ export async function notifyFailedLogin(ip: string) {
 export async function unbanIp(ip: string) {
   const config = await getLocalConfig();
 
-  if (!(ip in config.bannedIps)) {
+  if (!(ip in config.loginBannedIps)) {
     error(400, 'This IP address has not been configured');
   }
 
-  delete config.bannedIps[ip];
+  delete config.loginBannedIps[ip];
 
   await setLocalConfig(config);
 }
@@ -95,13 +95,13 @@ export async function unbanIp(ip: string) {
 /** Permanently ban an IP address */
 export async function banIp(ip: string) {
   const config = await getLocalConfig();
-  config.bannedIps[ip] = true;
+  config.loginBannedIps[ip] = true;
   await setLocalConfig(config);
 }
 
 /** Allow all login attempts from an IP */
 export async function allowIp(ip: string) {
   const config = await getLocalConfig();
-  config.bannedIps[ip] = false;
+  config.loginBannedIps[ip] = false;
   await setLocalConfig(config);
 }

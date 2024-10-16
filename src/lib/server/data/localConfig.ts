@@ -61,7 +61,7 @@ export const ConfigLocalJsonStruct = object({
    * timestamps, or a boolean indicating whether they are permanently banned
    * (`true`) or must never be banned (`false`).
    */
-  bannedIps: record(string(), union([array(number()), boolean()])),
+  loginBannedIps: record(string(), union([array(number()), boolean()])),
   /**
    * Path to the private key file which the server should use when connecting
    * to git repos.

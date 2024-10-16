@@ -51,7 +51,7 @@ export async function authSetup(
       },
     },
     enableFail2ban: false,
-    bannedIps: {},
+    loginBannedIps: {},
     keyPath: null,
     version,
   };
