@@ -54,6 +54,7 @@ export async function authSetup(
     loginBannedIps: {},
     bannedIps: [],
     bannedUserAgents: [],
+    allowCloudflareIp: false,
     keyPath: null,
     version,
   };

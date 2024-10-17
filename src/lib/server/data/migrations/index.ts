@@ -5,6 +5,7 @@ import migrateToV020 from './v0.2.0';
 import migrateToV030 from './v0.3.0';
 import migrateToV040 from './v0.4.0';
 import migrateToV060 from './v0.6.0';
+import migrateToV061 from './v0.6.1';
 import semver from 'semver';
 
 
@@ -22,8 +23,9 @@ const migrations: Record<string, MigrationFunction> = {
   // function
   '~0.4.0': migrateToV060,
   '~0.5.0': migrateToV060,
+  '0.6.0': migrateToV061,
   // Pre-empt future releases
-  '~0.6.0': updateConfigVersions,
+  '~0.6.1': updateConfigVersions,
 };
 
 /** Perform a migration from the given version */

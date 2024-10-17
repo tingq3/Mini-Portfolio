@@ -68,6 +68,12 @@ export const ConfigLocalJsonStruct = object({
    */
   bannedIps: array(string()),
   /**
+   * Whether to allow determining incoming IP addresses using Cloudflare's
+   * `CF-Connecting-IP` header. Only enable if running behind a Cloudflare
+   * tunnel, otherwise the client's IP address can be faked.
+   */
+  allowCloudflareIp: boolean(),
+  /**
    * Array of regular expressions matching user-agent strings which should be
    * blocked.
    */
