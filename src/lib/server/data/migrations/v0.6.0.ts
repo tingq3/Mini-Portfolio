@@ -9,18 +9,19 @@
  */
 
 import { nanoid } from 'nanoid';
-import { moveLocalConfig, updateConfigVersions } from './shared';
+import { moveLocalConfig } from './shared';
 import { unsafeLoadLocalConfig } from './unsafeLoad';
 import { setLocalConfig } from '../localConfig';
 import { authIsSetUp } from '../dataDir';
 import semver from 'semver';
+import migrateV061 from './v0.6.1';
 
 export default async function migrate(dataDir: string, privateDataDir: string) {
   await moveLocalConfig(dataDir, privateDataDir);
   if (await authIsSetUp()) {
     await updateLocalConfig(privateDataDir);
   }
-  await updateConfigVersions();
+  await migrateV061(dataDir, privateDataDir);
 }
 
 async function updateLocalConfig(privateDataDir: string) {
