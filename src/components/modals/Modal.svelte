@@ -33,7 +33,8 @@
   }>();
 </script>
 
-<!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
 <div class="outer" style="display: {display};" onclick={close}>
   <div class="inner">
     <div class="box" style="background-color: {color};" onclick={stopPropagation(bubble('click'))}>
@@ -41,6 +42,7 @@
         {@render header?.()}
         {#if canClose}
           <span></span>
+          <!-- svelte-ignore a11y_consider_explicit_label -->
           <button onclick={preventDefault(close)}>
             <i class="las la-times"></i>
           </button>

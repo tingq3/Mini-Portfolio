@@ -11,8 +11,8 @@
 
   let { text, hint = 'Copy', children }: Props = $props();
 
-  async function copy() {
-    await navigator.clipboard.writeText(text);
+  function copy() {
+    void navigator.clipboard.writeText(text);
   }
 </script>
 

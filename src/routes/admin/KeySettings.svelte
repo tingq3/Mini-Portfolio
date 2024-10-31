@@ -6,8 +6,8 @@
   import api from '$endpoints';
   import { APP_NAME } from '$lib/consts';
 
-  
-  
+
+
   interface Props {
     /** Public key currently being used by the server */
     publicKey: string | null;
@@ -50,7 +50,7 @@
       {APP_NAME} is using your system's default SSH configuration. Note that in Docker,
       this may be unset, unless you are forwarding your host's SSH agent.
     </p>
-    <form onsubmit={preventDefault(useKeyAtPath)}>
+    <form onsubmit={preventDefault(() => void useKeyAtPath)}>
       <p>Use the given SSH key-pair</p>
       <p>
         <input
@@ -61,7 +61,7 @@
       </p>
       <p><input type="submit" value="Set SSH key path" /></p>
     </form>
-    <form onsubmit={preventDefault(generateNewKey)}>
+    <form onsubmit={preventDefault(() => void generateNewKey)}>
       <p>Generate a new SSH key-pair</p>
       <p><input type="submit" value="Generate SSH key" /></p>
     </form>
@@ -71,7 +71,7 @@
     <p>Public key is:</p>
     <pre>{publicKey}</pre>
     <CopyButton text={publicKey ?? ''}>Copy to clipboard</CopyButton>
-    <form onsubmit={preventDefault(useKeyAtPath)}>
+    <form onsubmit={preventDefault(() => void useKeyAtPath)}>
       <p>Use the given SSH key-pair</p>
       <p>
         <input
@@ -82,11 +82,11 @@
       </p>
       <p><input type="submit" value="Set SSH key path" /></p>
     </form>
-    <form onsubmit={preventDefault(generateNewKey)}>
+    <form onsubmit={preventDefault(() => void generateNewKey)}>
       <p>Generate a new SSH key-pair</p>
       <p><input type="submit" value="Generate SSH key" /></p>
     </form>
-    <form onsubmit={preventDefault(useSystemSsh)}>
+    <form onsubmit={preventDefault(() => void useSystemSsh)}>
       <p>Use the system's SSH configuration</p>
       <p><input type="submit" value="Use system SSH" /></p>
     </form>
@@ -94,5 +94,5 @@
 </div>
 
 <style>
-  
+
 </style>

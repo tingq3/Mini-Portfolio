@@ -66,7 +66,7 @@
         {/each}
       </ul>
 
-      <form onsubmit={preventDefault(gitCommit)}>
+      <form onsubmit={preventDefault(() => void gitCommit)}>
         <input
           required
           type="text"
@@ -84,7 +84,7 @@
     You can use a Git repository to back up your portfolio data. Enter the clone
     URL for an empty Git repository and it will be set up for you.
 
-    <form onsubmit={preventDefault(submitSwitchToGit)}>
+    <form onsubmit={preventDefault(() => void submitSwitchToGit)}>
       <input
         required
         type="text"

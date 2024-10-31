@@ -7,7 +7,7 @@
     show: boolean;
   }
 
-  let { header, text, show }: Props = $props();
+  let { text, show }: Props = $props();
 </script>
 
 <Modal {show} color="white" canClose={false}>

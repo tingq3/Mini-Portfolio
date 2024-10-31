@@ -44,7 +44,7 @@
     <h2 >New item</h2>
   {/snippet}
   <p>Creating an item within the group '{groupId}'.</p>
-  <form onsubmit={preventDefault(makeItem)}>
+  <form onsubmit={preventDefault(() => {void makeItem()})}>
     <p>
       Item name
       <input

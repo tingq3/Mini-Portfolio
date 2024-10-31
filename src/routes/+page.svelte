@@ -85,7 +85,7 @@
   />
 
   {#if editing}
-    <form onsubmit={preventDefault(() => finishEditing(true))}>
+    <form onsubmit={preventDefault(() => (void finishEditing(true)))}>
       <h2>Site name</h2>
       <input type="text" placeholder="My portfolio" bind:value={configEdit.siteName} required>
       <p>

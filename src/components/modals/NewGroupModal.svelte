@@ -41,7 +41,7 @@
   {#snippet header()}
     <h2 >New group</h2>
   {/snippet}
-  <form onsubmit={preventDefault(makeGroup)}>
+  <form onsubmit={preventDefault(() => {void makeGroup()})}>
     <p>
       Group name
       <input
