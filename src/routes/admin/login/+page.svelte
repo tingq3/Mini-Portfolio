@@ -7,12 +7,16 @@
   import consts from '$lib/consts';
   import { onMount } from 'svelte';
 
-  export let data: import('./$types').PageData;
+  interface Props {
+    data: import('./$types').PageData;
+  }
+
+  let { data }: Props = $props();
 
   let previousPage: string;
 
-  let username = '';
-  let password = '';
+  let username = $state('');
+  let password = $state('');
 
   onMount(() => {
     previousPage =
@@ -77,7 +81,7 @@
           type="submit"
           id="submit-main"
           value="Log in"
-          on:click={doLogin}
+          onclick={doLogin}
         />
       </form>
     </main>

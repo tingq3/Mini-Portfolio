@@ -1,8 +1,15 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import { tooltip } from '$lib/tooltip';
 
-  export let text: string;
-  export let hint = 'Copy';
+  interface Props {
+    text: string;
+    hint?: string;
+    children?: import('svelte').Snippet;
+  }
+
+  let { text, hint = 'Copy', children }: Props = $props();
 
   async function copy() {
     await navigator.clipboard.writeText(text);
@@ -11,10 +18,10 @@
 
 <button
   class="copy-btn"
-  on:click|preventDefault={copy}
+  onclick={preventDefault(copy)}
   use:tooltip={{ content: hint }}
 >
-  <slot/>
+  {@render children?.()}
 </button>
 
 <style>

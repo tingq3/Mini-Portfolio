@@ -1,17 +1,23 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import api from '$endpoints';
 
-  export let data: import('./$types').PageData;
+  interface Props {
+    data: import('./$types').PageData;
+  }
+
+  let { data }: Props = $props();
 
   // Git setup
-  let gitUrl = '';
+  let gitUrl = $state('');
 
   async function submitSwitchToGit() {
     await api().admin.git.init(gitUrl);
   }
 
   // Git controls
-  let commitMessage = '';
+  let commitMessage = $state('');
 
   async function gitCommit() {
     await api().admin.git.commit(commitMessage);
@@ -34,9 +40,9 @@
 
     <!-- Push/pull -->
     {#if data.repo.behind}
-      <button on:click={() => api().admin.git.pull()}>Pull</button>
+      <button onclick={() => api().admin.git.pull()}>Pull</button>
     {:else if data.repo.ahead}
-      <button on:click={() => api().admin.git.push()}>Push</button>
+      <button onclick={() => api().admin.git.push()}>Push</button>
     {/if}
 
     <!-- Commit -->
@@ -60,7 +66,7 @@
         {/each}
       </ul>
 
-      <form on:submit|preventDefault={gitCommit}>
+      <form onsubmit={preventDefault(gitCommit)}>
         <input
           required
           type="text"
@@ -78,7 +84,7 @@
     You can use a Git repository to back up your portfolio data. Enter the clone
     URL for an empty Git repository and it will be set up for you.
 
-    <form on:submit|preventDefault={submitSwitchToGit}>
+    <form onsubmit={preventDefault(submitSwitchToGit)}>
       <input
         required
         type="text"

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { Navbar } from '$components';
   import {
     IconCard,
@@ -14,19 +16,24 @@
   import consts from '$lib/consts';
   import { generateKeywords } from '$lib/seo';
   import EditControls from '$components/EditControls.svelte';
-  // import AsciinemaPlayer from "$components";
+  
 
-  export let data: import('./$types').PageData;
+  interface Props {
+    // import AsciinemaPlayer from "$components";
+    data: import('./$types').PageData;
+  }
 
-  let groupData = data.globals.groups[data.groupId];
-  let itemData = data.globals.items[data.groupId][data.itemId];
+  let { data }: Props = $props();
 
-  let editing = false;
+  let groupData = $state(data.globals.groups[data.groupId]);
+  let itemData = $state(data.globals.items[data.groupId][data.itemId]);
 
-  let readme = '';
+  let editing = $state(false);
 
-  let chipLinks = itemData.info.links.filter(([l]) => l.style === 'chip');
-  let cardLinks = itemData.info.links.filter(([l]) => l.style === 'card');
+  let readme = $state('');
+
+  let chipLinks = $state(itemData.info.links.filter(([l]) => l.style === 'chip'));
+  let cardLinks = $state(itemData.info.links.filter(([l]) => l.style === 'card'));
 
   function beginEditing() {
     editing = true;
@@ -102,7 +109,9 @@
     cardLinks = [...cardLinks];
   }
 
-  $: setupData(data.groupId, data.itemId);
+  run(() => {
+    setupData(data.groupId, data.itemId);
+  });
 </script>
 
 <!-- TODO: Find a less repetitive way to get SEO working nicely -->
@@ -170,7 +179,7 @@
             <input
               type="text"
               bind:value={linkOptions.title}
-              on:input={() =>
+              oninput={() =>
                 changeLinkTitle(linkOptions.groupId, linkOptions.title)}
             />
             <div class="chip-link-items">
@@ -203,7 +212,9 @@
           link={itemData.info.urls.site}
           color={itemData.info.color}
         >
-          <i slot="icon" class="las la-globe"></i>
+          {#snippet icon()}
+                    <i  class="las la-globe"></i>
+                  {/snippet}
         </IconCard>
       {/if}
       {#if itemData.info.urls.docs}
@@ -212,7 +223,9 @@
           link={itemData.info.urls.docs}
           color={itemData.info.color}
         >
-          <i slot="icon" class="lab la-readme"></i>
+          {#snippet icon()}
+                    <i  class="lab la-readme"></i>
+                  {/snippet}
         </IconCard>
       {/if}
       {#if itemData.info.urls.repo}

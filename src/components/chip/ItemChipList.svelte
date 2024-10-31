@@ -5,22 +5,29 @@
   import { Separator } from '$components';
   import type { FilterOptions } from '$lib/itemFilter';
 
-  /** Global data */
-  export let globals: PortfolioGlobals;
+  
 
-  /**
+  
+
+  
+  interface Props {
+    /** Global data */
+    globals: PortfolioGlobals;
+    /**
    * Filter options to display
    */
-  export let items: FilterOptions;
+    items: FilterOptions;
+    /** Whether to link each chip to its respective page */
+    link?: boolean;
+  }
 
-  /** Whether to link each chip to its respective page */
-  export let link = false;
+  let { globals, items, link = false }: Props = $props();
 
   // Smoooooooooooth scrolling
   // ==================================================
 
   /** Reference to this element  */
-  let ele: HTMLDivElement;
+  let ele: HTMLDivElement = $state();
   /**
    * Scroll position we are aiming for (used to prevent smooth scroll jank)
    */
@@ -108,7 +115,7 @@
   <div
     class="chip-list"
     bind:this={ele}
-    on:wheel={onWheel}
+    onwheel={onWheel}
   >
     {#each items as itemGroup, outer}
       {#each itemGroup as filterItem, inner}

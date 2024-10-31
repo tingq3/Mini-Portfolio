@@ -1,14 +1,20 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
     import { createEventDispatcher } from 'svelte';
   import Modal from './Modal.svelte';
     import api from '$endpoints';
     import { goto } from '$app/navigation';
-  export let show: boolean;
+  interface Props {
+    show: boolean;
+  }
 
-  let groupName = '';
-  let groupId = '';
-  let groupDescription = '';
-  let userModifiedId = false;
+  let { show }: Props = $props();
+
+  let groupName = $state('');
+  let groupId = $state('');
+  let groupDescription = $state('');
+  let userModifiedId = $state(false);
 
   const dispatch = createEventDispatcher();
 
@@ -32,15 +38,17 @@
 </script>
 
 <Modal {show} on:close={resetAndClose}>
-  <h2 slot="header">New group</h2>
-  <form on:submit|preventDefault={makeGroup}>
+  {#snippet header()}
+    <h2 >New group</h2>
+  {/snippet}
+  <form onsubmit={preventDefault(makeGroup)}>
     <p>
       Group name
       <input
         placeholder="Projects"
         bind:value={groupName}
         required
-        on:input={() => {
+        oninput={() => {
           // Whenever the user modifies the name, we should update the ID
           // to match, until the user modifies the ID themselves
           if (!userModifiedId) {
@@ -51,7 +59,7 @@
     </p>
     <p>
       Group ID
-      <input placeholder="projects" required bind:value={groupId} on:input={() => { userModifiedId = true; }} />
+      <input placeholder="projects" required bind:value={groupId} oninput={() => { userModifiedId = true; }} />
     </p>
     <p>
       Group description

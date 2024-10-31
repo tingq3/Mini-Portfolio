@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { Navbar } from '$components';
   import EditableMarkdown from '$components/markdown';
   import { ItemCardGrid } from '$components/card';
@@ -10,10 +12,14 @@
   import { generateKeywords } from '$lib/seo';
   import EditControls from '$components/EditControls.svelte';
 
-  export let data: import('./$types').PageData;
+  interface Props {
+    data: import('./$types').PageData;
+  }
 
-  let groupData = data.globals.groups[data.groupId];
-  let filterSelections = createItemFilter(data.globals, data.groupId);
+  let { data }: Props = $props();
+
+  let groupData = $state(data.globals.groups[data.groupId]);
+  let filterSelections = $state(createItemFilter(data.globals, data.groupId));
 
   // Items in group
   // ==================================================
@@ -21,19 +27,19 @@
   const listHiddenItems = (groupId: string) => Object.keys(data.globals.items[groupId])
     .filter(g => !groupData.info.listedItems.includes(g));
 
-  let editing = false;
-  let readme = groupData.readme;
+  let editing = $state(false);
+  let readme = $state(groupData.readme);
 
-  let shownItems = [...groupData.info.listedItems];
-  let hiddenItems = listHiddenItems(data.groupId);
+  let shownItems = $state([...groupData.info.listedItems]);
+  let hiddenItems = $state(listHiddenItems(data.groupId));
 
   /** By default list all items until a filter is applied */
-  let mainItemsList = shownItems;
+  let mainItemsList = $state(shownItems);
 
   // Filter groups for this group
   // ==================================================
 
-  let filterGroups: [string, boolean][] = [];
+  let filterGroups: [string, boolean][] = $state([]);
 
   function beginEditing() {
     editing = true;
@@ -88,8 +94,12 @@
   }
 
   // Reset data when the group ID changes
-  $: setupData(data.groupId);
-  $: updateMainItemsList(filterSelections, shownItems);
+  run(() => {
+    setupData(data.groupId);
+  });
+  run(() => {
+    updateMainItemsList(filterSelections, shownItems);
+  });
 </script>
 
 <!-- TODO: Find a less repetitive way to get SEO tags working nicely -->

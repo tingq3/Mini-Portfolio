@@ -3,26 +3,45 @@
   import { goto } from '$app/navigation';
   import Color from 'color';
 
-  /** Location to link to, or `false` to not give a link */
-  export let link: string | false = false;
-  /** Whether to open link in new tab */
-  export let newTab = false;
-  /** Color to use for the card */
-  export let color: string;
-  /** Whether the card has an icon */
-  export let hasIcon = false;
+  
+  
+  
+  
+  interface Props {
+    /** Location to link to, or `false` to not give a link */
+    link?: string | false;
+    /** Whether to open link in new tab */
+    newTab?: boolean;
+    /** Color to use for the card */
+    color: string;
+    /** Whether the card has an icon */
+    hasIcon?: boolean;
+    icon?: import('svelte').Snippet;
+    children?: import('svelte').Snippet;
+    bottom?: import('svelte').Snippet;
+  }
+
+  let {
+    link = false,
+    newTab = false,
+    color,
+    hasIcon = false,
+    icon,
+    children,
+    bottom
+  }: Props = $props();
 
   const dispatch = createEventDispatcher<{
     click: undefined,
   }>();
 
-  $: baseColor = Color(color).lightness(85).hex();
-  $: hoverColor = Color(color).lightness(70).hex();
+  let baseColor = $derived(Color(color).lightness(85).hex());
+  let hoverColor = $derived(Color(color).lightness(70).hex());
 </script>
 
 <a
   href={link || undefined}
-  on:click={async () => {
+  onclick={async () => {
     if (link) {
       await goto(link);
     } else {
@@ -39,19 +58,19 @@
     {#if hasIcon}
       <div class="card-grid">
         <div class="icon-div">
-          <slot name="icon" />
+          {@render icon?.()}
         </div>
         <div class="card-main">
-          <slot />
+          {@render children?.()}
         </div>
       </div>
     {:else}
       <div class="card-main">
-        <slot />
+        {@render children?.()}
       </div>
     {/if}
     <div class="card-bottom">
-      <slot name="bottom" />
+      {@render bottom?.()}
     </div>
   </div>
 </a>

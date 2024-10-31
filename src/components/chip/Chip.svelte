@@ -1,26 +1,44 @@
 <script lang="ts">
+  import { createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import { tooltip } from '$lib/tooltip';
   import Color from 'color';
 
-  /** Name to show for chip */
-  export let name: string;
-  /** Description to show on hover */
-  export let description: string;
-  /** Color to use for the chip */
-  export let color: string;
-  /** Location to link to on click (or `undefined` for no link) */
-  export let link: string | undefined;
-  /** Whether the chip should render as selected (filled) */
-  export let selected = false;
+  
+  
+  
+  
+  
+  interface Props {
+    /** Name to show for chip */
+    name: string;
+    /** Description to show on hover */
+    description: string;
+    /** Color to use for the chip */
+    color: string;
+    /** Location to link to on click (or `undefined` for no link) */
+    link: string | undefined;
+    /** Whether the chip should render as selected (filled) */
+    selected?: boolean;
+  }
 
-  $: fillColor = selected ? Color(color).lightness(80).hex() : Color(color).lightness(95).hex();
-  $: borderColor = selected ? Color(color).lightness(50).hex() : Color(color).lightness(85).hex();
-  $: hoverColor = Color(color).lightness(70).hex();
-  $: borderWidth = selected ? '2px' : '1px';
+  let {
+    name,
+    description,
+    color,
+    link,
+    selected = false
+  }: Props = $props();
+
+  let fillColor = $derived(selected ? Color(color).lightness(80).hex() : Color(color).lightness(95).hex());
+  let borderColor = $derived(selected ? Color(color).lightness(50).hex() : Color(color).lightness(85).hex());
+  let hoverColor = $derived(Color(color).lightness(70).hex());
+  let borderWidth = $derived(selected ? '2px' : '1px');
 </script>
 
 <a
-  on:click
+  onclick={bubble('click')}
   href={link}
 >
   <div

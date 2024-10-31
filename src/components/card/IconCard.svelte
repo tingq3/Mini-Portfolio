@@ -1,9 +1,19 @@
 <script lang="ts">
   import { Card } from '.';
 
-  export let title: string;
-  export let link: string | false = false;
-  export let color: string;
+  interface Props {
+    title: string;
+    link?: string | false;
+    color: string;
+    icon?: import('svelte').Snippet;
+  }
+
+  let {
+    title,
+    link = false,
+    color,
+    icon
+  }: Props = $props();
 </script>
 
 <Card
@@ -14,7 +24,7 @@
 >
   <span>
     <div class="icon-div">
-      <slot name="icon" />
+      {@render icon?.()}
     </div>
     <h3>{title}</h3>
   </span>

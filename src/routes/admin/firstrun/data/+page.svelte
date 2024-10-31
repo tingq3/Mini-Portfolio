@@ -11,11 +11,11 @@
   import consts from '$lib/consts';
   import KeySettings from '../../KeySettings.svelte';
 
-  export let data;
+  let { data } = $props();
 
   // Default values are auto-filled in dev mode
-  let repoUrl = dev ? 'git@github.com:MaddyGuthridge/portfolio-data.git' : '';
-  let repoBranch = '';
+  let repoUrl = $state(dev ? 'git@github.com:MaddyGuthridge/portfolio-data.git' : '');
+  let repoBranch = $state('');
 
   async function submitMain() {
     showLoading = true;
@@ -52,9 +52,9 @@
     }
   }
 
-  let showLoading = false;
+  let showLoading = $state(false);
 
-  let errorText = '';
+  let errorText = $state('');
 </script>
 
 <svelte:head>
@@ -90,7 +90,7 @@
       <div class="main-content">
         <KeySettings publicKey={data.publicKey} privateKeyPath={data.keyPath} />
 
-        <form on:submit={onSubmit}>
+        <form onsubmit={onSubmit}>
           <h3>Data repository URL</h3>
           <p>
             It's a good idea to set up a repository to back up your portfolio

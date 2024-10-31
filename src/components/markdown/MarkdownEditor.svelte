@@ -3,7 +3,11 @@
   import Markdown from './Markdown.svelte';
   import { createEventDispatcher } from 'svelte';
 
-  export let source: string;
+  interface Props {
+    source: string;
+  }
+
+  let { source = $bindable() }: Props = $props();
 
   const dispatch = createEventDispatcher<{ submit: undefined }>();
 
@@ -15,7 +19,7 @@
 </script>
 
 <div class="md-editor">
-  <textarea class="md-input" bind:value={source} on:keypress={handleKeypress}></textarea>
+  <textarea class="md-input" bind:value={source} onkeypress={handleKeypress}></textarea>
   <span class="md-preview">
     <Markdown {source} />
   </span>

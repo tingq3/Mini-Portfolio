@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import { Navbar } from '$components';
   import Background from '$components/Background.svelte';
   import { GroupCardGrid } from '$components/card';
@@ -9,20 +11,24 @@
   import { generateKeywords } from '$lib/seo';
   import type { ConfigJson } from '$lib/server/data/config';
 
-  export let data: import('./$types').PageData;
+  interface Props {
+    data: import('./$types').PageData;
+  }
+
+  let { data = $bindable() }: Props = $props();
 
   const listHiddenGroups = (config: ConfigJson) => Object.keys(data.globals.groups)
     .filter(g => !config.listedGroups.includes(g));
 
-  let editing: boolean;
-  let readme: string;
-  let configEdit: ConfigJson;
-  let siteKeywords: string;
+  let editing: boolean = $state();
+  let readme: string = $state();
+  let configEdit: ConfigJson = $state();
+  let siteKeywords: string = $state();
 
   /** Groups that are shown */
-  let listedGroups: string[];
+  let listedGroups: string[] = $state();
   /** Groups that are hidden */
-  let hiddenGroups: string[];
+  let hiddenGroups: string[] = $state();
 
   function setupData() {
     editing = false;
@@ -79,7 +85,7 @@
   />
 
   {#if editing}
-    <form on:submit|preventDefault={() => finishEditing(true)}>
+    <form onsubmit={preventDefault(() => finishEditing(true))}>
       <h2>Site name</h2>
       <input type="text" placeholder="My portfolio" bind:value={configEdit.siteName} required>
       <p>

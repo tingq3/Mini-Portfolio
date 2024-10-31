@@ -5,23 +5,27 @@
   import { onMount } from 'svelte';
   import { tooltip } from '$lib/tooltip';
 
-  export let repo: RepoInfo;
-  export let color: string;
+  interface Props {
+    repo: RepoInfo;
+    color: string;
+  }
 
-  $: repoUrl = (
-    repoIsWithProvider(repo)
+  let { repo, color }: Props = $props();
+
+  let repoUrl = (
+    $derived(repoIsWithProvider(repo)
       ? repoProviders[repo.provider].makeUrl(repo.path)
-      : repo.url);
+      : repo.url));
 
-  $: repoString = (
-    repoIsWithProvider(repo)
+  let repoString = (
+    $derived(repoIsWithProvider(repo)
       ? `${repoProviders[repo.provider].name}: ${repo.path}`
-      : repo.title);
+      : repo.title));
 
-  $: repoIcon = (
-    repoIsWithProvider(repo)
+  let repoIcon = (
+    $derived(repoIsWithProvider(repo)
       ? repoProviders[repo.provider].icon
-      : repo.icon ?? 'las la-code-branch');
+      : repo.icon ?? 'las la-code-branch'));
 
   async function fetchRepoStarCount(repo: RepoInfo): Promise<number | undefined> {
     // Manual repos can't display star counts
@@ -39,7 +43,7 @@
     }
   }
 
-  let repoStarCount: Promise<number | undefined> = Promise.resolve(undefined);
+  let repoStarCount: Promise<number | undefined> = $state(Promise.resolve(undefined));
 
   onMount(() => {
     repoStarCount = fetchRepoStarCount(repo);

@@ -2,13 +2,23 @@
   import type { PortfolioGlobals } from '$lib';
   import Chip from './Chip.svelte';
 
-  export let globals: PortfolioGlobals;
-  export let groupId: string;
-  export let itemId: string;
-  export let link = false;
-  export let selected = false;
+  interface Props {
+    globals: PortfolioGlobals;
+    groupId: string;
+    itemId: string;
+    link?: boolean;
+    selected?: boolean;
+  }
 
-  $: item = globals.items[groupId][itemId];
+  let {
+    globals,
+    groupId,
+    itemId,
+    link = false,
+    selected = false
+  }: Props = $props();
+
+  let item = $derived(globals.items[groupId][itemId]);
 </script>
 
 <Chip

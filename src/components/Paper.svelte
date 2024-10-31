@@ -1,9 +1,14 @@
 <script lang="ts">
-  export let opacity = 0.75;
+  interface Props {
+    opacity?: number;
+    children?: import('svelte').Snippet;
+  }
+
+  let { opacity = 0.75, children }: Props = $props();
 </script>
 
 <div class="paper" style="--opacity: {opacity}">
-  <slot></slot>
+  {@render children?.()}
 </div>
 
 <style>

@@ -1,10 +1,14 @@
 <script lang="ts">
   import api from '$endpoints';
 
-  export let username: string;
-  let originalPassword = '';
-  let newPassword = '';
-  let repeatNewPassword = '';
+  interface Props {
+    username: string;
+  }
+
+  let { username = $bindable() }: Props = $props();
+  let originalPassword = $state('');
+  let newPassword = $state('');
+  let repeatNewPassword = $state('');
 
   async function submitChangePassword() {
     await api().admin.auth.change(username, originalPassword, newPassword);
@@ -16,7 +20,7 @@
 
 <div>
   <h2>Change authentication</h2>
-  <form on:submit={submitChangePassword}>
+  <form onsubmit={submitChangePassword}>
     <p>
       Username
       <br />

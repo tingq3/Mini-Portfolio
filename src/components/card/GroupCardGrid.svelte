@@ -9,20 +9,32 @@
   import IconCard from './IconCard.svelte';
   import { NewGroupModal } from '$components/modals';
 
-  export let globals: PortfolioGlobals;
-  /** Groups to display */
-  export let groups: string[];
-  /** Whether edit mode is active */
-  export let editing: boolean;
-  /** Whether to give the option to create a group in edit mode */
-  export let createOption = false;
+  
+  
+  
+  interface Props {
+    globals: PortfolioGlobals;
+    /** Groups to display */
+    groups: string[];
+    /** Whether edit mode is active */
+    editing: boolean;
+    /** Whether to give the option to create a group in edit mode */
+    createOption?: boolean;
+  }
+
+  let {
+    globals,
+    groups,
+    editing,
+    createOption = false
+  }: Props = $props();
 
   const dispatch = createEventDispatcher<{
     click: { groupId: string },
   }>();
 
   // Logic for new group modal
-  let newGroupModalShown = false;
+  let newGroupModalShown = $state(false);
   function closeNewGroupModal() {
     newGroupModalShown = false;
   }
@@ -49,7 +61,9 @@
       color="#888888"
       on:click={() => { newGroupModalShown = true; }}
     >
-      <i slot="icon" class="las la-plus"></i>
+      {#snippet icon()}
+            <i  class="las la-plus"></i>
+          {/snippet}
     </IconCard>
     <NewGroupModal show={newGroupModalShown} on:close={closeNewGroupModal} />
   {/if}

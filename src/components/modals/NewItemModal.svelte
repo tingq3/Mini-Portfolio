@@ -1,16 +1,22 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import { createEventDispatcher } from 'svelte';
   import Modal from './Modal.svelte';
   import api from '$endpoints';
   import { goto } from '$app/navigation';
 
-  export let show: boolean;
-  export let groupId: string;
+  interface Props {
+    show: boolean;
+    groupId: string;
+  }
 
-  let itemName = '';
-  let itemId = '';
-  let itemDescription = '';
-  let userModifiedId = false;
+  let { show, groupId }: Props = $props();
+
+  let itemName = $state('');
+  let itemId = $state('');
+  let itemDescription = $state('');
+  let userModifiedId = $state(false);
 
   const dispatch = createEventDispatcher();
 
@@ -34,16 +40,18 @@
 </script>
 
 <Modal {show} on:close={resetAndClose}>
-  <h2 slot="header">New item</h2>
+  {#snippet header()}
+    <h2 >New item</h2>
+  {/snippet}
   <p>Creating an item within the group '{groupId}'.</p>
-  <form on:submit|preventDefault={makeItem}>
+  <form onsubmit={preventDefault(makeItem)}>
     <p>
       Item name
       <input
         placeholder="Manyfolio"
         bind:value={itemName}
         required
-        on:input={() => {
+        oninput={() => {
           // Whenever the user modifies the name, we should update the ID
           // to match, until the user modifies the ID themselves
           if (!userModifiedId) {
@@ -54,7 +62,7 @@
     </p>
     <p>
       Item ID
-      <input placeholder="manyfolio" required bind:value={itemId} on:input={() => { userModifiedId = true; }} />
+      <input placeholder="manyfolio" required bind:value={itemId} oninput={() => { userModifiedId = true; }} />
     </p>
     <p>
       Item description

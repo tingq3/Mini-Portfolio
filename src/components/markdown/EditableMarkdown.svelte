@@ -2,10 +2,16 @@
   import Markdown from './Markdown.svelte';
   import MarkdownEditor from './MarkdownEditor.svelte';
 
-  /** Markdown source code */
-  export let source: string;
-  /** Whether we are currently editing the markdown */
-  export let editing: boolean;
+  
+  
+  interface Props {
+    /** Markdown source code */
+    source: string;
+    /** Whether we are currently editing the markdown */
+    editing: boolean;
+  }
+
+  let { source = $bindable(), editing }: Props = $props();
 
   // const originalSource = source;
 </script>

@@ -3,18 +3,30 @@
   import Card from './Card.svelte';
   import { ItemChipList } from '$components/chip';
 
-  export let globals: PortfolioGlobals;
-  /** Group ID of item to show */
-  export let groupId: string;
-  /** Item ID of item to show */
-  export let itemId: string;
-  /** Whether edit mode is active */
-  export let editing: boolean;
+  
+  
+  
+  interface Props {
+    globals: PortfolioGlobals;
+    /** Group ID of item to show */
+    groupId: string;
+    /** Item ID of item to show */
+    itemId: string;
+    /** Whether edit mode is active */
+    editing: boolean;
+  }
 
-  $: item = globals.items[groupId][itemId];
-  $: associatedChips = item.info.links
+  let {
+    globals,
+    groupId,
+    itemId,
+    editing
+  }: Props = $props();
+
+  let item = $derived(globals.items[groupId][itemId]);
+  let associatedChips = $derived(item.info.links
     .filter(([{ style }]) => style === 'chip')
-    .map(([{ groupId }, items]) => items.map(itemId => ({ groupId, itemId, selected: false })));
+    .map(([{ groupId }, items]) => items.map(itemId => ({ groupId, itemId, selected: false }))));
 </script>
 
 <Card
@@ -23,24 +35,28 @@
   on:click
   hasIcon={!!item.info.icon}
 >
-  <div slot="icon">
-    {#if item.info.icon}
-      <img
-        src="/{groupId}/{itemId}/{item.info.icon}"
-        alt="Icon for {item.info.name}"
-        class="label-icon"
-      />
-    {/if}
-  </div>
+  {#snippet icon()}
+    <div >
+      {#if item.info.icon}
+        <img
+          src="/{groupId}/{itemId}/{item.info.icon}"
+          alt="Icon for {item.info.name}"
+          class="label-icon"
+        />
+      {/if}
+    </div>
+  {/snippet}
   <div>
     <h3>{item.info.name}</h3>
     <p>{item.info.description}</p>
   </div>
-  <div slot="bottom">
-    {#if !editing}
-      <ItemChipList items={associatedChips} {globals} link />
-    {/if}
-  </div>
+  {#snippet bottom()}
+    <div >
+      {#if !editing}
+        <ItemChipList items={associatedChips} {globals} link />
+      {/if}
+    </div>
+  {/snippet}
 </Card>
 
 <style>

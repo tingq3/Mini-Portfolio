@@ -1,9 +1,15 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { marked } from 'marked';
   import hljs from 'highlight.js';
   import 'highlight.js/styles/stackoverflow-light.css';
 
-  export let source: string;
+  interface Props {
+    source: string;
+  }
+
+  let { source }: Props = $props();
 
   // https://github.com/markedjs/marked/discussions/2982#discussioncomment-6979586
   const renderer = {
@@ -14,14 +20,9 @@
   };
   marked.use({ renderer });
 
-  let markdownRender: HTMLDivElement;
+  let markdownRender: HTMLDivElement = $state();
 
-  $: rendered = marked(source);
 
-  // https://stackoverflow.com/a/75688200/6335363
-  // TODO: Find a way to automagically disable this but only for Svelte
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  $: rendered && markdownRender && applySyntaxHighlighting(markdownRender);
 
   function applySyntaxHighlighting(renderElement: HTMLDivElement) {
     // Wait a moment before we highlight so that we can be sure the HTML has
@@ -36,6 +37,13 @@
       });
     });
   }
+  let rendered = $derived(marked(source));
+  // https://stackoverflow.com/a/75688200/6335363
+  // TODO: Find a way to automagically disable this but only for Svelte
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  run(() => {
+    rendered && markdownRender && applySyntaxHighlighting(markdownRender);
+  });
 </script>
 
 <div class="markdown-render" bind:this={markdownRender}>

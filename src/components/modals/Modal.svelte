@@ -1,11 +1,26 @@
 <script lang="ts">
+  import { createBubbler, stopPropagation, preventDefault } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import { createEventDispatcher } from 'svelte';
 
-  export let show: boolean;
-  export let color = 'white';
-  export let canClose = true;
+  interface Props {
+    show: boolean;
+    color?: string;
+    canClose?: boolean;
+    header?: import('svelte').Snippet;
+    children?: import('svelte').Snippet;
+  }
 
-  $: display = show ? 'block' : 'none';
+  let {
+    show,
+    color = 'white',
+    canClose = true,
+    header,
+    children
+  }: Props = $props();
+
+  let display = $derived(show ? 'block' : 'none');
 
   function close() {
     if (canClose) {
@@ -18,21 +33,21 @@
   }>();
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
-<div class="outer" style="display: {display};" on:click={close}>
+<!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
+<div class="outer" style="display: {display};" onclick={close}>
   <div class="inner">
-    <div class="box" style="background-color: {color};" on:click|stopPropagation>
+    <div class="box" style="background-color: {color};" onclick={stopPropagation(bubble('click'))}>
       <div class="header">
-        <slot name="header"></slot>
+        {@render header?.()}
         {#if canClose}
-          <span />
-          <button on:click|preventDefault={close}>
+          <span></span>
+          <button onclick={preventDefault(close)}>
             <i class="las la-times"></i>
           </button>
         {/if}
       </div>
       <div class="main-content">
-        <slot />
+        {@render children?.()}
       </div>
     </div>
   </div>

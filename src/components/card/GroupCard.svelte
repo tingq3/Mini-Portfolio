@@ -2,13 +2,19 @@
   import { type PortfolioGlobals } from '$lib';
   import Card from './Card.svelte';
 
-  export let globals: PortfolioGlobals;
-  /** Group ID of group to show */
-  export let groupId: string;
-  /** Whether edit mode is active */
-  export let editing: boolean;
+  
+  
+  interface Props {
+    globals: PortfolioGlobals;
+    /** Group ID of group to show */
+    groupId: string;
+    /** Whether edit mode is active */
+    editing: boolean;
+  }
 
-  $: group = globals.groups[groupId];
+  let { globals, groupId, editing }: Props = $props();
+
+  let group = $derived(globals.groups[groupId]);
 </script>
 
 <Card

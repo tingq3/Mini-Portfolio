@@ -7,22 +7,37 @@
   import IconCard from './IconCard.svelte';
   import { NewItemModal } from '$components/modals';
 
-  /** Portfolio globals */
-  export let globals: PortfolioGlobals;
-  /** ID of group to which items belong */
-  export let groupId: string;
-  /** Item IDs to show */
-  export let itemIds: string[];
-  /** Whether edit mode is active */
-  export let editing: boolean;
-  /** Whether to give the option to create an item in edit mode */
-  export let createOption = false;
+  
+  
+  
+  
+  
+  interface Props {
+    /** Portfolio globals */
+    globals: PortfolioGlobals;
+    /** ID of group to which items belong */
+    groupId: string;
+    /** Item IDs to show */
+    itemIds: string[];
+    /** Whether edit mode is active */
+    editing: boolean;
+    /** Whether to give the option to create an item in edit mode */
+    createOption?: boolean;
+  }
+
+  let {
+    globals,
+    groupId,
+    itemIds,
+    editing,
+    createOption = false
+  }: Props = $props();
 
   const dispatch = createEventDispatcher<{
     click: { itemId: string },
   }>();
 
-  let newItemModalShown = false;
+  let newItemModalShown = $state(false);
   function closeNewItemModal() {
     newItemModalShown = false;
   }
@@ -50,7 +65,9 @@
       color="#888888"
       on:click={() => { newItemModalShown = true; }}
     >
-      <i slot="icon" class="las la-plus"></i>
+      {#snippet icon()}
+            <i  class="las la-plus"></i>
+          {/snippet}
     </IconCard>
     <NewItemModal {groupId} show={newItemModalShown} on:close={closeNewItemModal} />
   {/if}

@@ -1,7 +1,11 @@
 <script lang="ts">
   import Color from 'color';
 
-  export let color: string;
+  interface Props {
+    color: string;
+  }
+
+  let { color }: Props = $props();
 
   /** Possible positions for the background splotches */
   const possiblePositions: [number, number][] = [
@@ -26,7 +30,7 @@
   ];
 
   /** Color hue offsets, picked based on the given color */
-  $: colors = [
+  let colors = $derived([
     -25,
     -15,
     -10,
@@ -49,7 +53,7 @@
       `${posY}%`,
       `${spread}px`
     ] as [string, string, string, string];
-  });
+  }));
 </script>
 
 <div id="background">

@@ -4,28 +4,32 @@
   import type { PackageInfo } from '$lib/server/data/itemPackage';
   import CopyButton from '$components/CopyButton.svelte';
 
-  export let info: PackageInfo;
-  export let color: string;
+  interface Props {
+    info: PackageInfo;
+    color: string;
+  }
 
-  $: packageUrl = (
-    packageIsWithProvider(info)
+  let { info, color }: Props = $props();
+
+  let packageUrl = (
+    $derived(packageIsWithProvider(info)
       ? packageProviders[info.provider].makeUrl(info.id)
-      : info.url);
+      : info.url));
 
-  $: providerName = (
-    packageIsWithProvider(info)
+  let providerName = (
+    $derived(packageIsWithProvider(info)
       ? packageProviders[info.provider].name
-      : info.providerName);
+      : info.providerName));
 
-  $: providerIcon = (
-    packageIsWithProvider(info)
+  let providerIcon = (
+    $derived(packageIsWithProvider(info)
       ? packageProviders[info.provider].icon
-      : info.icon);
+      : info.icon));
 
-  $: installCommand = (
-    packageIsWithProvider(info)
+  let installCommand = (
+    $derived(packageIsWithProvider(info)
       ? packageProviders[info.provider].makeInstallCmd(info.id)
-      : info.command);
+      : info.command));
 </script>
 
 <Card

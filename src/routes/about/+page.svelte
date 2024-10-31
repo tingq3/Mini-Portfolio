@@ -5,7 +5,11 @@ import Navbar from '$components/navbar';
 import consts from '$lib/consts';
 import { dev } from '$app/environment';
 
-export let data: import('./$types').PageData;
+  interface Props {
+    data: import('./$types').PageData;
+  }
+
+  let { data }: Props = $props();
 
 const mainInfo = `
 # ${consts.APP_NAME}
