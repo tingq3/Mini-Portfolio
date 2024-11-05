@@ -51,7 +51,7 @@
 </script>
 
 <Card
-  link={repoUrl}
+children link={repoUrl}
   newTab={true}
   {color}
 >

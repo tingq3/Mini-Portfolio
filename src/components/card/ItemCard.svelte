@@ -3,9 +3,9 @@
   import Card from './Card.svelte';
   import { ItemChipList } from '$components/chip';
 
-  
-  
-  
+
+
+
   interface Props {
     globals: PortfolioGlobals;
     /** Group ID of item to show */
@@ -33,30 +33,29 @@
   link={editing ? false : `/${groupId}/${itemId}`}
   color={item.info.color}
   on:click
-  hasIcon={!!item.info.icon}
 >
-  {#snippet icon()}
-    <div >
-      {#if item.info.icon}
+  {#if item.info.icon}
+    {#snippet icon()}
+      <div >
         <img
           src="/{groupId}/{itemId}/{item.info.icon}"
           alt="Icon for {item.info.name}"
           class="label-icon"
         />
-      {/if}
-    </div>
-  {/snippet}
+      </div>
+    {/snippet}
+  {/if}
   <div>
     <h3>{item.info.name}</h3>
     <p>{item.info.description}</p>
   </div>
-  {#snippet bottom()}
-    <div >
-      {#if !editing}
+  {#if !editing}
+    {#snippet bottom()}
+      <div >
         <ItemChipList items={associatedChips} {globals} link />
-      {/if}
-    </div>
-  {/snippet}
+      </div>
+    {/snippet}
+  {/if}
 </Card>
 
 <style>

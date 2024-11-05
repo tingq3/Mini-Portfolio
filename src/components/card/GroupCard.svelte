@@ -2,8 +2,6 @@
   import { type PortfolioGlobals } from '$lib';
   import Card from './Card.svelte';
 
-  
-  
   interface Props {
     globals: PortfolioGlobals;
     /** Group ID of group to show */
@@ -17,11 +15,7 @@
   let group = $derived(globals.groups[groupId]);
 </script>
 
-<Card
-  link={editing ? false : `/${groupId}`}
-  color={group.info.color}
-  on:click
->
+<Card link={editing ? false : `/${groupId}`} color={group.info.color} on:click>
   {#if group.info.icon}
     <div class="card-grid">
       <img

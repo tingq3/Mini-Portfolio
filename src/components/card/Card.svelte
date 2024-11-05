@@ -1,12 +1,8 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, type Snippet } from 'svelte';
   import { goto } from '$app/navigation';
   import Color from 'color';
 
-  
-  
-  
-  
   interface Props {
     /** Location to link to, or `false` to not give a link */
     link?: string | false;
@@ -14,21 +10,21 @@
     newTab?: boolean;
     /** Color to use for the card */
     color: string;
-    /** Whether the card has an icon */
-    hasIcon?: boolean;
-    icon?: import('svelte').Snippet;
-    children?: import('svelte').Snippet;
-    bottom?: import('svelte').Snippet;
+    /** The icon to use for the card */
+    icon?: Snippet;
+    /** Body content to place in the card */
+    children: Snippet;
+    /** Bottom content to place along the bottom of the card */
+    bottom?: Snippet;
   }
 
   let {
     link = false,
     newTab = false,
     color,
-    hasIcon = false,
     icon,
     children,
-    bottom
+    bottom,
   }: Props = $props();
 
   const dispatch = createEventDispatcher<{
@@ -55,18 +51,18 @@
     style:--base-color={baseColor}
     style:--hover-color={hoverColor}
   >
-    {#if hasIcon}
+    {#if icon}
       <div class="card-grid">
         <div class="icon-div">
-          {@render icon?.()}
+          {@render icon()}
         </div>
         <div class="card-main">
-          {@render children?.()}
+          {@render children()}
         </div>
       </div>
     {:else}
       <div class="card-main">
-        {@render children?.()}
+        {@render children()}
       </div>
     {/if}
     <div class="card-bottom">

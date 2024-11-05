@@ -33,7 +33,7 @@
 </script>
 
 <Card
-  link={packageUrl}
+children link={packageUrl}
   newTab={true}
   {color}
 >
