@@ -1,15 +1,15 @@
-<script>
-  /**
-   * @typedef {Object} Props
-   * @property {import('svelte').Snippet} [children]
-   */
+<script lang="ts">
+  import type { Snippet } from 'svelte';
 
-  /** @type {Props} */
-  let { children } = $props();
+  type Props = {
+    children: Snippet;
+  }
+
+  let { children }: Props = $props();
 </script>
 
 <div class="card-list">
-  {@render children?.()}
+  {@render children()}
 </div>
 
 <style>

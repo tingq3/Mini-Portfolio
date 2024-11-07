@@ -2,20 +2,32 @@
   import { type PortfolioGlobals } from '$lib';
   import Card from './Card.svelte';
 
-  interface Props {
+  type Props = {
     globals: PortfolioGlobals;
     /** Group ID of group to show */
     groupId: string;
     /** Whether edit mode is active */
     editing: boolean;
-  }
+    /** Callback for when the element is clicked */
+    onclick?: (e: MouseEvent | undefined | null) => void;
+  };
 
-  let { globals, groupId, editing }: Props = $props();
+  let { globals, groupId, editing, onclick }: Props = $props();
 
   let group = $derived(globals.groups[groupId]);
 </script>
 
-<Card link={editing ? false : `/${groupId}`} color={group.info.color} on:click>
+<!--
+@component
+
+A card containing information about a Minifolio group.
+-->
+
+<Card
+  link={editing ? undefined : { url: `/${groupId}`, newTab: false }}
+  color={group.info.color}
+  {onclick}
+>
   {#if group.info.icon}
     <div class="card-grid">
       <img

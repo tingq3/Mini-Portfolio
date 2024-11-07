@@ -1,72 +1,59 @@
 <script lang="ts">
-  import { createEventDispatcher, type Snippet } from 'svelte';
+  import { type Snippet } from 'svelte';
   import { goto } from '$app/navigation';
   import Color from 'color';
 
-  interface Props {
-    /** Location to link to, or `false` to not give a link */
-    link?: string | false;
-    /** Whether to open link in new tab */
-    newTab?: boolean;
-    /** Color to use for the card */
-    color: string;
-    /** The icon to use for the card */
-    icon?: Snippet;
+  type Props = {
+    /** Controls for the linking */
+    link?: { url: string, newTab: boolean },
+    /** Hex color to use on the card */
+    color: string,
     /** Body content to place in the card */
-    children: Snippet;
-    /** Bottom content to place along the bottom of the card */
-    bottom?: Snippet;
+    children: Snippet,
+    /** Callback for when the element is clicked */
+    onclick?: (e: MouseEvent | undefined | null) => void,
   }
 
   let {
-    link = false,
-    newTab = false,
+    link,
     color,
-    icon,
     children,
-    bottom,
+    onclick,
   }: Props = $props();
-
-  const dispatch = createEventDispatcher<{
-    click: undefined,
-  }>();
 
   let baseColor = $derived(Color(color).lightness(85).hex());
   let hoverColor = $derived(Color(color).lightness(70).hex());
+
+  let linkHref = $derived(link ? link.url : undefined);
+  let linkNewTab = $derived((link?.newTab) ? '_blank' : undefined);
 </script>
 
+<!--
+@component
+
+A generic card element.
+
+Children are rendered on a colored card with rounded corners.
+-->
+
 <a
-  href={link || undefined}
-  onclick={async () => {
+  href={linkHref}
+  onclick={async (e) => {
     if (link) {
-      await goto(link);
-    } else {
-      dispatch('click');
+      await goto(link.url);
+    } else if (onclick) {
+      onclick(e);
     }
   }}
-  target={newTab ? '_blank' : undefined}
+  target={linkNewTab}
 >
   <div
-    class="card"
-    style:--base-color={baseColor}
-    style:--hover-color={hoverColor}
+  class="card"
+  style:--base-color={baseColor}
+  style:--hover-color={hoverColor}
   >
-    {#if icon}
-      <div class="card-grid">
-        <div class="icon-div">
-          {@render icon()}
-        </div>
-        <div class="card-main">
-          {@render children()}
-        </div>
-      </div>
-    {:else}
-      <div class="card-main">
-        {@render children()}
-      </div>
-    {/if}
-    <div class="card-bottom">
-      {@render bottom?.()}
+    <div class="card-main">
+      {@render children()}
     </div>
   </div>
 </a>
@@ -75,22 +62,6 @@
   a {
     color: black;
     text-decoration: none;
-  }
-
-  .card-grid {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 10px;
-    /* Make main content of card leave some space before the bottom slot */
-    flex-grow: 1;
-  }
-  .card-main {
-    flex-grow: 1;
-  }
-
-  /* Make icons using Line Awesome render at a nice font size */
-  .icon-div {
-    font-size: 3em;
   }
 
   .card {

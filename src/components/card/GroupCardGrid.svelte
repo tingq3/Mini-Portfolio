@@ -9,10 +9,7 @@
   import IconCard from './IconCard.svelte';
   import { NewGroupModal } from '$components/modals';
 
-  
-  
-  
-  interface Props {
+  type Props = {
     globals: PortfolioGlobals;
     /** Groups to display */
     groups: string[];
@@ -29,6 +26,7 @@
     createOption = false
   }: Props = $props();
 
+  // FIXME: Change to use regular callbacks
   const dispatch = createEventDispatcher<{
     click: { groupId: string },
   }>();
@@ -51,7 +49,7 @@
         {globals}
         {groupId}
         {editing}
-        on:click={() => dispatch('click', { groupId })}
+        onclick={() => dispatch('click', { groupId })}
       />
     </div>
   {/each}
