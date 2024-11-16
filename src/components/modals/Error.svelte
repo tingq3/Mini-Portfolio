@@ -8,13 +8,11 @@
     onclose: () => void;
   };
 
-  let { text, show, onclose }: Props = $props();
+  let { text, show, header, onclose }: Props = $props();
 </script>
 
 <Modal {show} color="#ffaaaa" {onclose}>
-  {#snippet header()}
-    <h1>{header}</h1>
-  {/snippet}
+  <h1>{header}</h1>
   <i class="las la-exclamation-circle"></i>
   <p>{text}</p>
 </Modal>

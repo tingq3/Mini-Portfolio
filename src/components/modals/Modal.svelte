@@ -1,10 +1,11 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
   type Props = {
     show: boolean;
     color?: string;
     showCloseButton?: boolean;
-    header?: import('svelte').Snippet;
-    children?: import('svelte').Snippet;
+    header?: Snippet;
+    children?: Snippet;
     onclose: () => void;
   };
 
