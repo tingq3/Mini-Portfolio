@@ -72,6 +72,8 @@ export async function generateKey(): Promise<string> {
   await setLocalConfig(cfg);
 
   // ssh-keygen -t $DEFAULT_KEY_TYPE -f ${defaultPrivateKeyPath()} -N '' -c "Minifolio SSH key"
+  // NOTE: While cross-spawn (dependency of child-process-promise) is technically vulnerable to a
+  // ReDoS attack, this is fine here, since the arguments are controlled by us
   await spawn(
     'ssh-keygen',
     [

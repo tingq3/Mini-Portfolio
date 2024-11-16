@@ -88,6 +88,9 @@ export async function runSshKeyscan(url: string) {
     }
   }
 
+  // NOTE: While this is technically vulnerable due to a ReDoS vulnerability in cross-spawn
+  // (dependency of child-process-promise), this code will only be executed by admins, so it should
+  // be ok.
   const process = await spawn('ssh-keyscan', [host], { capture: ['stdout'] });
 
   // console.log(process.stdout);
