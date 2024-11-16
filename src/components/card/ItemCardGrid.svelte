@@ -66,7 +66,7 @@
     <NewItemModal
       {groupId}
       show={newItemModalShown}
-      on:close={closeNewItemModal}
+      onclose={closeNewItemModal}
     />
   {/if}
 </div>

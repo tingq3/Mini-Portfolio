@@ -190,6 +190,8 @@
                 })),
               ]}
               link={true}
+              onfilter={() => {}}
+              onclick={() => {}}
             />
           </div>
         {:else}
@@ -212,7 +214,8 @@
                     }),
                   ),
                 ]}
-                on:click={(e) => toggleLink(e.detail.groupId, e.detail.itemId)}
+                onfilter={() => {}}
+                onclick={(groupId, itemId) => toggleLink(groupId, itemId)}
               />
             </div>
           </div>

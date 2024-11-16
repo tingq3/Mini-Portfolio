@@ -48,7 +48,13 @@
     </div>
     {#if !editing}
       <div>
-        <ItemChipList items={associatedChips} {globals} link />
+        <ItemChipList
+          items={associatedChips}
+          {globals}
+          link
+          onclick={() => {}}
+          onfilter={() => {}}
+        />
       </div>
     {/if}
   </div>

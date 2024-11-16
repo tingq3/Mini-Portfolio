@@ -1,8 +1,8 @@
 
-export type RecordItems <K extends string, V> = [K, V][];
+export type RecordItems<K extends string, V> = [K, V][];
 
 /** Ordered record, basically a record + ordering */
-export interface OrderedRecord <K extends string, V> {
+export type OrderedRecord<K extends string, V> = {
   __record: Record<K, V>
   __order: K[]
   get: (key: K) => V

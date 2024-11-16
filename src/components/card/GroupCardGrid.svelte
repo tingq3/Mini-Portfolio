@@ -63,7 +63,7 @@
         <i class="las la-plus"></i>
       {/snippet}
     </IconCard>
-    <NewGroupModal show={newGroupModalShown} on:close={closeNewGroupModal} />
+    <NewGroupModal show={newGroupModalShown} onclose={closeNewGroupModal} />
   {/if}
 </div>
 

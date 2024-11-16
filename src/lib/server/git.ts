@@ -39,7 +39,7 @@ export const gitClient = async (baseDir: string | undefined) => {
 }
 
 /** Status information of a git repo */
-export interface RepoStatus {
+export type RepoStatus = {
   /** The repo URL */
   url: string
   /** The current branch */

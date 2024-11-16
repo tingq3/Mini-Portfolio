@@ -21,7 +21,7 @@ import { invalidateAuthSecret } from '../auth/secret';
 import { invalidatePublicKey } from '../keys';
 
 /** Public global data for the portfolio */
-export interface PortfolioGlobals {
+export type PortfolioGlobals = {
   config: ConfigJson,
   readme: string,
   groups: Record<string, GroupData>,
