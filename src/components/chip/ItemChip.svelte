@@ -18,6 +18,7 @@
     itemId,
     link = false,
     selected = false,
+    onclick,
   }: Props = $props();
 
   let item = $derived(globals.items[groupId][itemId]);
@@ -29,4 +30,5 @@
   color={item.info.color}
   {selected}
   link={link ? { url: `/${groupId}/${itemId}`, newTab: false } : undefined}
+  {onclick}
 />

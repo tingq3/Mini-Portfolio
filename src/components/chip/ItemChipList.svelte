@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { onMount } from 'svelte';
   import { ItemChip } from '.';
   import type { PortfolioGlobals } from '$lib';
   import { Separator } from '$components';
@@ -14,9 +14,13 @@
     items: FilterOptions;
     /** Whether to link each chip to its respective page */
     link?: boolean;
+    /** Called when the filter is updated */
+    onfilter: (options: FilterOptions) => void;
+    /** Called when an item is clicked */
+    onclick: (groupId: string, itemId: string) => void;
   };
 
-  let { globals, items, link = false }: Props = $props();
+  let { globals, items, link = false, onfilter, onclick }: Props = $props();
 
   // Smoooooooooooth scrolling
   // ==================================================
@@ -95,18 +99,11 @@
     return () => clearInterval(interval);
   });
 
-  // Filtering
-
-  const dispatch = createEventDispatcher<{
-    filter: FilterOptions;
-    click: { groupId: string; itemId: string };
-  }>();
-
   // Update filter status
   function updateFilterStatus(outerIdx: number, innerIdx: number) {
-    const newItems = structuredClone(items);
+    const newItems = items;
     newItems[outerIdx][innerIdx].selected = !items[outerIdx][innerIdx].selected;
-    dispatch('filter', newItems);
+    onfilter(newItems);
   }
 </script>
 
@@ -122,10 +119,7 @@
           {link}
           onclick={() => {
             updateFilterStatus(outer, inner);
-            dispatch('click', {
-              groupId: filterItem.groupId,
-              itemId: filterItem.itemId,
-            });
+            onclick(filterItem.groupId, filterItem.itemId);
           }}
         />
       {/each}

@@ -156,9 +156,10 @@
       <ItemChipList
         globals={data.globals}
         items={filterSelections}
-        on:filter={(e) => {
-          filterSelections = e.detail;
+        onfilter={(options) => {
+          filterSelections = options;
         }}
+        onclick={() => {}}
       />
     </div>
   {:else}
