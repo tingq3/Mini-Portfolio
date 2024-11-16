@@ -31,17 +31,7 @@ A generic card element.
 Children are rendered on a colored card with rounded corners.
 -->
 
-<a
-  href={linkHref}
-  onclick={async (e) => {
-    if (link) {
-      await goto(link.url);
-    } else if (onclick) {
-      onclick(e);
-    }
-  }}
-  target={linkNewTab}
->
+{#snippet content()}
   <div
     class="card"
     style:--base-color={baseColor}
@@ -49,7 +39,30 @@ Children are rendered on a colored card with rounded corners.
   >
     {@render children()}
   </div>
-</a>
+{/snippet}
+
+<!--
+  HACK: Workaround for https://github.com/sveltejs/kit/issues/11057
+  Very yucky, but I'll have to live with it since technically this is the only way to get valid HTML
+  :(
+-->
+{#if link}
+  <a
+    href={linkHref}
+    onclick={async (e) => {
+      if (link) {
+        await goto(link.url);
+      } else if (onclick) {
+        onclick(e);
+      }
+    }}
+    target={linkNewTab}
+  >
+    {@render content()}
+  </a>
+{:else}
+  {@render content()}
+{/if}
 
 <style>
   a {

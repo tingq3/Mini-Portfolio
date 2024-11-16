@@ -27,25 +27,26 @@
   );
 </script>
 
-<Card
-  link={editing ? undefined : { url: `/${groupId}/${itemId}`, newTab: false }}
-  color={item.info.color}
-  {onclick}
->
+<Card color={item.info.color} {onclick}>
   <div class="card-outer">
-    <div class:card-icon={item.info.icon} class:flex-grow={true}>
-      {#if item.info.icon}
-        <img
-          src="/{groupId}/{itemId}/{item.info.icon}"
-          alt="Icon for {item.info.name}"
-          class="label-icon"
-        />
-      {/if}
-      <div>
-        <h3>{item.info.name}</h3>
-        <p>{item.info.description}</p>
+    <a
+      href={editing ? undefined : `/${groupId}/${itemId}`}
+      class:flex-grow={true}
+    >
+      <div class:card-icon={item.info.icon}>
+        {#if item.info.icon}
+          <img
+            src="/{groupId}/{itemId}/{item.info.icon}"
+            alt="Icon for {item.info.name}"
+            class="label-icon"
+          />
+        {/if}
+        <div>
+          <h3>{item.info.name}</h3>
+          <p>{item.info.description}</p>
+        </div>
       </div>
-    </div>
+    </a>
     {#if !editing}
       <div>
         <ItemChipList
@@ -61,6 +62,11 @@
 </Card>
 
 <style>
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
   h3 {
     margin-bottom: 0;
   }
