@@ -1,27 +1,29 @@
 <script lang="ts">
   import { Card } from '.';
 
-  interface Props {
+  type Props = {
+    /** Title to use for the card */
     title: string;
-    link?: string | false;
+    /** Link behavior options */
+    link?: { url: string; newTab: boolean };
+    /** Hex color to use for the card */
     color: string;
+    /** Callback for when the element is clicked */
+    onclick?: (e: MouseEvent | undefined | null) => void;
+    /** Icon to use */
     icon?: import('svelte').Snippet;
-  }
+  };
 
-  let {
-    title,
-    link = false,
-    color,
-    icon
-  }: Props = $props();
+  let { title, link, color, icon, onclick }: Props = $props();
 </script>
 
-<Card
-  {link}
-  newTab={true}
-  {color}
-  on:click
->
+<!--
+@component
+
+A card containing information about a Minifolio group.
+-->
+
+<Card {link} {color} {onclick}>
   <span>
     <div class="icon-div">
       {@render icon?.()}

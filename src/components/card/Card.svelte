@@ -4,28 +4,23 @@
   import Color from 'color';
 
   type Props = {
-    /** Controls for the linking */
-    link?: { url: string, newTab: boolean },
+    /** Link behavior options */
+    link?: { url: string; newTab: boolean };
     /** Hex color to use on the card */
-    color: string,
+    color: string;
     /** Body content to place in the card */
-    children: Snippet,
+    children: Snippet;
     /** Callback for when the element is clicked */
-    onclick?: (e: MouseEvent | undefined | null) => void,
-  }
+    onclick?: (e: MouseEvent | undefined | null) => void;
+  };
 
-  let {
-    link,
-    color,
-    children,
-    onclick,
-  }: Props = $props();
+  let { link, color, children, onclick }: Props = $props();
 
   let baseColor = $derived(Color(color).lightness(85).hex());
   let hoverColor = $derived(Color(color).lightness(70).hex());
 
   let linkHref = $derived(link ? link.url : undefined);
-  let linkNewTab = $derived((link?.newTab) ? '_blank' : undefined);
+  let linkNewTab = $derived(link?.newTab ? '_blank' : undefined);
 </script>
 
 <!--
@@ -48,9 +43,9 @@ Children are rendered on a colored card with rounded corners.
   target={linkNewTab}
 >
   <div
-  class="card"
-  style:--base-color={baseColor}
-  style:--hover-color={hoverColor}
+    class="card"
+    style:--base-color={baseColor}
+    style:--hover-color={hoverColor}
   >
     <div class="card-main">
       {@render children()}
@@ -74,8 +69,8 @@ Children are rendered on a colored card with rounded corners.
     box-shadow: 5px 5px 15px rgba(61, 61, 61, 0.329);
     height: 90%;
     transition:
-      background-color .5s,
-      box-shadow .5s;
+      background-color 0.5s,
+      box-shadow 0.5s;
   }
   .card:hover {
     /* Don't scale cards since that makes the text render weirdly on Firefox */
@@ -84,8 +79,7 @@ Children are rendered on a colored card with rounded corners.
     box-shadow:
       /* Default shadow */
       5px 5px 10px rgba(61, 61, 61, 0.178),
-      /* Glow */
-      0 0 20px var(--base-color);
+      /* Glow */ 0 0 20px var(--base-color);
   }
   @media only screen and (max-width: 600px) {
     .card {

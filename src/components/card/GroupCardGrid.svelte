@@ -1,10 +1,10 @@
 <script lang="ts">
   // FIXME: Code duplication between here and ItemCardGrid -- need to figure
   // out a nice way to do generics in Svelte
+  // Or it's probably better to refactor this to be generic
   import { flip } from 'svelte/animate';
   import GroupCard from './GroupCard.svelte';
   import type { PortfolioGlobals } from '$lib';
-  import { createEventDispatcher } from 'svelte';
   import { send, receive } from '$lib/transition';
   import IconCard from './IconCard.svelte';
   import { NewGroupModal } from '$components/modals';
@@ -17,19 +17,17 @@
     editing: boolean;
     /** Whether to give the option to create a group in edit mode */
     createOption?: boolean;
-  }
+    /** Called when an item is clicked */
+    onclick: (groupId: string) => void;
+  };
 
   let {
     globals,
     groups,
     editing,
-    createOption = false
+    createOption = false,
+    onclick,
   }: Props = $props();
-
-  // FIXME: Change to use regular callbacks
-  const dispatch = createEventDispatcher<{
-    click: { groupId: string },
-  }>();
 
   // Logic for new group modal
   let newGroupModalShown = $state(false);
@@ -49,7 +47,7 @@
         {globals}
         {groupId}
         {editing}
-        onclick={() => dispatch('click', { groupId })}
+        onclick={() => onclick(groupId)}
       />
     </div>
   {/each}
@@ -57,11 +55,13 @@
     <IconCard
       title="New group"
       color="#888888"
-      on:click={() => { newGroupModalShown = true; }}
+      onclick={() => {
+        newGroupModalShown = true;
+      }}
     >
       {#snippet icon()}
-            <i  class="las la-plus"></i>
-          {/snippet}
+        <i class="las la-plus"></i>
+      {/snippet}
     </IconCard>
     <NewGroupModal show={newGroupModalShown} on:close={closeNewGroupModal} />
   {/if}
@@ -82,10 +82,15 @@
     */
     --gap-count: calc(var(--grid-column-count) - 1);
     --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
-    --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+    --grid-item--max-width: calc(
+      (100% - var(--total-gap-width)) / var(--grid-column-count)
+    );
 
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr)
+    );
     grid-gap: var(--grid-layout-gap);
   }
 

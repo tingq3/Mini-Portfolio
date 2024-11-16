@@ -5,29 +5,34 @@
   import { onMount } from 'svelte';
   import { tooltip } from '$lib/tooltip';
 
-  interface Props {
+  type Props = {
     repo: RepoInfo;
     color: string;
-  }
+  };
 
   let { repo, color }: Props = $props();
 
-  let repoUrl = (
-    $derived(repoIsWithProvider(repo)
+  let repoUrl = $derived(
+    repoIsWithProvider(repo)
       ? repoProviders[repo.provider].makeUrl(repo.path)
-      : repo.url));
+      : repo.url,
+  );
 
-  let repoString = (
-    $derived(repoIsWithProvider(repo)
+  let repoString = $derived(
+    repoIsWithProvider(repo)
       ? `${repoProviders[repo.provider].name}: ${repo.path}`
-      : repo.title));
+      : repo.title,
+  );
 
-  let repoIcon = (
-    $derived(repoIsWithProvider(repo)
+  let repoIcon = $derived(
+    repoIsWithProvider(repo)
       ? repoProviders[repo.provider].icon
-      : repo.icon ?? 'las la-code-branch'));
+      : (repo.icon ?? 'las la-code-branch'),
+  );
 
-  async function fetchRepoStarCount(repo: RepoInfo): Promise<number | undefined> {
+  async function fetchRepoStarCount(
+    repo: RepoInfo,
+  ): Promise<number | undefined> {
     // Manual repos can't display star counts
     if (!repoIsWithProvider(repo)) {
       return Promise.resolve(undefined);
@@ -43,21 +48,19 @@
     }
   }
 
-  let repoStarCount: Promise<number | undefined> = $state(Promise.resolve(undefined));
+  let repoStarCount: Promise<number | undefined> = $state(
+    Promise.resolve(undefined),
+  );
 
   onMount(() => {
     repoStarCount = fetchRepoStarCount(repo);
   });
 </script>
 
-<Card
-children link={repoUrl}
-  newTab={true}
-  {color}
->
+<Card link={{ url: repoUrl, newTab: true }} {color}>
   <span>
     <div class="icon-div">
-        <i class={repoIcon}></i>
+      <i class={repoIcon}></i>
     </div>
     <h3>{repoString}</h3>
     {#await repoStarCount}
@@ -67,13 +70,20 @@ children link={repoUrl}
     {:then stars}
       <!-- Only show star count if the project has stars -->
       {#if stars}
-        <div class="star-count" use:tooltip={{ content: `Repository has ${stars} star${stars === 1 ? '' : 's'}` }}>
-          <i class="lar la-star"></i> {stars}
+        <div
+          class="star-count"
+          use:tooltip={{
+            content: `Repository has ${stars} star${stars === 1 ? '' : 's'}`,
+          }}
+        >
+          <i class="lar la-star"></i>
+          {stars}
         </div>
       {/if}
     {:catch e}
       <div class="star-count">
-        <i class="lar la-star"></i> {e}
+        <i class="lar la-star"></i>
+        {e}
       </div>
     {/await}
   </span>
@@ -103,6 +113,8 @@ children link={repoUrl}
   }
 
   @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>
