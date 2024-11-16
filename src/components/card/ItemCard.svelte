@@ -32,24 +32,26 @@
   color={item.info.color}
   {onclick}
 >
-  {#if item.info.icon}
-    <div class="card-grid">
-      <img
-        src="/{groupId}/{itemId}/{item.info.icon}"
-        alt="Icon for {item.info.name}"
-        class="label-icon"
-      />
+  <div class="card-outer">
+    <div class:card-icon={item.info.icon} class:flex-grow={true}>
+      {#if item.info.icon}
+        <img
+          src="/{groupId}/{itemId}/{item.info.icon}"
+          alt="Icon for {item.info.name}"
+          class="label-icon"
+        />
+      {/if}
+      <div>
+        <h3>{item.info.name}</h3>
+        <p>{item.info.description}</p>
+      </div>
     </div>
-  {/if}
-  <div>
-    <h3>{item.info.name}</h3>
-    <p>{item.info.description}</p>
+    {#if !editing}
+      <div>
+        <ItemChipList items={associatedChips} {globals} link />
+      </div>
+    {/if}
   </div>
-  {#if !editing}
-    <div>
-      <ItemChipList items={associatedChips} {globals} link />
-    </div>
-  {/if}
 </Card>
 
 <style>
@@ -57,10 +59,21 @@
     margin-bottom: 0;
   }
 
-  .card-grid {
+  .card-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .flex-grow {
+    flex: 1;
+  }
+
+  .card-icon {
     display: grid;
     grid-template-columns: 1fr 3fr;
     gap: 10px;
+    margin-bottom: 10px;
   }
 
   .label-icon {

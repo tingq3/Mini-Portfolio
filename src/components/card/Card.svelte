@@ -47,9 +47,7 @@ Children are rendered on a colored card with rounded corners.
     style:--base-color={baseColor}
     style:--hover-color={hoverColor}
   >
-    <div class="card-main">
-      {@render children()}
-    </div>
+    {@render children()}
   </div>
 </a>
 
