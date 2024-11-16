@@ -5,13 +5,12 @@
   import type { ConfigJson } from '$lib/server/data/config';
   import Separator from '$components/Separator.svelte';
 
-  
-  interface Props {
+  type Props = {
     path: { url: string; txt: string }[];
     config: ConfigJson;
     /** Whether the user is logged in. Set to undefined if auth is disabled */
     loggedIn: boolean | undefined;
-  }
+  };
 
   let { path, config, loggedIn }: Props = $props();
 
@@ -83,7 +82,7 @@
   nav {
     display: grid;
     grid-template-columns: 1fr auto auto;
-    grid-template-areas: "navigator empty control-buttons";
+    grid-template-areas: 'navigator empty control-buttons';
   }
 
   a {

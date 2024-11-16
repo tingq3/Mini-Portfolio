@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { preventDefault } from 'svelte/legacy';
-
   import { tooltip } from '$lib/tooltip';
 
-  interface Props {
+  type Props = {
     text: string;
     hint?: string;
     children?: import('svelte').Snippet;
-  }
+  };
 
   let { text, hint = 'Copy', children }: Props = $props();
 
@@ -16,11 +14,7 @@
   }
 </script>
 
-<button
-  class="copy-btn"
-  onclick={preventDefault(copy)}
-  use:tooltip={{ content: hint }}
->
+<button class="copy-btn" onclick={copy} use:tooltip={{ content: hint }}>
   {@render children?.()}
 </button>
 
@@ -42,7 +36,7 @@
     border-color: rgba(0, 0, 0, 0.178);
     border-width: 1px;
     border-style: solid;
-    transition: background-color .5s;
+    transition: background-color 0.5s;
   }
   .copy-btn:hover {
     background-color: rgba(0, 0, 0, 0.137);

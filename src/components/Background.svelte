@@ -1,9 +1,9 @@
 <script lang="ts">
   import Color from 'color';
 
-  interface Props {
+  type Props = {
     color: string;
-  }
+  };
 
   let { color }: Props = $props();
 
@@ -22,38 +22,29 @@
     [45, 80],
   ];
 
-  const possibleSpreads: number[] = [
-    100,
-    150,
-    300,
-    500,
-  ];
+  const possibleSpreads: number[] = [100, 150, 300, 500];
 
   /** Color hue offsets, picked based on the given color */
-  let colors = $derived([
-    -25,
-    -15,
-    -10,
-    -5,
-    0,
-    0,
-    5,
-    10,
-    15,
-    25,
-  ].map(hueDiff => {
-    const base = Color(color);
-    const newColor = base.hue(base.hue() + hueDiff).lightness(95).hex();
-    const [posX, posY] = possiblePositions[Math.floor(Math.random() * possiblePositions.length)];
-    const spread = possibleSpreads[Math.floor(Math.random() * possibleSpreads.length)];
+  let colors = $derived(
+    [-25, -15, -10, -5, 0, 0, 5, 10, 15, 25].map((hueDiff) => {
+      const base = Color(color);
+      const newColor = base
+        .hue(base.hue() + hueDiff)
+        .lightness(95)
+        .hex();
+      const [posX, posY] =
+        possiblePositions[Math.floor(Math.random() * possiblePositions.length)];
+      const spread =
+        possibleSpreads[Math.floor(Math.random() * possibleSpreads.length)];
 
-    return [
-      newColor,
-      `${posX}%`,
-      `${posY}%`,
-      `${spread}px`
-    ] as [string, string, string, string];
-  }));
+      return [newColor, `${posX}%`, `${posY}%`, `${spread}px`] as [
+        string,
+        string,
+        string,
+        string,
+      ];
+    }),
+  );
 </script>
 
 <div id="background">
@@ -64,8 +55,7 @@
       style:--x={x}
       style:--y={y}
       style:--spread={spread}
-    >
-    </div>
+    ></div>
   {/each}
 </div>
 

@@ -1,14 +1,17 @@
 <script lang="ts">
-  interface Props {
+  import { type Snippet } from 'svelte';
+  type Props = {
     opacity?: number;
-    children?: import('svelte').Snippet;
-  }
+    children?: Snippet;
+  };
 
   let { opacity = 0.75, children }: Props = $props();
 </script>
 
 <div class="paper" style="--opacity: {opacity}">
-  {@render children?.()}
+  {#if children}
+    {@render children?.()}
+  {/if}
 </div>
 
 <style>
