@@ -1,9 +1,9 @@
 <script lang="ts">
   import api from '$endpoints';
 
-  interface Props {
+  type Props = {
     username: string;
-  }
+  };
 
   let { username = $bindable() }: Props = $props();
   let originalPassword = $state('');

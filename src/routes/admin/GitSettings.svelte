@@ -1,11 +1,9 @@
 <script lang="ts">
-  import { preventDefault } from 'svelte/legacy';
-
   import api from '$endpoints';
 
-  interface Props {
+  type Props = {
     data: import('./$types').PageData;
-  }
+  };
 
   let { data }: Props = $props();
 
@@ -66,7 +64,12 @@
         {/each}
       </ul>
 
-      <form onsubmit={preventDefault(() => void gitCommit)}>
+      <form
+        onsubmit={(e) => {
+          e.preventDefault();
+          void gitCommit();
+        }}
+      >
         <input
           required
           type="text"
@@ -84,7 +87,12 @@
     You can use a Git repository to back up your portfolio data. Enter the clone
     URL for an empty Git repository and it will be set up for you.
 
-    <form onsubmit={preventDefault(() => void submitSwitchToGit)}>
+    <form
+      onsubmit={(e) => {
+        e.preventDefault();
+        void submitSwitchToGit();
+      }}
+    >
       <input
         required
         type="text"

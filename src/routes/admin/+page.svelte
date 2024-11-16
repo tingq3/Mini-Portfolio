@@ -9,9 +9,9 @@
   import LogOutAll from './LogOutAll.svelte';
   import KeySettings from './KeySettings.svelte';
 
-  interface Props {
+  type Props = {
     data: import('./$types').PageData;
-  }
+  };
 
   let { data }: Props = $props();
 </script>

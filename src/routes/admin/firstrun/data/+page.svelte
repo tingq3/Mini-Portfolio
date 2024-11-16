@@ -150,7 +150,7 @@
   show={errorText !== ''}
   header="Oh no!"
   text={errorText}
-  on:close={() => {
+  onclose={() => {
     errorText = '';
   }}
 />

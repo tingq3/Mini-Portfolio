@@ -7,9 +7,9 @@
   import consts from '$lib/consts';
   import { onMount } from 'svelte';
 
-  interface Props {
+  type Props = {
     data: import('./$types').PageData;
-  }
+  };
 
   let { data }: Props = $props();
 
@@ -110,7 +110,7 @@
     border-style: solid;
   }
 
-  form input[type="submit"] {
+  form input[type='submit'] {
     font-size: 1rem;
     font-weight: bold;
   }

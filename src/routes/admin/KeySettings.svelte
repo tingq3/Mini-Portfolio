@@ -6,16 +6,15 @@
   import api from '$endpoints';
   import { APP_NAME } from '$lib/consts';
 
-
-
-  interface Props {
+  type Props = {
     /** Public key currently being used by the server */
     publicKey: string | null;
     /** Path to the server's private key */
     privateKeyPath: string | null;
-  }
+  };
 
-  let { publicKey = $bindable(), privateKeyPath = $bindable() }: Props = $props();
+  let { publicKey = $bindable(), privateKeyPath = $bindable() }: Props =
+    $props();
 
   /** Setting key path */
   let newKeyPath = $state('');
@@ -94,5 +93,4 @@
 </div>
 
 <style>
-
 </style>
