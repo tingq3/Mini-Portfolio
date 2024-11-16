@@ -7,13 +7,11 @@
     show: boolean;
   };
 
-  let { text, show }: Props = $props();
+  let { header, text, show }: Props = $props();
 </script>
 
 <Modal {show} color="white" showCloseButton={false} onclose={() => {}}>
-  {#snippet header()}
-    <h1>{header}</h1>
-  {/snippet}
+  <h1>{header}</h1>
   <i class="las la-sync spin"></i>
   <p>{text}</p>
 </Modal>
