@@ -1,18 +1,19 @@
 <script lang="ts">
   import Modal from './Modal.svelte';
 
-  interface Props {
+  type Props = {
     header: string;
     text: string;
     show: boolean;
-  }
+    onclose: () => void;
+  };
 
-  let { text, show }: Props = $props();
+  let { text, show, onclose }: Props = $props();
 </script>
 
-<Modal {show} color="#ffaaaa" on:close>
+<Modal {show} color="#ffaaaa" {onclose}>
   {#snippet header()}
-    <h1 >{header}</h1>
+    <h1>{header}</h1>
   {/snippet}
   <i class="las la-exclamation-circle"></i>
   <p>{text}</p>

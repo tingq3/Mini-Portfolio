@@ -1,29 +1,26 @@
 <script lang="ts">
-  import { preventDefault } from 'svelte/legacy';
-
-    import { createEventDispatcher } from 'svelte';
   import Modal from './Modal.svelte';
-    import api from '$endpoints';
-    import { goto } from '$app/navigation';
-  interface Props {
-    show: boolean;
-  }
+  import api from '$endpoints';
+  import { goto } from '$app/navigation';
 
-  let { show }: Props = $props();
+  type Props = {
+    show: boolean;
+    onclose: () => void;
+  };
+
+  let { show, onclose }: Props = $props();
 
   let groupName = $state('');
   let groupId = $state('');
   let groupDescription = $state('');
   let userModifiedId = $state(false);
 
-  const dispatch = createEventDispatcher();
-
   function resetAndClose() {
     groupName = '';
     groupDescription = '';
     groupId = '';
     userModifiedId = false;
-    dispatch('close');
+    onclose();
   }
 
   function nameToId(name: string): string {
@@ -37,11 +34,16 @@
   }
 </script>
 
-<Modal {show} on:close={resetAndClose}>
+<Modal {show} onclose={resetAndClose}>
   {#snippet header()}
-    <h2 >New group</h2>
+    <h2>New group</h2>
   {/snippet}
-  <form onsubmit={preventDefault(() => {void makeGroup()})}>
+  <form
+    onsubmit={(e) => {
+      e.preventDefault();
+      void makeGroup();
+    }}
+  >
     <p>
       Group name
       <input
@@ -59,11 +61,21 @@
     </p>
     <p>
       Group ID
-      <input placeholder="projects" required bind:value={groupId} oninput={() => { userModifiedId = true; }} />
+      <input
+        placeholder="projects"
+        required
+        bind:value={groupId}
+        oninput={() => {
+          userModifiedId = true;
+        }}
+      />
     </p>
     <p>
       Group description
-      <input placeholder="Projects I have created" bind:value={groupDescription} />
+      <input
+        placeholder="Projects I have created"
+        bind:value={groupDescription}
+      />
     </p>
     <p>
       <input type="submit" value="Create" />
@@ -86,14 +98,14 @@
     height: 1.2rem;
   }
 
-  input[type="submit"] {
+  input[type='submit'] {
     height: 2rem;
     background-color: transparent;
     border: none;
     border-radius: 5px;
   }
 
-  input[type="submit"]:hover {
+  input[type='submit']:hover {
     background-color: rgba(124, 124, 124, 0.253);
     cursor: pointer;
   }
