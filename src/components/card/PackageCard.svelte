@@ -4,44 +4,45 @@
   import type { PackageInfo } from '$lib/server/data/itemPackage';
   import CopyButton from '$components/CopyButton.svelte';
 
-  export let info: PackageInfo;
-  export let color: string;
+  type Props = {
+    info: PackageInfo;
+    color: string;
+  };
 
-  $: packageUrl = (
+  let { info, color }: Props = $props();
+
+  let packageUrl = $derived(
     packageIsWithProvider(info)
       ? packageProviders[info.provider].makeUrl(info.id)
-      : info.url);
+      : info.url,
+  );
 
-  $: providerName = (
+  let providerName = $derived(
     packageIsWithProvider(info)
       ? packageProviders[info.provider].name
-      : info.providerName);
+      : info.providerName,
+  );
 
-  $: providerIcon = (
+  let providerIcon = $derived(
     packageIsWithProvider(info)
       ? packageProviders[info.provider].icon
-      : info.icon);
+      : info.icon,
+  );
 
-  $: installCommand = (
+  let installCommand = $derived(
     packageIsWithProvider(info)
       ? packageProviders[info.provider].makeInstallCmd(info.id)
-      : info.command);
+      : info.command,
+  );
 </script>
 
-<Card
-  link={packageUrl}
-  newTab={true}
-  {color}
->
+<Card link={{ url: packageUrl, newTab: true }} {color}>
   <span>
     <div class="provider-info">
       <i class={providerIcon}></i>
       <b>{providerName}</b>
     </div>
-    <CopyButton
-      text={installCommand}
-      hint='Copy install command'
-    >
+    <CopyButton text={installCommand} hint="Copy install command">
       <i class="las la-terminal"></i>
       <pre>{installCommand}</pre>
     </CopyButton>

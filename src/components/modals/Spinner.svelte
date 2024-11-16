@@ -1,13 +1,17 @@
 <script lang="ts">
   import Modal from './Modal.svelte';
 
-  export let header: string;
-  export let text: string;
-  export let show: boolean;
+  type Props = {
+    header: string;
+    text: string;
+    show: boolean;
+  };
+
+  let { header, text, show }: Props = $props();
 </script>
 
-<Modal {show} color="white" canClose={false}>
-  <h1 slot="header">{header}</h1>
+<Modal {show} color="white" showCloseButton={false} onclose={() => {}}>
+  <h1>{header}</h1>
   <i class="las la-sync spin"></i>
   <p>{text}</p>
 </Modal>

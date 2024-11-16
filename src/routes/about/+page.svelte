@@ -1,13 +1,17 @@
 <script lang="ts">
-import Background from '$components/Background.svelte';
-import Markdown from '$components/markdown/Markdown.svelte';
-import Navbar from '$components/navbar';
-import consts from '$lib/consts';
-import { dev } from '$app/environment';
+  import Background from '$components/Background.svelte';
+  import Markdown from '$components/markdown/Markdown.svelte';
+  import Navbar from '$components/navbar';
+  import consts from '$lib/consts';
+  import { dev } from '$app/environment';
 
-export let data: import('./$types').PageData;
+  type Props = {
+    data: import('./$types').PageData;
+  };
 
-const mainInfo = `
+  let { data }: Props = $props();
+
+  const mainInfo = `
 # ${consts.APP_NAME}
 
 This portfolio website is driven by ${consts.APP_NAME}, a
@@ -19,9 +23,9 @@ data-driven portfolio system made with <3 by [Maddy Guthridge](https://maddyguth
 * [View the GPLv3 software license for ${consts.APP_NAME}](${consts.APP_GITHUB}/blob/main/LICENSE.md).
 `;
 
-let technicalDetails = '';
-if (data.versions) {
-  technicalDetails = `
+  let technicalDetails = '';
+  if (data.versions) {
+    technicalDetails = `
 
 ## Technical details
 
@@ -31,25 +35,23 @@ For security reasons, these details are only shown if you are logged in.
 * Node: ${data.versions.node}
 * OS: ${data.versions.os}
 `;
-}
+  }
 
-const readme = mainInfo + technicalDetails;
+  const readme = mainInfo + technicalDetails;
 </script>
 
 <svelte:head>
   <title>About - {data.config.siteName}</title>
-  <meta name="description" content="{data.config.siteDescription}">
-  <meta name="generator" content="{consts.APP_NAME}">
-  <meta name="keywords" content="{data.config.siteKeywords.join(', ')}">
-  <meta name="theme-color" content="{data.config.color}">
+  <meta name="description" content={data.config.siteDescription} />
+  <meta name="generator" content={consts.APP_NAME} />
+  <meta name="keywords" content={data.config.siteKeywords.join(', ')} />
+  <meta name="theme-color" content={data.config.color} />
 </svelte:head>
 
 <Navbar
   config={data.config}
   loggedIn={data.loggedIn}
-  path={[
-    { txt: 'About', url: 'about' },
-  ]}
+  path={[{ txt: 'About', url: 'about' }]}
 />
 
 <Background color={data.config.color} />

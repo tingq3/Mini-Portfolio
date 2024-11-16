@@ -1,7 +1,7 @@
 import type { ProvidedPackageInfo, PackageProvider, PackageInfo } from '$lib/server/data/itemPackage';
 
 /** Info required to register a package provider */
-interface ProviderInfo {
+type ProviderInfo = {
   /** Name of provider (eg Pypi) */
   name: string
   /** Icon id to use (from LineAwesome) */

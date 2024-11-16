@@ -1,24 +1,25 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  type Props = {
+    /** Whether edit mode is currently enabled */
+    editing: boolean;
+    /** Whether the user is currently logged in */
+    loggedIn: boolean;
+    /** Called when editing begins */
+    onbegin: () => void;
+    /** Called when editing is finished. */
+    onfinish: (save: boolean) => void;
+  };
 
-  /** Whether edit mode is currently enabled */
-  export let editing: boolean;
-  /** Whether the user is currently logged in */
-  export let loggedIn: boolean;
-
-  const dispatch = createEventDispatcher<{
-    beginEdits: undefined;
-    finishEdits: boolean;
-  }>();
+  let { editing, loggedIn, onbegin, onfinish }: Props = $props();
 </script>
 
 {#if loggedIn}
   <div class="edit-buttons">
     {#if editing}
-      <button on:click={() => dispatch('finishEdits', false)}>Cancel</button>
-      <button on:click={() => dispatch('finishEdits', true)}>Done</button>
+      <button onclick={() => onfinish(false)}>Cancel</button>
+      <button onclick={() => onfinish(true)}>Done</button>
     {:else}
-      <button on:click={() => dispatch('beginEdits')}>Edit</button>
+      <button onclick={onbegin}>Edit</button>
     {/if}
   </div>
 {/if}

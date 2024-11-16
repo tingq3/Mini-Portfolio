@@ -1,9 +1,17 @@
 <script lang="ts">
-  export let opacity = 0.75;
+  import { type Snippet } from 'svelte';
+  type Props = {
+    opacity?: number;
+    children?: Snippet;
+  };
+
+  let { opacity = 0.75, children }: Props = $props();
 </script>
 
 <div class="paper" style="--opacity: {opacity}">
-  <slot></slot>
+  {#if children}
+    {@render children?.()}
+  {/if}
 </div>
 
 <style>

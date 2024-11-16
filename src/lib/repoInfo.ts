@@ -1,7 +1,7 @@
 import type { ProvidedRepoInfo, RepoProvider, RepoInfo } from '$lib/server/data/itemRepo';
 
 /** Info required to register a repo provider */
-interface RepoProviderInfo {
+type RepoProviderInfo = {
   /** Name of provider (eg GitHub) */
   name: string
   /** Icon id to use (from LineAwesome) */

@@ -9,7 +9,11 @@
   import LogOutAll from './LogOutAll.svelte';
   import KeySettings from './KeySettings.svelte';
 
-  export let data: import('./$types').PageData;
+  type Props = {
+    data: import('./$types').PageData;
+  };
+
+  let { data }: Props = $props();
 </script>
 
 <svelte:head>

@@ -1,21 +1,24 @@
 <script lang="ts">
   import 'highlight.js/styles/stackoverflow-light.css';
   import Markdown from './Markdown.svelte';
-  import { createEventDispatcher } from 'svelte';
 
-  export let source: string;
+  type Props = {
+    source: string;
+    onsubmit: () => void;
+  };
 
-  const dispatch = createEventDispatcher<{ submit: undefined }>();
+  let { source = $bindable(), onsubmit }: Props = $props();
 
   function handleKeypress(e: KeyboardEvent) {
     if (e.ctrlKey && e.key === 'Enter') {
-      dispatch('submit');
+      onsubmit();
     }
   }
 </script>
 
 <div class="md-editor">
-  <textarea class="md-input" bind:value={source} on:keypress={handleKeypress}></textarea>
+  <textarea class="md-input" bind:value={source} onkeypress={handleKeypress}
+  ></textarea>
   <span class="md-preview">
     <Markdown {source} />
   </span>

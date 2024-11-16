@@ -5,10 +5,14 @@
   import type { ConfigJson } from '$lib/server/data/config';
   import Separator from '$components/Separator.svelte';
 
-  export let path: { url: string; txt: string }[];
-  export let config: ConfigJson;
-  /** Whether the user is logged in. Set to undefined if auth is disabled */
-  export let loggedIn: boolean | undefined;
+  type Props = {
+    path: { url: string; txt: string }[];
+    config: ConfigJson;
+    /** Whether the user is logged in. Set to undefined if auth is disabled */
+    loggedIn: boolean | undefined;
+  };
+
+  let { path, config, loggedIn }: Props = $props();
 
   /** Log out, then reload the page */
   async function logOut() {
@@ -58,18 +62,18 @@
   <!-- Control buttons -->
   <span id="control-buttons">
     {#if loggedIn}
-      <button on:click={() => goto('/admin')}> Admin </button>
-      <button on:click={logOut}> Log out </button>
+      <button onclick={() => goto('/admin')}> Admin </button>
+      <button onclick={logOut}> Log out </button>
     {:else if loggedIn !== undefined}
       <!-- Only include a login button if logging in is enabled -->
-      <button on:click={gotoLogin}> Log in </button>
+      <button onclick={gotoLogin}> Log in </button>
     {/if}
     <!-- About button navigates to about page -->
-    <button on:click={() => goto('/about')}> About </button>
+    <button onclick={() => goto('/about')}> About </button>
     <!-- In dev mode, add a quick shortcut to delete everything -->
     {#if dev}
       <Separator />
-      <button on:click={clear}> Clear data </button>
+      <button onclick={clear}> Clear data </button>
     {/if}
   </span>
 </nav>
@@ -78,7 +82,7 @@
   nav {
     display: grid;
     grid-template-columns: 1fr auto auto;
-    grid-template-areas: "navigator empty control-buttons";
+    grid-template-areas: 'navigator empty control-buttons';
   }
 
   a {

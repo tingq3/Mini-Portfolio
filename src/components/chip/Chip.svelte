@@ -2,27 +2,45 @@
   import { tooltip } from '$lib/tooltip';
   import Color from 'color';
 
-  /** Name to show for chip */
-  export let name: string;
-  /** Description to show on hover */
-  export let description: string;
-  /** Color to use for the chip */
-  export let color: string;
-  /** Location to link to on click (or `undefined` for no link) */
-  export let link: string | undefined;
-  /** Whether the chip should render as selected (filled) */
-  export let selected = false;
+  type Props = {
+    /** Name to show for chip */
+    name: string;
+    /** Description to show on hover */
+    description: string;
+    /** Color to use for the chip */
+    color: string;
+    /** Link behavior options */
+    link?: { url: string; newTab: boolean };
+    /** Whether the chip should render as selected (filled) */
+    selected?: boolean;
+    /** Callback when the chip is clicked */
+    onclick?: (e: MouseEvent | undefined | null) => void;
+  };
 
-  $: fillColor = selected ? Color(color).lightness(80).hex() : Color(color).lightness(95).hex();
-  $: borderColor = selected ? Color(color).lightness(50).hex() : Color(color).lightness(85).hex();
-  $: hoverColor = Color(color).lightness(70).hex();
-  $: borderWidth = selected ? '2px' : '1px';
+  let {
+    name,
+    description,
+    color,
+    link,
+    onclick,
+    selected = false,
+  }: Props = $props();
+
+  let fillColor = $derived(
+    selected
+      ? Color(color).lightness(80).hex()
+      : Color(color).lightness(95).hex(),
+  );
+  let borderColor = $derived(
+    selected
+      ? Color(color).lightness(50).hex()
+      : Color(color).lightness(85).hex(),
+  );
+  let hoverColor = $derived(Color(color).lightness(70).hex());
+  let borderWidth = $derived(selected ? '2px' : '1px');
 </script>
 
-<a
-  on:click
-  href={link}
->
+<a {onclick} href={link?.url}>
   <div
     use:tooltip={{ content: description }}
     style:--fill-color={fillColor}
@@ -51,8 +69,8 @@
     width: min-content;
     text-wrap: nowrap;
     transition:
-      border-color .5s,
-      background-color .5s;
+      border-color 0.5s,
+      background-color 0.5s;
   }
   div:hover {
     background-color: var(--hover-color);

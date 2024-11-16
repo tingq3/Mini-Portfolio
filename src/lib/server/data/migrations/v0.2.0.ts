@@ -30,9 +30,9 @@ import { version } from '$app/environment';
 import { capitalize } from '$lib/util';
 import { unsafeLoadConfig, unsafeLoadGroupInfo, unsafeLoadItemInfo } from './unsafeLoad';
 
-interface OldConfig { name: string }
+type OldConfig = { name: string }
 
-interface OldItemInfo {
+type OldItemInfo = {
   name: string;
   description: string;
   color: string;
@@ -52,13 +52,13 @@ interface OldItemInfo {
 }
 
 /** How to display links within a group */
-interface GroupLinkDisplayOptions {
+type GroupLinkDisplayOptions = {
   title: string;
   display: 'card' | 'chip';
   reverseLookup: boolean;
 }
 
-interface OldGroupInfo {
+type OldGroupInfo = {
   name: string;
   description: string;
   color: string;
@@ -66,7 +66,7 @@ interface OldGroupInfo {
 }
 
 /** Minimal representation of old global data */
-interface OldGlobals {
+type OldGlobals = {
   config: OldConfig,
   groups: Record<string, OldGroupInfo>,
   items: Record<string, Record<string, OldItemInfo>>,

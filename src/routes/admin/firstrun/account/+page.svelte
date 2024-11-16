@@ -12,9 +12,9 @@
   import { idValidatorRegex } from '$lib/validators';
 
   // Default values are auto-filled in dev mode
-  let username = dev ? 'admin' : '';
-  let password = dev ? 'abc123ABC!' : '';
-  let repeatPassword = dev ? 'abc123ABC!' : '';
+  let username = $state(dev ? 'admin' : '');
+  let password = $state(dev ? 'abc123ABC!' : '');
+  let repeatPassword = $state(dev ? 'abc123ABC!' : '');
 
   async function createAccount() {
     showLoading = true;
@@ -36,9 +36,9 @@
     await createAccount();
   }
 
-  let showLoading = false;
+  let showLoading = $state(false);
 
-  let errorText = '';
+  let errorText = $state('');
 </script>
 
 <svelte:head>
@@ -71,7 +71,7 @@
         {/if}
       </div>
 
-      <form on:submit={onSubmit}>
+      <form onsubmit={onSubmit}>
         <h3>Login information</h3>
         <p>
           Create a username. It may only use lowercase alphanumeric characters,
@@ -118,7 +118,7 @@
   show={errorText !== ''}
   header="Oh no!"
   text={errorText}
-  on:close={() => {
+  onclose={() => {
     errorText = '';
   }}
 />

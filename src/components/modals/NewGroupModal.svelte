@@ -1,23 +1,26 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
   import Modal from './Modal.svelte';
-    import api from '$endpoints';
-    import { goto } from '$app/navigation';
-  export let show: boolean;
+  import api from '$endpoints';
+  import { goto } from '$app/navigation';
 
-  let groupName = '';
-  let groupId = '';
-  let groupDescription = '';
-  let userModifiedId = false;
+  type Props = {
+    show: boolean;
+    onclose: () => void;
+  };
 
-  const dispatch = createEventDispatcher();
+  let { show, onclose }: Props = $props();
+
+  let groupName = $state('');
+  let groupId = $state('');
+  let groupDescription = $state('');
+  let userModifiedId = $state(false);
 
   function resetAndClose() {
     groupName = '';
     groupDescription = '';
     groupId = '';
     userModifiedId = false;
-    dispatch('close');
+    onclose();
   }
 
   function nameToId(name: string): string {
@@ -31,16 +34,23 @@
   }
 </script>
 
-<Modal {show} on:close={resetAndClose}>
-  <h2 slot="header">New group</h2>
-  <form on:submit|preventDefault={makeGroup}>
+<Modal {show} onclose={resetAndClose}>
+  {#snippet header()}
+    <h2>New group</h2>
+  {/snippet}
+  <form
+    onsubmit={(e) => {
+      e.preventDefault();
+      void makeGroup();
+    }}
+  >
     <p>
       Group name
       <input
         placeholder="Projects"
         bind:value={groupName}
         required
-        on:input={() => {
+        oninput={() => {
           // Whenever the user modifies the name, we should update the ID
           // to match, until the user modifies the ID themselves
           if (!userModifiedId) {
@@ -51,11 +61,21 @@
     </p>
     <p>
       Group ID
-      <input placeholder="projects" required bind:value={groupId} on:input={() => { userModifiedId = true; }} />
+      <input
+        placeholder="projects"
+        required
+        bind:value={groupId}
+        oninput={() => {
+          userModifiedId = true;
+        }}
+      />
     </p>
     <p>
       Group description
-      <input placeholder="Projects I have created" bind:value={groupDescription} />
+      <input
+        placeholder="Projects I have created"
+        bind:value={groupDescription}
+      />
     </p>
     <p>
       <input type="submit" value="Create" />
@@ -78,14 +98,14 @@
     height: 1.2rem;
   }
 
-  input[type="submit"] {
+  input[type='submit'] {
     height: 2rem;
     background-color: transparent;
     border: none;
     border-radius: 5px;
   }
 
-  input[type="submit"]:hover {
+  input[type='submit']:hover {
     background-color: rgba(124, 124, 124, 0.253);
     cursor: pointer;
   }

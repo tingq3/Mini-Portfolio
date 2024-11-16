@@ -1,20 +1,21 @@
 <script lang="ts">
   import { tooltip } from '$lib/tooltip';
 
-  export let text: string;
-  export let hint = 'Copy';
+  type Props = {
+    text: string;
+    hint?: string;
+    children?: import('svelte').Snippet;
+  };
 
-  async function copy() {
-    await navigator.clipboard.writeText(text);
+  let { text, hint = 'Copy', children }: Props = $props();
+
+  function copy() {
+    void navigator.clipboard.writeText(text);
   }
 </script>
 
-<button
-  class="copy-btn"
-  on:click|preventDefault={copy}
-  use:tooltip={{ content: hint }}
->
-  <slot/>
+<button class="copy-btn" onclick={copy} use:tooltip={{ content: hint }}>
+  {@render children?.()}
 </button>
 
 <style>
@@ -35,7 +36,7 @@
     border-color: rgba(0, 0, 0, 0.178);
     border-width: 1px;
     border-style: solid;
-    transition: background-color .5s;
+    transition: background-color 0.5s;
   }
   .copy-btn:hover {
     background-color: rgba(0, 0, 0, 0.137);

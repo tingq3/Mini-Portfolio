@@ -64,6 +64,8 @@ export default ts.config(
       '@typescript-eslint/no-unsafe-member-access': 'off',
       // Allow empty functions, as they are useful to silence promise errors
       '@typescript-eslint/no-empty-function': 'off',
+      // Use `type` instead of `interface`
+      "@typescript-eslint/consistent-type-definitions": ["error", 'type'],
     },
   },
   {

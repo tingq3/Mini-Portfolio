@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { Navbar } from '$components';
   import {
     IconCard,
@@ -14,19 +16,38 @@
   import consts from '$lib/consts';
   import { generateKeywords } from '$lib/seo';
   import EditControls from '$components/EditControls.svelte';
-  // import AsciinemaPlayer from "$components";
 
-  export let data: import('./$types').PageData;
+  type Props = {
+    // import AsciinemaPlayer from "$components";
+    data: import('./$types').PageData;
+  };
 
-  let groupData = data.globals.groups[data.groupId];
-  let itemData = data.globals.items[data.groupId][data.itemId];
+  let { data }: Props = $props();
 
-  let editing = false;
+  let groupData = $state(data.globals.groups[data.groupId]);
+  let itemData = $state(data.globals.items[data.groupId][data.itemId]);
 
-  let readme = '';
+  let editing = $state(false);
 
-  let chipLinks = itemData.info.links.filter(([l]) => l.style === 'chip');
-  let cardLinks = itemData.info.links.filter(([l]) => l.style === 'card');
+  let readme = $state('');
+
+  // FIXME: Import a proper type definition from somewhere
+  let chipLinks: [
+    {
+      groupId: string;
+      style: 'chip' | 'card';
+      title: string;
+    },
+    string[],
+  ][] = $state([]);
+  let cardLinks: [
+    {
+      groupId: string;
+      style: 'chip' | 'card';
+      title: string;
+    },
+    string[],
+  ][] = $state([]);
 
   function beginEditing() {
     editing = true;
@@ -102,7 +123,9 @@
     cardLinks = [...cardLinks];
   }
 
-  $: setupData(data.groupId, data.itemId);
+  run(() => {
+    setupData(data.groupId, data.itemId);
+  });
 </script>
 
 <!-- TODO: Find a less repetitive way to get SEO working nicely -->
@@ -135,8 +158,8 @@
   <EditControls
     {editing}
     loggedIn={data.loggedIn}
-    on:beginEdits={beginEditing}
-    on:finishEdits={(e) => finishEditing(e.detail)}
+    onbegin={beginEditing}
+    onfinish={finishEditing}
   />
   {#if itemData.info.banner}
     <img
@@ -146,7 +169,11 @@
     />
   {/if}
   <div id="info-container">
-    <EditableMarkdown bind:source={readme} {editing} />
+    <EditableMarkdown
+      bind:source={readme}
+      {editing}
+      onsubmit={() => finishEditing(true)}
+    />
     <!-- Display linked items as chips -->
     <div id="chip-links">
       {#each chipLinks as [linkOptions, linkedItems]}
@@ -163,6 +190,8 @@
                 })),
               ]}
               link={true}
+              onfilter={() => {}}
+              onclick={() => {}}
             />
           </div>
         {:else}
@@ -170,7 +199,7 @@
             <input
               type="text"
               bind:value={linkOptions.title}
-              on:input={() =>
+              oninput={() =>
                 changeLinkTitle(linkOptions.groupId, linkOptions.title)}
             />
             <div class="chip-link-items">
@@ -185,7 +214,8 @@
                     }),
                   ),
                 ]}
-                on:click={(e) => toggleLink(e.detail.groupId, e.detail.itemId)}
+                onfilter={() => {}}
+                onclick={(groupId, itemId) => toggleLink(groupId, itemId)}
               />
             </div>
           </div>
@@ -200,19 +230,23 @@
       {#if itemData.info.urls.site}
         <IconCard
           title="Visit the website"
-          link={itemData.info.urls.site}
+          link={{ url: itemData.info.urls.site, newTab: true }}
           color={itemData.info.color}
         >
-          <i slot="icon" class="las la-globe"></i>
+          {#snippet icon()}
+            <i class="las la-globe"></i>
+          {/snippet}
         </IconCard>
       {/if}
       {#if itemData.info.urls.docs}
         <IconCard
           title="View the documentation"
-          link={itemData.info.urls.docs}
+          link={{ url: itemData.info.urls.docs, newTab: true }}
           color={itemData.info.color}
         >
-          <i slot="icon" class="lab la-readme"></i>
+          {#snippet icon()}
+            <i class="lab la-readme"></i>
+          {/snippet}
         </IconCard>
       {/if}
       {#if itemData.info.urls.repo}
@@ -243,6 +277,9 @@
         groupId={linkOptions.groupId}
         itemIds={linkedItems}
         editing={false}
+        onclick={() => {
+          // TODO: Figure out if I need to handle onclick to get the link working properly
+        }}
       />
     {/each}
   </div>

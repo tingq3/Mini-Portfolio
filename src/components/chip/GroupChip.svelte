@@ -2,19 +2,30 @@
   import type { PortfolioGlobals } from '$lib';
   import Chip from './Chip.svelte';
 
-  export let globals: PortfolioGlobals;
-  export let groupId: string;
-  export let link = false;
-  export let selected = false;
+  type Props = {
+    globals: PortfolioGlobals;
+    groupId: string;
+    link?: boolean;
+    selected?: boolean;
+    onclick?: (e: MouseEvent | undefined | null) => void;
+  };
 
-  $: group = globals.groups[groupId];
+  let {
+    globals,
+    groupId,
+    onclick,
+    link = false,
+    selected = false,
+  }: Props = $props();
+
+  let group = $derived(globals.groups[groupId]);
 </script>
 
 <Chip
-  on:click
+  {onclick}
   name={group.info.name}
   description={group.info.description}
   color={group.info.color}
   {selected}
-  link={link ? `/${groupId}` : undefined}
+  link={link ? { url: `/${groupId}`, newTab: false } : undefined}
 />

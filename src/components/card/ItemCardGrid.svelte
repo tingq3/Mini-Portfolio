@@ -2,27 +2,34 @@
   import { flip } from 'svelte/animate';
   import { ItemCard } from '.';
   import type { PortfolioGlobals } from '$lib';
-  import { createEventDispatcher } from 'svelte';
   import { send, receive } from '$lib/transition';
   import IconCard from './IconCard.svelte';
   import { NewItemModal } from '$components/modals';
 
-  /** Portfolio globals */
-  export let globals: PortfolioGlobals;
-  /** ID of group to which items belong */
-  export let groupId: string;
-  /** Item IDs to show */
-  export let itemIds: string[];
-  /** Whether edit mode is active */
-  export let editing: boolean;
-  /** Whether to give the option to create an item in edit mode */
-  export let createOption = false;
+  type Props = {
+    globals: PortfolioGlobals;
+    /** ID of group to which items belong */
+    groupId: string;
+    /** Item IDs to show */
+    itemIds: string[];
+    /** Whether edit mode is active */
+    editing: boolean;
+    /** Whether to give the option to create a group in edit mode */
+    createOption?: boolean;
+    /** Called when an item is clicked */
+    onclick: (groupId: string, itemId: string) => void;
+  };
 
-  const dispatch = createEventDispatcher<{
-    click: { itemId: string },
-  }>();
+  let {
+    globals,
+    groupId,
+    itemIds,
+    editing,
+    onclick,
+    createOption = false,
+  }: Props = $props();
 
-  let newItemModalShown = false;
+  let newItemModalShown = $state(false);
   function closeNewItemModal() {
     newItemModalShown = false;
   }
@@ -31,16 +38,16 @@
 <div class="card-grid">
   {#each itemIds as itemId (itemId)}
     <div
-    animate:flip={{ duration: 300 }}
-    in:receive={{ key: itemId }}
-    out:send={{ key: itemId }}
+      animate:flip={{ duration: 300 }}
+      in:receive={{ key: itemId }}
+      out:send={{ key: itemId }}
     >
       <ItemCard
         {groupId}
         {itemId}
         {globals}
         {editing}
-        on:click={() => dispatch('click', { itemId })}
+        onclick={() => onclick(groupId, itemId)}
       />
     </div>
   {/each}
@@ -48,11 +55,19 @@
     <IconCard
       title="New item"
       color="#888888"
-      on:click={() => { newItemModalShown = true; }}
+      onclick={() => {
+        newItemModalShown = true;
+      }}
     >
-      <i slot="icon" class="las la-plus"></i>
+      {#snippet icon()}
+        <i class="las la-plus"></i>
+      {/snippet}
     </IconCard>
-    <NewItemModal {groupId} show={newItemModalShown} on:close={closeNewItemModal} />
+    <NewItemModal
+      {groupId}
+      show={newItemModalShown}
+      onclose={closeNewItemModal}
+    />
   {/if}
 </div>
 
@@ -71,10 +86,15 @@
     */
     --gap-count: calc(var(--grid-column-count) - 1);
     --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
-    --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+    --grid-item--max-width: calc(
+      (100% - var(--total-gap-width)) / var(--grid-column-count)
+    );
 
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr)
+    );
     grid-gap: var(--grid-layout-gap);
   }
 

@@ -14,7 +14,7 @@
  * # Edge cases
  * - Empty form fields
  */
-import { it, expect, beforeEach, describe } from 'vitest';
+import { it, expect, beforeEach, describe, test } from 'vitest';
 import { setup } from '../../helpers';
 import api from '$endpoints';
 import { getLocalConfig, setLocalConfig } from '$lib/server/data/localConfig';
@@ -34,6 +34,12 @@ it("Gives an error when the server isn't setup", async () => {
 it('Returns a token when correct credentials are provided', async () => {
   await expect(api().admin.auth.login(credentials.username, credentials.password))
     .resolves.toStrictEqual({ token: expect.any(String) });
+});
+
+test('Tokens are unique', async () => {
+  const { token: token1 } = await api().admin.auth.login(credentials.username, credentials.password);
+  const { token: token2 } = await api().admin.auth.login(credentials.username, credentials.password);
+  expect(token1).not.toStrictEqual(token2);
 });
 
 it('Blocks logins with non-existent usernames', async () => {

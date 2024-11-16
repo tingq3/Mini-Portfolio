@@ -1,16 +1,23 @@
 <!-- Settings panel for managing the server's public key. -->
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import CopyButton from '$components/CopyButton.svelte';
   import api from '$endpoints';
   import { APP_NAME } from '$lib/consts';
 
-  /** Public key currently being used by the server */
-  export let publicKey: string | null;
-  /** Path to the server's private key */
-  export let privateKeyPath: string | null;
+  type Props = {
+    /** Public key currently being used by the server */
+    publicKey: string | null;
+    /** Path to the server's private key */
+    privateKeyPath: string | null;
+  };
+
+  let { publicKey = $bindable(), privateKeyPath = $bindable() }: Props =
+    $props();
 
   /** Setting key path */
-  let newKeyPath = '';
+  let newKeyPath = $state('');
 
   /** Use the SSH key at the given path */
   async function useKeyAtPath() {
@@ -42,7 +49,7 @@
       {APP_NAME} is using your system's default SSH configuration. Note that in Docker,
       this may be unset, unless you are forwarding your host's SSH agent.
     </p>
-    <form on:submit|preventDefault={useKeyAtPath}>
+    <form onsubmit={preventDefault(() => void useKeyAtPath)}>
       <p>Use the given SSH key-pair</p>
       <p>
         <input
@@ -53,7 +60,7 @@
       </p>
       <p><input type="submit" value="Set SSH key path" /></p>
     </form>
-    <form on:submit|preventDefault={generateNewKey}>
+    <form onsubmit={preventDefault(() => void generateNewKey)}>
       <p>Generate a new SSH key-pair</p>
       <p><input type="submit" value="Generate SSH key" /></p>
     </form>
@@ -63,7 +70,7 @@
     <p>Public key is:</p>
     <pre>{publicKey}</pre>
     <CopyButton text={publicKey ?? ''}>Copy to clipboard</CopyButton>
-    <form on:submit|preventDefault={useKeyAtPath}>
+    <form onsubmit={preventDefault(() => void useKeyAtPath)}>
       <p>Use the given SSH key-pair</p>
       <p>
         <input
@@ -74,11 +81,11 @@
       </p>
       <p><input type="submit" value="Set SSH key path" /></p>
     </form>
-    <form on:submit|preventDefault={generateNewKey}>
+    <form onsubmit={preventDefault(() => void generateNewKey)}>
       <p>Generate a new SSH key-pair</p>
       <p><input type="submit" value="Generate SSH key" /></p>
     </form>
-    <form on:submit|preventDefault={useSystemSsh}>
+    <form onsubmit={preventDefault(() => void useSystemSsh)}>
       <p>Use the system's SSH configuration</p>
       <p><input type="submit" value="Use system SSH" /></p>
     </form>
@@ -86,5 +93,4 @@
 </div>
 
 <style>
-  
 </style>

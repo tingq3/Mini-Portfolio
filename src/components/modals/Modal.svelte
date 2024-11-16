@@ -1,38 +1,43 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import type { Snippet } from 'svelte';
+  type Props = {
+    show: boolean;
+    color?: string;
+    showCloseButton?: boolean;
+    header?: Snippet;
+    children?: Snippet;
+    onclose: () => void;
+  };
 
-  export let show: boolean;
-  export let color = 'white';
-  export let canClose = true;
+  let {
+    show,
+    color = 'white',
+    showCloseButton = true,
+    header,
+    children,
+    onclose,
+  }: Props = $props();
 
-  $: display = show ? 'block' : 'none';
-
-  function close() {
-    if (canClose) {
-      dispatch('close', {});
-    }
-  }
-
-  const dispatch = createEventDispatcher<{
-    close: object,
-  }>();
+  let display = $derived(show ? 'block' : 'none');
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
-<div class="outer" style="display: {display};" on:click={close}>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<div class="outer" style="display: {display};" onclick={close}>
   <div class="inner">
-    <div class="box" style="background-color: {color};" on:click|stopPropagation>
+    <div class="box" style="background-color: {color};" onclick={onclose}>
       <div class="header">
-        <slot name="header"></slot>
-        {#if canClose}
-          <span />
-          <button on:click|preventDefault={close}>
+        {@render header?.()}
+        {#if showCloseButton}
+          <span></span>
+          <!-- svelte-ignore a11y_consider_explicit_label -->
+          <button onclick={onclose}>
             <i class="las la-times"></i>
           </button>
         {/if}
       </div>
       <div class="main-content">
-        <slot />
+        {@render children?.()}
       </div>
     </div>
   </div>
