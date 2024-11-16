@@ -1,4 +1,5 @@
 <script lang="ts">
+  // FIXME: Remove `run` blocks when unifying group and item types
   import { run } from 'svelte/legacy';
 
   import { Navbar } from '$components';
@@ -7,14 +8,18 @@
   import Background from '$components/Background.svelte';
   import api from '$endpoints';
   import { ItemChipList, GroupChip } from '$components/chip';
-  import { createItemFilter, applyFiltersToGroupItems, type FilterOptions } from '$lib/itemFilter';
+  import {
+    createItemFilter,
+    applyFiltersToGroupItems,
+    type FilterOptions,
+  } from '$lib/itemFilter';
   import consts from '$lib/consts';
   import { generateKeywords } from '$lib/seo';
   import EditControls from '$components/EditControls.svelte';
 
-  interface Props {
+  type Props = {
     data: import('./$types').PageData;
-  }
+  };
 
   let { data }: Props = $props();
 
@@ -24,17 +29,19 @@
   // Items in group
   // ==================================================
 
-  const listHiddenItems = (groupId: string) => Object.keys(data.globals.items[groupId])
-    .filter(g => !groupData.info.listedItems.includes(g));
+  const listHiddenItems = (groupId: string) =>
+    Object.keys(data.globals.items[groupId]).filter(
+      (g) => !groupData.info.listedItems.includes(g),
+    );
 
   let editing = $state(false);
-  let readme = $state(groupData.readme);
+  let readme = $state('');
 
-  let shownItems = $state([...groupData.info.listedItems]);
+  let shownItems: string[] = $state([]);
   let hiddenItems = $state(listHiddenItems(data.groupId));
 
   /** By default list all items until a filter is applied */
-  let mainItemsList = $state(shownItems);
+  let mainItemsList: string[] = $state([]);
 
   // Filter groups for this group
   // ==================================================
@@ -47,9 +54,9 @@
     // Make mainItemsList a reference so that updates are shown to the user
     mainItemsList = shownItems;
     // Set up filter groups
-    filterGroups = groupData.info.filterGroups.map(g => [g, true]);
+    filterGroups = groupData.info.filterGroups.map((g) => [g, true]);
     // Including filter groups not shown
-    Object.keys(data.globals.groups).forEach(g => {
+    Object.keys(data.globals.groups).forEach((g) => {
       if (g !== data.groupId && !groupData.info.filterGroups.includes(g)) {
         filterGroups.push([g, false]);
       }
@@ -89,7 +96,11 @@
     if (editing) {
       mainItemsList = shownItems;
     } else {
-      mainItemsList = applyFiltersToGroupItems(data.globals, data.groupId, filters);
+      mainItemsList = applyFiltersToGroupItems(
+        data.globals,
+        data.groupId,
+        filters,
+      );
     }
   }
 
@@ -105,10 +116,13 @@
 <!-- TODO: Find a less repetitive way to get SEO tags working nicely -->
 <svelte:head>
   <title>{groupData.info.name} - {data.globals.config.siteShortName}</title>
-  <meta name="description" content="{groupData.info.pageDescription}">
-  <meta name="generator" content="{consts.APP_NAME}">
-  <meta name="keywords" content="{generateKeywords(data.globals, data.groupId)}">
-  <meta name="theme-color" content="{groupData.info.color}">
+  <meta name="description" content={groupData.info.pageDescription} />
+  <meta name="generator" content={consts.APP_NAME} />
+  <meta
+    name="keywords"
+    content={generateKeywords(data.globals, data.groupId)}
+  />
+  <meta name="theme-color" content={groupData.info.color} />
 </svelte:head>
 
 <Background color={groupData.info.color} />
@@ -123,14 +137,15 @@
   <EditControls
     {editing}
     loggedIn={data.loggedIn}
-    on:beginEdits={beginEditing}
-    on:finishEdits={e => finishEditing(e.detail)}
+    onbegin={beginEditing}
+    onfinish={finishEditing}
   />
   <div id="readme">
     <div id="info-container">
       <EditableMarkdown
         bind:source={readme}
-        editing={editing}
+        {editing}
+        onsubmit={() => finishEditing(true)}
       />
     </div>
   </div>
@@ -141,7 +156,9 @@
       <ItemChipList
         globals={data.globals}
         items={filterSelections}
-        on:filter={e => { filterSelections = e.detail; }}
+        on:filter={(e) => {
+          filterSelections = e.detail;
+        }}
       />
     </div>
   {:else}
@@ -152,7 +169,7 @@
           globals={data.globals}
           groupId={filterGroup}
           {selected}
-          on:click={() => {
+          onclick={() => {
             // Toggle filtering for this group
             const g = filterGroups.find(([g]) => g === filterGroup);
             if (g) {
@@ -173,10 +190,10 @@
       globals={data.globals}
       {editing}
       createOption
-      on:click={e => {
+      onclick={(groupId, itemId) => {
         if (editing) {
-          shownItems = shownItems.filter(i => i !== e.detail.itemId);
-          hiddenItems = [...hiddenItems, e.detail.itemId];
+          shownItems = shownItems.filter((i) => i !== itemId);
+          hiddenItems = [...hiddenItems, itemId];
         }
       }}
     />
@@ -189,9 +206,9 @@
         itemIds={hiddenItems}
         globals={data.globals}
         {editing}
-        on:click={e => {
-          shownItems = [...shownItems, e.detail.itemId];
-          hiddenItems = hiddenItems.filter(i => i !== e.detail.itemId);
+        onclick={(groupId, itemId) => {
+          shownItems = [...shownItems, itemId];
+          hiddenItems = hiddenItems.filter((i) => i !== itemId);
         }}
       />
     </div>

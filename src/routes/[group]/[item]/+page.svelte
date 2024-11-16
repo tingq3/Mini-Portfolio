@@ -16,12 +16,11 @@
   import consts from '$lib/consts';
   import { generateKeywords } from '$lib/seo';
   import EditControls from '$components/EditControls.svelte';
-  
 
-  interface Props {
+  type Props = {
     // import AsciinemaPlayer from "$components";
     data: import('./$types').PageData;
-  }
+  };
 
   let { data }: Props = $props();
 
@@ -32,8 +31,23 @@
 
   let readme = $state('');
 
-  let chipLinks = $state(itemData.info.links.filter(([l]) => l.style === 'chip'));
-  let cardLinks = $state(itemData.info.links.filter(([l]) => l.style === 'card'));
+  // FIXME: Import a proper type definition from somewhere
+  let chipLinks: [
+    {
+      groupId: string;
+      style: 'chip' | 'card';
+      title: string;
+    },
+    string[],
+  ][] = $state([]);
+  let cardLinks: [
+    {
+      groupId: string;
+      style: 'chip' | 'card';
+      title: string;
+    },
+    string[],
+  ][] = $state([]);
 
   function beginEditing() {
     editing = true;
@@ -144,8 +158,8 @@
   <EditControls
     {editing}
     loggedIn={data.loggedIn}
-    on:beginEdits={beginEditing}
-    on:finishEdits={(e) => finishEditing(e.detail)}
+    onbegin={beginEditing}
+    onfinish={finishEditing}
   />
   {#if itemData.info.banner}
     <img
@@ -155,7 +169,11 @@
     />
   {/if}
   <div id="info-container">
-    <EditableMarkdown bind:source={readme} {editing} />
+    <EditableMarkdown
+      bind:source={readme}
+      {editing}
+      onsubmit={() => finishEditing(true)}
+    />
     <!-- Display linked items as chips -->
     <div id="chip-links">
       {#each chipLinks as [linkOptions, linkedItems]}
@@ -209,23 +227,23 @@
       {#if itemData.info.urls.site}
         <IconCard
           title="Visit the website"
-          link={itemData.info.urls.site}
+          link={{ url: itemData.info.urls.site, newTab: true }}
           color={itemData.info.color}
         >
           {#snippet icon()}
-                    <i  class="las la-globe"></i>
-                  {/snippet}
+            <i class="las la-globe"></i>
+          {/snippet}
         </IconCard>
       {/if}
       {#if itemData.info.urls.docs}
         <IconCard
           title="View the documentation"
-          link={itemData.info.urls.docs}
+          link={{ url: itemData.info.urls.docs, newTab: true }}
           color={itemData.info.color}
         >
           {#snippet icon()}
-                    <i  class="lab la-readme"></i>
-                  {/snippet}
+            <i class="lab la-readme"></i>
+          {/snippet}
         </IconCard>
       {/if}
       {#if itemData.info.urls.repo}
@@ -256,6 +274,9 @@
         groupId={linkOptions.groupId}
         itemIds={linkedItems}
         editing={false}
+        onclick={() => {
+          // TODO: Figure out if I need to handle onclick to get the link working properly
+        }}
       />
     {/each}
   </div>
