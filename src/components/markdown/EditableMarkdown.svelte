@@ -2,22 +2,19 @@
   import Markdown from './Markdown.svelte';
   import MarkdownEditor from './MarkdownEditor.svelte';
 
-  
-  
-  interface Props {
+  type Props = {
     /** Markdown source code */
     source: string;
     /** Whether we are currently editing the markdown */
     editing: boolean;
-  }
+    onsubmit: () => void;
+  };
 
-  let { source = $bindable(), editing }: Props = $props();
-
-  // const originalSource = source;
+  let { source = $bindable(), editing, onsubmit }: Props = $props();
 </script>
 
 {#if editing}
-  <MarkdownEditor bind:source={source} on:submit />
+  <MarkdownEditor bind:source {onsubmit} />
 {:else}
   <Markdown {source} />
 {/if}

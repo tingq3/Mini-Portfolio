@@ -5,9 +5,9 @@
   import hljs from 'highlight.js';
   import 'highlight.js/styles/stackoverflow-light.css';
 
-  interface Props {
+  type Props = {
     source: string;
-  }
+  };
 
   let { source }: Props = $props();
 
@@ -20,9 +20,7 @@
   };
   marked.use({ renderer });
 
-  let markdownRender: HTMLDivElement = $state();
-
-
+  let markdownRender: HTMLDivElement | undefined = $state();
 
   function applySyntaxHighlighting(renderElement: HTMLDivElement) {
     // Wait a moment before we highlight so that we can be sure the HTML has
@@ -88,7 +86,7 @@
   }
   .markdown-render :global(blockquote:before) {
     color: #ccccccc2;
-    content: "\201C";
+    content: '\201C';
     font-size: 4em;
     line-height: 0.1em;
     margin-right: 0.25em;

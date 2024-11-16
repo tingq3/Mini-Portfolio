@@ -1,46 +1,46 @@
 <script lang="ts">
-  import { createBubbler } from 'svelte/legacy';
-
-  const bubble = createBubbler();
   import { tooltip } from '$lib/tooltip';
   import Color from 'color';
 
-  
-  
-  
-  
-  
-  interface Props {
+  type Props = {
     /** Name to show for chip */
     name: string;
     /** Description to show on hover */
     description: string;
     /** Color to use for the chip */
     color: string;
-    /** Location to link to on click (or `undefined` for no link) */
-    link: string | undefined;
+    /** Link behavior options */
+    link?: { url: string; newTab: boolean };
     /** Whether the chip should render as selected (filled) */
     selected?: boolean;
-  }
+    /** Callback when the chip is clicked */
+    onclick?: (e: MouseEvent | undefined | null) => void;
+  };
 
   let {
     name,
     description,
     color,
     link,
-    selected = false
+    onclick,
+    selected = false,
   }: Props = $props();
 
-  let fillColor = $derived(selected ? Color(color).lightness(80).hex() : Color(color).lightness(95).hex());
-  let borderColor = $derived(selected ? Color(color).lightness(50).hex() : Color(color).lightness(85).hex());
+  let fillColor = $derived(
+    selected
+      ? Color(color).lightness(80).hex()
+      : Color(color).lightness(95).hex(),
+  );
+  let borderColor = $derived(
+    selected
+      ? Color(color).lightness(50).hex()
+      : Color(color).lightness(85).hex(),
+  );
   let hoverColor = $derived(Color(color).lightness(70).hex());
   let borderWidth = $derived(selected ? '2px' : '1px');
 </script>
 
-<a
-  onclick={bubble('click')}
-  href={link}
->
+<a {onclick} href={link?.url}>
   <div
     use:tooltip={{ content: description }}
     style:--fill-color={fillColor}
@@ -69,8 +69,8 @@
     width: min-content;
     text-wrap: nowrap;
     transition:
-      border-color .5s,
-      background-color .5s;
+      border-color 0.5s,
+      background-color 0.5s;
   }
   div:hover {
     background-color: var(--hover-color);

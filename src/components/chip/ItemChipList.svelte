@@ -5,21 +5,16 @@
   import { Separator } from '$components';
   import type { FilterOptions } from '$lib/itemFilter';
 
-  
-
-  
-
-  
-  interface Props {
+  type Props = {
     /** Global data */
     globals: PortfolioGlobals;
     /**
-   * Filter options to display
-   */
+     * Filter options to display
+     */
     items: FilterOptions;
     /** Whether to link each chip to its respective page */
     link?: boolean;
-  }
+  };
 
   let { globals, items, link = false }: Props = $props();
 
@@ -27,7 +22,7 @@
   // ==================================================
 
   /** Reference to this element  */
-  let ele: HTMLDivElement = $state();
+  let ele: HTMLDivElement | undefined = $state();
   /**
    * Scroll position we are aiming for (used to prevent smooth scroll jank)
    */
@@ -35,7 +30,11 @@
   let lastScrollPosition = 0;
 
   /** Event handler for scrolling on the element */
-  function onWheel(e: WheelEvent & { currentTarget: EventTarget & HTMLDivElement }) {
+  function onWheel(
+    e: WheelEvent & { currentTarget: EventTarget & HTMLDivElement },
+  ) {
+    // Ensure element has been mounted
+    if (!ele) return;
     // Didn't scroll vertically, so ignore it
     if (e.deltaY === 0) {
       return;
@@ -48,9 +47,9 @@
     // position to prevent jank
     if (
       // Aiming further left but we're scrolling right
-      (targetScrollPosition > ele.scrollLeft && e.deltaY < 0)
+      (targetScrollPosition > ele.scrollLeft && e.deltaY < 0) ||
       // Aiming further right but we're scrolling left
-      || (targetScrollPosition < ele.scrollLeft && e.deltaY > 0)
+      (targetScrollPosition < ele.scrollLeft && e.deltaY > 0)
     ) {
       targetScrollPosition = ele.scrollLeft;
     }
@@ -59,8 +58,8 @@
       0,
       Math.min(
         ele.scrollWidth - ele.clientWidth,
-        targetScrollPosition + e.deltaY
-      )
+        targetScrollPosition + e.deltaY,
+      ),
     );
     // If scroll distance is too small, just scroll instantly
     // This should reduce jank for people scrolling with trackpads
@@ -85,11 +84,11 @@
         return;
       }
       if (ele.scrollLeft === lastScrollPosition) {
-      // Scroll didn't change therefore we should update target position
-      // to prevent jank
+        // Scroll didn't change therefore we should update target position
+        // to prevent jank
         targetScrollPosition = ele.scrollLeft;
       } else {
-      // Otherwise, update the last scroll position to this position
+        // Otherwise, update the last scroll position to this position
         lastScrollPosition = ele.scrollLeft;
       }
     }, 100);
@@ -99,8 +98,8 @@
   // Filtering
 
   const dispatch = createEventDispatcher<{
-    filter: FilterOptions,
-    click: { groupId: string, itemId: string }
+    filter: FilterOptions;
+    click: { groupId: string; itemId: string };
   }>();
 
   // Update filter status
@@ -112,11 +111,7 @@
 </script>
 
 {#if items.length}
-  <div
-    class="chip-list"
-    bind:this={ele}
-    onwheel={onWheel}
-  >
+  <div class="chip-list" bind:this={ele} onwheel={onWheel}>
     {#each items as itemGroup, outer}
       {#each itemGroup as filterItem, inner}
         <ItemChip
@@ -125,9 +120,12 @@
           itemId={filterItem.itemId}
           selected={filterItem.selected}
           {link}
-          on:click={() => {
+          onclick={() => {
             updateFilterStatus(outer, inner);
-            dispatch('click', { groupId: filterItem.groupId, itemId: filterItem.itemId });
+            dispatch('click', {
+              groupId: filterItem.groupId,
+              itemId: filterItem.itemId,
+            });
           }}
         />
       {/each}
